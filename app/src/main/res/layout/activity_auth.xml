@@ -25,7 +25,7 @@
         android:id="@+id/logo"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="84dp"
+        android:layout_marginStart="76dp"
         android:layout_marginTop="16dp"
         android:background="@color/transparent"
         android:contentDescription="@string/group_name"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:layout_marginEnd="100dp"
+        android:layout_marginEnd="106dp"
         android:gravity="center"
         android:text="@string/group_name"
         android:textColor="@color/green"
@@ -170,10 +170,32 @@
         android:background="@android:color/white"
         android:gravity="center"
         android:text="@string/or"
+        android:textColor="@color/gray"
         android:textSize="20sp"
-        android:textColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
+
+    <ImageButton
+        android:id="@+id/icon_fb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="130dp"
+        android:background="@color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/or"
+        app:srcCompat="@drawable/icons8_fb" />
+
+    <ImageButton
+        android:id="@+id/icon_google"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/or"
+        app:srcCompat="@drawable/icons8_google" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
