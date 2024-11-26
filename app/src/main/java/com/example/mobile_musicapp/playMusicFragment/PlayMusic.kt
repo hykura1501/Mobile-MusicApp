@@ -1,4 +1,5 @@
 package com.example.mobile_musicapp.playMusicFragment
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.SeekBar
+import android.widget.TextView
 import com.example.mobile_musicapp.R
+import kotlin.text.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,6 +34,8 @@ class PlayMusic : Fragment() {
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
     private lateinit var seekBar: SeekBar
+    private lateinit var currentTime: TextView
+    private lateinit var totalTime: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,19 +72,27 @@ class PlayMusic : Fragment() {
             }
     }
 
+    @SuppressLint("DefaultLocale")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // Kết nối giao diện
         playButton = view.findViewById<ImageButton>(R.id.playButton) as ImageButton
         seekBar = view.findViewById<SeekBar>(R.id.seekBar) as SeekBar
+        currentTime = view.findViewById<TextView>(R.id.currentTime) as TextView
+        totalTime = view.findViewById<TextView>(R.id.totalTime) as TextView
 
         // Khởi tạo MediaPlayer với file nhạc trong res/raw
         mediaPlayer = MediaPlayer.create(requireContext(), R.raw.forget_me_now_7085475)
+        seekBar.isEnabled = false // chặn người dùng thay đổi thời gian
 
         // Cập nhật SeekBar theo thời gian phát nhạc
         mediaPlayer?.setOnPreparedListener {
             seekBar.max = it.duration
+            val minutes = (it.duration / 1000) / 60
+            val seconds = (it.duration / 1000) % 60
+            val time = String.format("%02d:%02d", minutes, seconds)
+            totalTime.text = time
         }
 
         mediaPlayer?.setOnCompletionListener {
@@ -98,9 +111,18 @@ class PlayMusic : Fragment() {
         // Cập nhật SeekBar theo thời gian
         val handler = Handler(Looper.getMainLooper())
         handler.post(object : Runnable {
+            @SuppressLint("DefaultLocale")
             override fun run() {
                 mediaPlayer?.let {
                     seekBar.progress = it.currentPosition
+
+                    val minutes = (it.currentPosition / 1000) / 60
+                    val seconds = (it.currentPosition / 1000) % 60
+                    val time = String.format("%02d:%02d", minutes, seconds)
+
+                    // Cập nhật TextView với thời gian
+                    currentTime.text = time
+
                     handler.postDelayed(this, 1000)
                 }
             }
