@@ -110,5 +110,9 @@
     <string name="enter_your_password">"Enter your password"</string>
     <string name="recovery_password">"Recovery password"</string>
     <string name="button_back">"button back"</string>
-    <string name="or">Or"</string>
+    <string name="or">"Or"</string>
+    <string name="gg">"gg"</string>
+    <string name="fb">"fb"</string>
+    <string name="not_a_member">"Not a member?"</string>
+    <string name="register_now">"Register now"</string>
 </resources>
