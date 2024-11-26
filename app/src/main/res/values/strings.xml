@@ -106,4 +106,9 @@
     <string name="sign_in">"Sign in"</string>
     <string name="if_you_need">"If you need any support?"</string>
     <string name="click_here">"Click here!"</string>
+    <string name="enter_your_email">"Enter your email"</string>
+    <string name="enter_your_password">"Enter your password"</string>
+    <string name="recovery_password">"Recovery password"</string>
+    <string name="button_back">"button back"</string>
+    <string name="or">Or"</string>
 </resources>
