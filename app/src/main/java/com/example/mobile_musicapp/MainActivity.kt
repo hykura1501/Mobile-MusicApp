@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, Ranking())
+                .replace(R.id.fragment_container, PlayMusic())
                 .commit()
         }
     }

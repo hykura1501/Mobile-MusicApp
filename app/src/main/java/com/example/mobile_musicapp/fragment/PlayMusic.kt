@@ -95,9 +95,11 @@ class PlayMusic : Fragment() {
         previousButton = view.findViewById<ImageButton>(R.id.previousButton) as ImageButton
 
         // Khởi tạo MediaPlayer với file nhạc trong res/raw
-        song = SongModel(id = "1", title = "Forget Me Now", artist = "Fishy, Trí Dũng", duration = 210, url = "http://example.com/song1")
-        dao.openSong(song)
-        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.forget_me_now)
+        song = SongModel(id = "1", title = "Forget Me Now", artist = "Fishy, Trí Dũng", duration = 210, url = "https://res.cloudinary.com/dw0acvowr/video/upload/v1733047809/mp3/qavybvjdbthflfcz2se5.mp3")
+        mediaPlayer?.setDataSource(song.url)
+        mediaPlayer?.prepareAsync() // Prepares the player asynchronously
+
+//        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.forget_me_now)
         seekBar.isEnabled = false // chặn người dùng thay đổi thời gian
 
         mediaPlayer?.setOnCompletionListener {
@@ -144,6 +146,7 @@ class PlayMusic : Fragment() {
 
     @SuppressLint("DefaultLocale")
     private fun playMusic() {
+
         mediaPlayer?.start()
         playButton.setImageResource(R.drawable.ic_pause_black)
         isPlaying = true
