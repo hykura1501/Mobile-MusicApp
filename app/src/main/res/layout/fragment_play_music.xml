@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:backgroundTint="@color/white"
     android:foregroundTint="@color/white"
-    tools:context=".playMusicFragment.PlayMusic">
+    tools:context=".fragment.PlayMusic">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -24,14 +24,15 @@
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
         <ImageButton
             android:id="@+id/minimizeButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/play_button"
+            android:contentDescription="@string/minimizeButton"
             android:src="@drawable/ic_minimize"
             app:layout_constraintBottom_toBottomOf="@+id/playlist"
             app:layout_constraintStart_toStartOf="@+id/song_image"
@@ -43,7 +44,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/play_button"
+            android:contentDescription="@string/moreOptionsButton"
             android:src="@drawable/ic_more_options"
             app:layout_constraintBottom_toBottomOf="@+id/playlist"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
@@ -66,7 +67,7 @@
                 android:layout_height="match_parent"
 
                 android:background="@drawable/rounded_background"
-                android:contentDescription="@string/song_image_description"
+                android:contentDescription="@string/songImageDescription"
                 android:src="@drawable/forget_me_now"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +85,8 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/song_image"
-            app:layout_constraintTop_toBottomOf="@+id/song_image" />
+            app:layout_constraintTop_toBottomOf="@+id/song_image"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/author"
@@ -95,14 +97,15 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@id/songName"
-            app:layout_constraintTop_toBottomOf="@id/songName" />
+            app:layout_constraintTop_toBottomOf="@id/songName"
+            tools:ignore="HardcodedText" />
 
         <ImageButton
             android:id="@+id/addToPlayListButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/play_button"
+            android:contentDescription="@string/addToPlayListButton"
             android:src="@drawable/ic_add_to_playlist"
             app:layout_constraintBottom_toBottomOf="@+id/author"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
@@ -128,7 +131,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/play_button"
+            android:contentDescription="@string/previousSongButton"
             android:src="@drawable/ic_previous_music"
             app:layout_constraintBottom_toBottomOf="@+id/playButton"
             app:layout_constraintEnd_toStartOf="@+id/playButton"
@@ -142,20 +145,20 @@
             android:layout_height="60dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/circle_button"
-            android:contentDescription="@string/play_button"
+            android:contentDescription="@string/playButton"
             android:padding="16dp"
             android:src="@drawable/ic_play_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currentTime"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,RedundantDescriptionCheck" />
 
         <ImageButton
             android:id="@+id/nextButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/play_button"
+            android:contentDescription="@string/nextSongButton"
             android:src="@drawable/ic_next_music"
             app:layout_constraintBottom_toBottomOf="@+id/playButton"
             app:layout_constraintEnd_toStartOf="@+id/sleepTimerButton"
@@ -168,7 +171,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/play_button"
+            android:contentDescription="@string/shuffleButton"
             android:src="@drawable/ic_shuffle"
             app:layout_constraintBottom_toBottomOf="@+id/previousButton"
             app:layout_constraintStart_toStartOf="@+id/song_image"
@@ -180,7 +183,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/play_button"
+            android:contentDescription="@string/sleepTimerButton"
             android:src="@drawable/ic_sleep_timer"
             app:layout_constraintBottom_toBottomOf="@+id/nextButton"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
@@ -192,7 +195,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="0:00"
+            android:text="@string/startTime"
             android:textColor="@color/light_gray"
             app:layout_constraintStart_toStartOf="@+id/shuffleButton"
             app:layout_constraintTop_toBottomOf="@+id/seekBar" />
@@ -201,7 +204,6 @@
             android:id="@+id/totalTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3:00"
             android:textColor="@color/light_gray"
             app:layout_constraintEnd_toEndOf="@+id/sleepTimerButton"
             app:layout_constraintTop_toTopOf="@+id/currentTime" />

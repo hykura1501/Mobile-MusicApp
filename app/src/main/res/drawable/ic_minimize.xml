@@ -8,7 +8,7 @@
         android:viewportHeight="24">
 
     <path
-        android:fillColor="transparent"
+        android:fillColor="@color/transparent"
         android:strokeWidth="2"
         android:strokeColor="@color/white"
         android:pathData="M3,10 L12,18 L21,10" />
@@ -23,7 +23,7 @@
         android:viewportHeight="24">
 
         <path
-            android:fillColor="transparent"
+            android:fillColor="@color/transparent"
             android:strokeWidth="2"
             android:strokeColor="@color/selected"
             android:pathData="M3,10 L12,18 L21,10" />
