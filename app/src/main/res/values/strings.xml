@@ -12,6 +12,8 @@
     <string name="addToPlayListButton">Add to playlist</string>
     <string name="shuffleButton">Shuffle</string>
     <string name="sleepTimerButton">Sleep timer</string>
+    <string name="shareButton">Share</string>
+    <string name="favouriteButton">Favourite</string>
     <string name="startTime">00:00</string>
 
     <string name="backButton">Back</string>
