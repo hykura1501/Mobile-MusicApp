@@ -8,7 +8,7 @@ class RandomHelper {
         return (min..max).random()
     }
 
-    fun getRandomSong() : Song {
+    fun getRandomSong()  {
 
     }
 }

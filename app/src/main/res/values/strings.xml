@@ -9,7 +9,7 @@
     <string name="nextSongButton">Next song</string>
     <string name="minimizeButton">Minimize</string>
     <string name="moreOptionsButton">More options</string>
-    <string name="addToPlayListButton">Add to playlist</string>
+    <string name="addToFavoritesButton">Add to favorites</string>
     <string name="shuffleButton">Shuffle</string>
     <string name="sleepTimerButton">Sleep timer</string>
     <string name="startTime">00:00</string>

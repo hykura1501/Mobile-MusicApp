@@ -5,5 +5,5 @@ import com.example.mobile_musicapp.models.Song
 
 interface IDao {
     fun openSong(song: Song) : String
-    fun openPlaylist(id : String) : Playlist
+    fun openPlaylist(id : String) : MutableList<Song>
 }

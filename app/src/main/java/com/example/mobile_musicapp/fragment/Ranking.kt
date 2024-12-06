@@ -70,21 +70,21 @@ class Ranking : Fragment() {
 
         // This code is use to test UI
 
-        newReleaseRecyclerView = view.findViewById(R.id.newReleaseRecyclerView)
-        adapter = SongAdapter(MockDao().openPlaylist("playlist").songs)
-        newReleaseRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-        newReleaseRecyclerView.adapter = adapter
-        adapter.onItemClick = { song ->
-            val fragmentManager = parentFragmentManager // Hoặc requireActivity().supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-
-            // Thay thế fragment hiện tại bằng fragment mới
-            fragmentTransaction.replace(R.id.fragment_container, PlayMusic())
-            // Thêm vào backstack (tuỳ chọn nếu bạn muốn quay lại fragment trước đó)
-            fragmentTransaction.addToBackStack(null)
-            // Áp dụng thay đổi
-            fragmentTransaction.commit()
-        }
+//        newReleaseRecyclerView = view.findViewById(R.id.newReleaseRecyclerView)
+//        adapter = SongAdapter(MockDao().openPlaylist("playlist").songs)
+//        newReleaseRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//
+//        newReleaseRecyclerView.adapter = adapter
+//        adapter.onItemClick = { song ->
+////            val fragmentManager = parentFragmentManager // Hoặc requireActivity().supportFragmentManager
+////            val fragmentTransaction = fragmentManager.beginTransaction()
+//
+//            // Thay thế fragment hiện tại bằng fragment mới
+////            fragmentTransaction.replace(R.id.fragment_container, PlayMusic())
+////            // Thêm vào backstack (tuỳ chọn nếu bạn muốn quay lại fragment trước đó)
+////            fragmentTransaction.addToBackStack(null)
+////            // Áp dụng thay đổi
+////            fragmentTransaction.commit()
+//        }
     }
 }

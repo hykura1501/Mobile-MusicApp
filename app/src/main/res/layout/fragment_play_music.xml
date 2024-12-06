@@ -89,7 +89,7 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/author"
+            android:id="@+id/artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -101,13 +101,13 @@
             tools:ignore="HardcodedText" />
 
         <ImageButton
-            android:id="@+id/addToPlayListButton"
+            android:id="@+id/addToFavoritesButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/addToPlayListButton"
+            android:contentDescription="@string/addToFavoritesButton"
             android:src="@drawable/ic_add_to_playlist"
-            app:layout_constraintBottom_toBottomOf="@+id/author"
+            app:layout_constraintBottom_toBottomOf="@+id/artist"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/songName"
             tools:ignore="TouchTargetSizeCheck" />
@@ -124,7 +124,7 @@
             android:thumbTint="@color/white"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
             app:layout_constraintStart_toStartOf="@+id/song_image"
-            app:layout_constraintTop_toBottomOf="@+id/author" />
+            app:layout_constraintTop_toBottomOf="@+id/artist" />
 
         <ImageButton
             android:id="@+id/previousButton"
