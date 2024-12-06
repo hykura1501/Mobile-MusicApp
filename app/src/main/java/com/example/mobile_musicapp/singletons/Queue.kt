@@ -1,10 +1,13 @@
 package com.example.mobile_musicapp.singletons
 
+import com.example.mobile_musicapp.helpers.RandomHelper
 import com.example.mobile_musicapp.models.Song
+
+val RandomHelper = RandomHelper()
 
 object Queue {
     var songs = mutableListOf<Song>()
-    private val playedSongs = mutableListOf<Song>()
+    private val playedSongs = mutableListOf<Int>()
     private var currentSongIndex = 0
     private var shuffle = false
     
@@ -22,6 +25,7 @@ object Queue {
     
     fun clearPlaylist() {
         songs.clear()
+        playedSongs.clear()
     }
     
     fun getCurrentSong(): Song? {
@@ -31,13 +35,24 @@ object Queue {
 
     fun nextSong() {
         if (songs.isNotEmpty()) {
-            currentSongIndex = (currentSongIndex + 1) % songs.size
+            playedSongs.add(currentSongIndex)
+            currentSongIndex =
+            if (shuffle) {
+                RandomHelper.getRandomSongIndex(playedSongs, songs.size - 1)
+            } else {
+                (currentSongIndex + 1) % songs.size
+            }
         }
     }
 
     fun previousSong() {
         if (songs.isNotEmpty()) {
-            currentSongIndex = (currentSongIndex - 1 + songs.size) % songs.size
+            currentSongIndex =
+            if (shuffle) {
+                playedSongs.last()
+            } else {
+                (currentSongIndex - 1) % songs.size
+            }
         }
     }
 }
