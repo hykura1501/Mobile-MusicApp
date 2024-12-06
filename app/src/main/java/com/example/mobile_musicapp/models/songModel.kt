@@ -1,6 +1,6 @@
 package com.example.mobile_musicapp.models
 
-data class SongModel(
+data class Song(
     val id: String,
     val title: String,
     val artist: String,

@@ -4,15 +4,15 @@ data class Playlist(
     val id: String,
     val name: String,
     val description: String? = null,
-    val songs: MutableList<SongModel> = mutableListOf(),
+    val songs: MutableList<Song> = mutableListOf(),
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )
 
 fun main() {
 
-    val song1 = SongModel(id = "1", title = "Forget Me Now", artist = "Fishy, Trí Dũng", duration = 210, url = "http://example.com/song1")
-    val song2 = SongModel(id = "2", title = "Nơi này có anh", artist = "Sơn Tùng MTP", duration = 210, url = "http://example.com/song2")
+    val song1 = Song(id = "1", title = "Forget Me Now", artist = "Fishy, Trí Dũng", duration = 210, url = "http://example.com/song1")
+    val song2 = Song(id = "2", title = "Nơi này có anh", artist = "Sơn Tùng MTP", duration = 210, url = "http://example.com/song2")
 
     // Tạo playlist
     val playlist = Playlist(

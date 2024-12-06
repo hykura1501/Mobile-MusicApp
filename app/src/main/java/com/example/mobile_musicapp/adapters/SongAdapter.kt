@@ -8,12 +8,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
-import com.example.mobile_musicapp.models.SongModel
+import com.example.mobile_musicapp.models.Song
 
 
-class SongAdapter(private val songs : List<SongModel>) : RecyclerView.Adapter<SongAdapter.ViewHolder>() {
+class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAdapter.ViewHolder>() {
 
-    var onItemClick: ((SongModel) -> Unit)? = null
+    var onItemClick: ((Song) -> Unit)? = null
 
     inner class ViewHolder(listItemView: View) : RecyclerView.ViewHolder(listItemView) {
         val songNameTextView: TextView = listItemView.findViewById(R.id.songNameTextView)
@@ -39,7 +39,7 @@ class SongAdapter(private val songs : List<SongModel>) : RecyclerView.Adapter<So
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Get the data model based on position
-        val song: SongModel = songs[position]
+        val song: Song = songs[position]
         // Set item views based on your views and data model
         val songNameTextView = holder.songNameTextView
         songNameTextView.text = song.title

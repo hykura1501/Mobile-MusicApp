@@ -12,8 +12,8 @@ import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
 import com.example.mobile_musicapp.R
-import com.example.mobile_musicapp.models.SongModel
-import com.example.mobile_musicapp.services.CurrentPlaylist
+import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.services.MockDao
 import com.example.mobile_musicapp.services.IDao
 import kotlin.text.*
@@ -43,7 +43,7 @@ class PlayMusic : Fragment() {
     private lateinit var seekBar: SeekBar
     private lateinit var currentTime: TextView
     private lateinit var totalTime: TextView
-    private lateinit var song: SongModel
+    private lateinit var song: Song
 
     private var dao : IDao = MockDao()
 
@@ -95,7 +95,7 @@ class PlayMusic : Fragment() {
         previousButton = view.findViewById<ImageButton>(R.id.previousButton) as ImageButton
 
         // Khởi tạo MediaPlayer với file nhạc trong res/raw
-        song = SongModel(id = "1", title = "Forget Me Now", artist = "Fishy, Trí Dũng", duration = 210, url = "https://res.cloudinary.com/dw0acvowr/video/upload/v1733047809/mp3/qavybvjdbthflfcz2se5.mp3")
+        song = Song(id = "1", title = "Forget Me Now", artist = "Fishy, Trí Dũng", duration = 210, url = "https://res.cloudinary.com/dw0acvowr/video/upload/v1733047809/mp3/qavybvjdbthflfcz2se5.mp3")
         mediaPlayer?.setDataSource(song.url)
         mediaPlayer?.prepareAsync() // Prepares the player asynchronously
 
@@ -118,7 +118,7 @@ class PlayMusic : Fragment() {
         nextButton.setOnClickListener {
             pauseMusic()
             mediaPlayer?.reset()
-            CurrentPlaylist.nextSong()
+            Queue.nextSong()
             dao.openSong(song)
             //mediaPlayer = MediaPlayer.create(requireContext(), R.raw.forget_me_now)
 
@@ -127,13 +127,13 @@ class PlayMusic : Fragment() {
         previousButton.setOnClickListener {
             pauseMusic()
             mediaPlayer?.reset()
-            CurrentPlaylist.previousSong()
+            Queue.previousSong()
             dao.openSong(song)
             //mediaPlayer = MediaPlayer.create(requireContext(), R.raw.forget_me_now)
         }
     }
 
-    private fun prepareMusic(song : SongModel) {
+    private fun prepareMusic(song : Song) {
         //val filename = dao.openSong(song)
         //val songFile = File(context.cacheDir, fileName)
 

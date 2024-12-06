@@ -1,24 +1,24 @@
-package com.example.mobile_musicapp.services
+package com.example.mobile_musicapp.singletons
 
-import com.example.mobile_musicapp.models.SongModel
+import com.example.mobile_musicapp.models.Song
 
-public object CurrentPlaylist {
+public object Queue {
     // Danh sách bài hát hiện tại
-    private val playlist = mutableListOf<SongModel>()
+    private val playlist = mutableListOf<Song>()
     private var currentSongIndex = 0
 
     // Thêm bài hát vào danh sách phát
-    fun addSongModel(song: SongModel) {
+    fun addSongModel(song: Song) {
         playlist.add(song)
     }
 
     // Xóa bài hát khỏi danh sách phát
-    fun removeSongModel(song: SongModel) {
+    fun removeSongModel(song: Song) {
         playlist.remove(song)
     }
 
     // Lấy toàn bộ danh sách phát
-    fun getPlaylist(): List<SongModel> {
+    fun getPlaylist(): List<Song> {
         return playlist.toList() // Trả về bản sao bất biến của danh sách
     }
 
@@ -28,7 +28,7 @@ public object CurrentPlaylist {
     }
 
     // Lấy bài hát hiện tại (nếu có)
-    fun getCurrentSong(): SongModel? {
+    fun getCurrentSong(): Song? {
         return if (playlist.isNotEmpty()) playlist[currentSongIndex] else null
     }
 
