@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_background">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/playlistHeader"
+                android:background="@drawable/gradient_background_playlist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/backButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/backButton"
+                    android:src="@drawable/ic_back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/playlistTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Liked Songs"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/backButton"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/quantitySongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="30 songs"
+                    android:textColor="@color/gray"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="@+id/playlistTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/playlistTitle"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="HardcodedText,TextContrastCheck" />
+
+                <ImageButton
+                    android:id="@+id/playButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="32dp"
+                    android:background="@drawable/circle_button"
+                    android:backgroundTint="@color/green"
+                    android:contentDescription="@string/playButton"
+                    android:src="@drawable/ic_play_black"
+                    app:layout_constraintBottom_toBottomOf="@+id/quantitySongs"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/playlistTitle" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/playlistRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/playlistHeader" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            layout="@layout/player_bar"
+            android:id="@+id/playerBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
+</layout>

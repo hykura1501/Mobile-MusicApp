@@ -7,19 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.services.MockDao
+import com.example.mobile_musicapp.viewModels.ShareViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [NewPlaylist.newInstance] factory method to
- * create an instance of this fragment.
- */
+
+@Suppress("RemoveExplicitTypeArguments")
 class NewPlaylist : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -54,7 +54,18 @@ class NewPlaylist : Fragment() {
         }
 
         createButton.setOnClickListener{
-            findNavController().navigate(R.id.libraryFragment)
+
+            val playlistTitle = playlistTitle.text.toString()
+
+            val playlist = MockDao().getSamplePlaylist()
+            playlist.name = playlistTitle
+
+            val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+            sharedViewModel.add(playlist)
+
+            val navController = findNavController()
+            navController.navigate(R.id.action_newPlaylist_to_library)
+
         }
     }
 

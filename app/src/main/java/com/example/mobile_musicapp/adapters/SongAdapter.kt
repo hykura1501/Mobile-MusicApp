@@ -15,9 +15,9 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
 
     var onItemClick: ((Song) -> Unit)? = null
 
-    inner class ViewHolder(listItemView: View) : RecyclerView.ViewHolder(listItemView) {
-        val songNameTextView: TextView = listItemView.findViewById(R.id.songNameTextView)
-        val songImageView: ImageView = listItemView.findViewById(R.id.songImageView)
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val songName: TextView = view.findViewById(R.id.songNameTextView)
+        val songThumbnail: ImageView = view.findViewById(R.id.songImageView)
 
         init {
             itemView.setOnClickListener {
@@ -32,7 +32,7 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : SongAdapter.ViewHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
-        val contactView = inflater.inflate(R.layout.song_item_horizontal_layout, parent, false)
+        val contactView = inflater.inflate(R.layout.song_item_vertical_layout, parent, false)
         return ViewHolder(contactView)
     }
 
@@ -41,11 +41,11 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
         // Get the data model based on position
         val song: Song = songs[position]
         // Set item views based on your views and data model
-        val songNameTextView = holder.songNameTextView
+        val songNameTextView = holder.songName
         songNameTextView.text = song.title
-        val songImageView = holder.songImageView
+        val songThumbnailView = holder.songThumbnail
         val imageResId = R.drawable.song
-        songImageView.setImageResource(imageResId)
+        songThumbnailView.setImageResource(imageResId)
     }
 
     override fun getItemCount(): Int = songs.size

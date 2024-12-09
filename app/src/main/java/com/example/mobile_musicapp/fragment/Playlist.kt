@@ -6,14 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
-import com.example.mobile_musicapp.adapters.PlaylistAdapter
-import com.example.mobile_musicapp.models.Playlist
-import com.example.mobile_musicapp.services.MockDao
+import com.example.mobile_musicapp.adapters.SongAdapter
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -23,16 +22,18 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [Library.newInstance] factory method to
+ * Use the [Playlist.newInstance] factory method to
  * create an instance of this fragment.
  */
-@Suppress("RemoveExplicitTypeArguments")
-class Library : Fragment() {
+class Playlist : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var createPlaylistButton: ImageButton
+    private lateinit var backButton: ImageButton
+    private lateinit var playlistTitle: TextView
+    private lateinit var quantitySongs: TextView
+    private lateinit var playButton: ImageButton
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +49,7 @@ class Library : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_library, container, false)
+        return inflater.inflate(R.layout.fragment_playlist, container, false)
     }
 
     companion object {
@@ -58,12 +59,12 @@ class Library : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment Library.
+         * @return A new instance of fragment Playlist.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            Library().apply {
+            Playlist().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
@@ -73,42 +74,42 @@ class Library : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         connectUI(view)
 
-        // Get sample playlists
-        val playlists = MockDao().getSamplePlaylists()
+        var playlist : com.example.mobile_musicapp.models.Playlist
 
-        // Get new playlist from view model
         val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-        sharedViewModel.shareDataPlaylist.observe(viewLifecycleOwner) { updatedPlaylists ->
-            playlists.addAll(updatedPlaylists)
+        sharedViewModel.selectedPlaylist.observe(viewLifecycleOwner) { selectedPlaylist ->
+            selectedPlaylist?.let {
+                playlist = it
+                setupRecyclerView(playlist)
+            }
         }
 
-        // Set up recycler view
-        setupRecyclerView(playlists)
-
-        createPlaylistButton.setOnClickListener {
-            val navController = findNavController()
-            navController.navigate(R.id.action_library_to_newPlaylist)
+        backButton.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
-    private fun setupRecyclerView(playlists: MutableList<Playlist>) {
+    private fun setupRecyclerView(playlist: com.example.mobile_musicapp.models.Playlist) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = PlaylistAdapter(playlists)
+        val adapter = SongAdapter(playlist.songs)
         recyclerView.adapter = adapter
 
-        adapter.onItemClick = { playlist ->
-            val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-            sharedViewModel.selectedPlaylist.value = playlist
+        adapter.onItemClick = {
             val navController = findNavController()
             navController.navigate(R.id.action_library_to_playlist)
         }
+
+        playlistTitle.text = playlist.name
+        "${playlist.songs.size} songs".also { quantitySongs.text = it }
     }
 
     private fun connectUI(view: View) {
-        createPlaylistButton = view.findViewById<ImageButton>(R.id.createPlaylistButton)!!
+        backButton = view.findViewById(R.id.backButton)
+        playlistTitle = view.findViewById(R.id.playlistTitle)
+        quantitySongs = view.findViewById(R.id.quantitySongs)
+        playButton = view.findViewById(R.id.playButton)
         recyclerView = view.findViewById(R.id.playlistRecyclerView)
     }
 }

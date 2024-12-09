@@ -89,7 +89,7 @@ class PlayMusic : Fragment() {
 
         // Kết nối giao diện
         val mockDao = MockDao()
-        Queue.songs = mockDao.openPlaylist("1")
+        Queue.songs = mockDao.getSampleSongList()
 
         connectUI(view)
         prepareMusic()
