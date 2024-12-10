@@ -45,7 +45,7 @@ class OptionAdapter(private val options : List<Option>) : RecyclerView.Adapter<O
         optionName.text = option.title
 
         val actionIcon = holder.optionIcon
-        val imageResId = Option.getIconResId(option.name)
+        val imageResId = option.iconResId
         actionIcon.setImageResource(imageResId)
     }
 

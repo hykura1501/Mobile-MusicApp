@@ -20,7 +20,7 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
         val songName: TextView = view.findViewById(R.id.songNameTextView)
         val songThumbnail: ImageView = view.findViewById(R.id.songImageView)
         val songArtist: TextView = view.findViewById(R.id.artistNameTextView)
-        val moreOptionsButton: ImageView = view.findViewById(R.id.moreOptionsButton)
+        private val optionsButton: ImageView = view.findViewById(R.id.optionsButton)
 
         init {
             itemView.setOnClickListener {
@@ -29,7 +29,7 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
                     onItemClick?.invoke(songs[position])
                 }
             }
-            moreOptionsButton.setOnClickListener {
+            optionsButton.setOnClickListener {
                 onOptionClick?.invoke(songs[adapterPosition])
             }
         }

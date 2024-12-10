@@ -4,9 +4,9 @@ import com.example.mobile_musicapp.R
 
 enum class Option(val title: String, val iconResId: Int) {
     ADD_TO_PLAYLIST("Add to Playlist", R.drawable.ic_add_to_playlist),
-//    HIDE_THIS_SONG("Hide This Song", R.drawable.ic_hide),
-//    GO_TO_ARTIST("Go to Artist", R.drawable.ic_artist),
-//    DELETE_SONG("Delete Song", R.drawable.ic_delete),
+    REMOVE_FROM_PLAYLIST("Remove from Playlist", R.drawable.ic_remove_from_playlist),
+    DELETE_PLAYLIST("Delete Playlist", R.drawable.ic_remove_playlist),
+    DOWNLOAD("Download", R.drawable.ic_download),
     SHARE("Share", R.drawable.ic_share);
 
     companion object {

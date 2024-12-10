@@ -6,16 +6,13 @@ import com.example.mobile_musicapp.models.Playlist
 
 class ShareViewModel : ViewModel() {
     // library - new playlist
-    private val _shareDataPlaylist = MutableLiveData<MutableList<Playlist>>(mutableListOf())
-    val shareDataPlaylist: MutableLiveData<MutableList<Playlist>> get() = _shareDataPlaylist
-    fun add(playlist: Playlist) {
-        _shareDataPlaylist.value?.apply {
-            add(playlist)
-            _shareDataPlaylist.value = this
-        }
-    }
+    val deletedPlaylist = MutableLiveData<Playlist>()
+
+    val addedPlaylist = MutableLiveData<Playlist>()
 
     // library - playlist
     val selectedPlaylist = MutableLiveData<Playlist>()
 
+    // library - bottom sheet dialog fragment
+    val longSelectedPlaylist = MutableLiveData<Playlist>()
 }

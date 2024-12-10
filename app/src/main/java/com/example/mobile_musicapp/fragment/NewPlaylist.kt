@@ -59,13 +59,13 @@ class NewPlaylist : Fragment() {
 
             val playlist = MockDao().getSamplePlaylist()
             playlist.name = playlistTitle
+            // TODO create new playlist in database
 
             val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-            sharedViewModel.add(playlist)
+            sharedViewModel.addedPlaylist.value = playlist
 
             val navController = findNavController()
             navController.navigate(R.id.action_newPlaylist_to_library)
-
         }
     }
 

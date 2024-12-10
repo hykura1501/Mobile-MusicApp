@@ -49,7 +49,7 @@
         app:layout_constraintStart_toEndOf="@+id/songImageView" />
 
     <ImageButton
-        android:id="@+id/moreOptionsButton"
+        android:id="@+id/optionsButton"
         android:layout_width="48dp"
         android:layout_height="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
