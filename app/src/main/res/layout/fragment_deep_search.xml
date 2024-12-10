@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/dark_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/dark_gray"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/backButton"
+                    android:src="@drawable/ic_back"
+                    tools:ignore="TouchTargetSizeCheck,RedundantDescriptionCheck" />
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/rounded_searchview"
+                    android:iconifiedByDefault="false"
+                    android:queryHint="@string/searchBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/dark_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RadioGroup
+                    android:id="@+id/categoryRadioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="24dp"
+                    android:padding="16dp">
+
+                    <RadioButton
+                        android:id="@+id/songCategoryRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/search_radio_button"
+                        android:text="@string/songCategory"
+                        android:textColor="@color/white"
+                        android:button="@null"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        tools:ignore="ButtonStyle" />
+
+                    <RadioButton
+                        android:id="@+id/artistCategoryRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/search_radio_button"
+                        android:text="@string/artistCategory"
+                        android:textColor="@color/white"
+                        android:button="@null"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        tools:ignore="ButtonStyle" />
+
+                    <RadioButton
+                        android:id="@+id/playlistCategoryRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/search_radio_button"
+                        android:text="@string/playlistCategory"
+                        android:textColor="@color/white"
+                        android:button="@null"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        tools:ignore="ButtonStyle" />
+
+                </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/topArtistRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="80dp"
+            android:orientation="vertical" />
+    </LinearLayout>
+
+    <include
+        layout="@layout/player_bar"
+        android:id="@+id/playerBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
+</FrameLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:state_pressed="false">
+    <vector
+        android:width="32dp"
+        android:height="32dp"
+        android:viewportWidth="24"
+        android:viewportHeight="24">
+
+    <path
+        android:fillColor="@color/transparent"
+        android:strokeWidth="2"
+        android:strokeColor="@color/white"
+        android:pathData="M3,10 L12,18 L21,10" />
+    </vector>
+</item>
+
+<item android:state_pressed="true">
+    <vector
+        android:width="32dp"
+        android:height="32dp"
+        android:viewportWidth="24"
+        android:viewportHeight="24">
+
+        <path
+            android:fillColor="@color/transparent"
+            android:strokeWidth="2"
+            android:strokeColor="@color/selected"
+            android:pathData="M3,10 L12,18 L21,10" />
+    </vector>
+
+</item>
+</selector>
