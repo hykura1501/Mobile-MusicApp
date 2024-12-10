@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -104,6 +105,10 @@ class Library : Fragment() {
             sharedViewModel.selectedPlaylist.value = playlist
             val navController = findNavController()
             navController.navigate(R.id.action_library_to_playlist)
+        }
+
+        adapter.onItemLongClick = { selectedItem ->
+            Toast.makeText(context, "Long clicked: $selectedItem", Toast.LENGTH_SHORT).show()
         }
     }
 

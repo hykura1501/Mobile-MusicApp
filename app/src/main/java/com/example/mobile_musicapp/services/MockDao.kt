@@ -54,7 +54,15 @@ class MockDao {
             songs = mutableListOf(song1, song2, song3)
         )
 
-        val playlists = mutableListOf(playlist1, playlist2, playlist3)
+        val playlist4 = Playlist(
+            id = "playlist4",
+            name = "My indie songs",
+            description = "A collection of rock songs",
+            songs = mutableListOf(song1, song2, song3)
+        )
+
+
+        val playlists = mutableListOf(playlist1, playlist2, playlist3, playlist4, playlist1, playlist2, playlist3, playlist4, playlist1, playlist2, playlist3, playlist4)
         return playlists
     }
 }

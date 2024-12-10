@@ -14,10 +14,13 @@ import com.example.mobile_musicapp.models.Song
 class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAdapter.ViewHolder>() {
 
     var onItemClick: ((Song) -> Unit)? = null
+    var onOptionClick: ((Song) -> Unit)? = null
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val songName: TextView = view.findViewById(R.id.songNameTextView)
         val songThumbnail: ImageView = view.findViewById(R.id.songImageView)
+        val songArtist: TextView = view.findViewById(R.id.artistNameTextView)
+        val moreOptionsButton: ImageView = view.findViewById(R.id.moreOptionsButton)
 
         init {
             itemView.setOnClickListener {
@@ -25,6 +28,9 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
                 if (position != RecyclerView.NO_POSITION) {
                     onItemClick?.invoke(songs[position])
                 }
+            }
+            moreOptionsButton.setOnClickListener {
+                onOptionClick?.invoke(songs[adapterPosition])
             }
         }
     }
@@ -43,6 +49,8 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
         // Set item views based on your views and data model
         val songNameTextView = holder.songName
         songNameTextView.text = song.title
+        val songArtistTextView = holder.songArtist
+        songArtistTextView.text = song.artist
         val songThumbnailView = holder.songThumbnail
         val imageResId = R.drawable.song
         songThumbnailView.setImageResource(imageResId)

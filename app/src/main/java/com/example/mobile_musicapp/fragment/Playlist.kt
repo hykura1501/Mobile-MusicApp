@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.SongAdapter
+import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -20,11 +21,6 @@ import com.example.mobile_musicapp.viewModels.ShareViewModel
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [Playlist.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Playlist : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -52,26 +48,6 @@ class Playlist : Fragment() {
         return inflater.inflate(R.layout.fragment_playlist, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Playlist.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Playlist().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         connectUI(view)
@@ -97,8 +73,16 @@ class Playlist : Fragment() {
         recyclerView.adapter = adapter
 
         adapter.onItemClick = {
-            val navController = findNavController()
-            navController.navigate(R.id.action_library_to_playlist)
+            // TODO play song
+        }
+
+        adapter.onOptionClick = { selectedItem ->
+            val options = listOf(
+                Option.ADD_TO_PLAYLIST.title,
+                Option.SHARE.title
+            )
+            val actionDialogFragment = MenuOptionFragment.newInstance(options)
+            actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
         }
 
         playlistTitle.text = playlist.name

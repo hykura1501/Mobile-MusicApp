@@ -12,6 +12,7 @@ import com.example.mobile_musicapp.models.Playlist
 
 class PlaylistAdapter (private val playlists : List<Playlist>) : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     var onItemClick: ((Playlist) -> Unit)? = null
+    var onItemLongClick: ((Playlist) -> Unit)? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val playlistName: TextView = itemView.findViewById(R.id.playlistNameTextView)
@@ -23,6 +24,13 @@ class PlaylistAdapter (private val playlists : List<Playlist>) : RecyclerView.Ad
                 if (position != RecyclerView.NO_POSITION) {
                     onItemClick?.invoke(playlists[position])
                 }
+            }
+        }
+
+        init {
+            itemView.setOnLongClickListener {
+                onItemLongClick?.invoke(playlists[adapterPosition])
+                true
             }
         }
     }
