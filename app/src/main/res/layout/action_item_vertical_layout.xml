@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="24dp"
+    android:background="@color/dark_background"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:id="@+id/optionIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@string/iconDescription"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_add_to_playlist"/>
+
+    <TextView
+        android:id="@+id/optionName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to playlist"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_marginStart="16dp"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>
