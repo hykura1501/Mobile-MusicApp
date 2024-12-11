@@ -1,6 +1,7 @@
 package com.example.mobile_musicapp.services
 import android.content.Context
 import com.example.mobile_musicapp.models.Playlist
+import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -15,6 +16,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 data class ApiResponsePlaylists(
     val code: Int,
@@ -35,6 +37,11 @@ data class DeletePlaylistResponse(
     val message: String
 )
 
+data class ApiResponseSongs(
+    val code: Int,
+    val data: List<Song>
+)
+
 
 interface ApiService {
     @GET("playlist")
@@ -50,6 +57,12 @@ interface ApiService {
     suspend fun createPlaylist(
         @Body playlistRequest: CreatePlaylistRequest
     ): Response<ApiResponsePlaylist>
+
+    @GET("song/new-release")
+    suspend fun getNewReleaseSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
 }
 
 

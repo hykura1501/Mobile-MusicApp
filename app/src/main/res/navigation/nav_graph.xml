@@ -2,7 +2,14 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/library">
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.mobile_musicapp.fragment.HomeFragment"
+        android:label="Home" >
+    </fragment>
+
     <fragment
         android:id="@+id/library"
         android:name="com.example.mobile_musicapp.fragment.Library"
