@@ -46,6 +46,15 @@
     <string name="iconDescription">Icon</string>
     <string name="dashDescription">Dash</string>
 
+    <string name="recommended_songs">Recommended songs</string>
+    <string name="favourite_songs">Favourite songs</string>
+    <string name="suggested_for_you">Suggested for you</string>
+    <string name="recently_played">Recently played</string>
+
+    <string name="song_thumbnail">Song Thumbnail</string>
+    <string name="song_name">Song Name</string>
+    <string name="playlist_cover">Playlist Cover</string>
+    <string name="playlist_title">Playlist Title</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

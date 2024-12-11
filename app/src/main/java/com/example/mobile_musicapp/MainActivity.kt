@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.mobile_musicapp.fragment.HomeFragment
 import com.example.mobile_musicapp.fragment.Library
 import com.example.mobile_musicapp.fragment.PlayMusic
 
@@ -23,9 +24,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, Library())
-                .commit()
+            // No need to replace fragment here as nav_host_fragment will handle it
         }
     }
 
