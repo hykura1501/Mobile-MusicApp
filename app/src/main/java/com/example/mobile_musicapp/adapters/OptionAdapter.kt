@@ -38,15 +38,11 @@ class OptionAdapter(private val options : List<Option>) : RecyclerView.Adapter<O
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // Get the data model based on position
-        val option: Option = options[position]
-        // Set item views based on your views and data model
-        val optionName = holder.optionName
-        optionName.text = option.title
+        val option = options[position]
+        holder.optionName.text = option.title
 
-        val actionIcon = holder.optionIcon
         val imageResId = option.iconResId
-        actionIcon.setImageResource(imageResId)
+        holder.optionIcon.setImageResource(imageResId)
     }
 
     override fun getItemCount(): Int = options.size

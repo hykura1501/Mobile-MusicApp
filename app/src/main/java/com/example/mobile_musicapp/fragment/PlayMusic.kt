@@ -185,7 +185,7 @@ class PlayMusic : Fragment() {
     private fun updateUI() {
         val song = Queue.getCurrentSong()!!
         // TODO update thumbnail
-        artist.text = song.artist
+        artist.text = song.artistName
         songName.text = song.title
 
         mediaPlayer?.let {

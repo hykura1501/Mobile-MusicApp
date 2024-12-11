@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.services.MockDao
+import com.example.mobile_musicapp.services.PlaylistDao
 import com.example.mobile_musicapp.viewModels.ShareViewModel
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,18 +57,10 @@ class NewPlaylist : Fragment() {
         }
 
         createButton.setOnClickListener{
-
             val playlistTitle = playlistTitle.text.toString()
-
-            val playlist = MockDao().getSamplePlaylist()
-            playlist.name = playlistTitle
-            // TODO create new playlist in database
-
             val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-            sharedViewModel.addedPlaylist.value = playlist
-
-            val navController = findNavController()
-            navController.navigate(R.id.action_newPlaylist_to_library)
+            sharedViewModel.addPlaylist(playlistTitle)
+            findNavController().navigateUp()
         }
     }
 

@@ -6,13 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.models.Playlist
 
-class PlaylistAdapter (private val playlists : List<Playlist>) : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
+class PlaylistAdapter : ListAdapter<Playlist, PlaylistAdapter.ViewHolder>(PlaylistDiffCallback()) {
+
     var onItemClick: ((Playlist) -> Unit)? = null
     var onItemLongClick: ((Playlist) -> Unit)? = null
+
+    class PlaylistDiffCallback : DiffUtil.ItemCallback<Playlist>() {
+        override fun areItemsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+            return oldItem.playlistId == newItem.playlistId
+        }
+
+        override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+            return oldItem == newItem
+        }
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val playlistName: TextView = itemView.findViewById(R.id.playlistNameTextView)
@@ -22,20 +35,22 @@ class PlaylistAdapter (private val playlists : List<Playlist>) : RecyclerView.Ad
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    onItemClick?.invoke(playlists[position])
+                    onItemClick?.invoke(getItem(position))
                 }
             }
-        }
 
-        init {
             itemView.setOnLongClickListener {
-                onItemLongClick?.invoke(playlists[adapterPosition])
-                true
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onItemLongClick?.invoke(getItem(position))
+                }
+                false
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : PlaylistAdapter.ViewHolder {
+    // Inflate layout item
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
         val contactView = inflater.inflate(R.layout.playlist_item_vertical_layout, parent, false)
@@ -44,15 +59,12 @@ class PlaylistAdapter (private val playlists : List<Playlist>) : RecyclerView.Ad
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // Get the data model based on position
-        val playlist: Playlist = playlists[position]
-        // Set item views based on your views and data model
-        val playlistNameTextView = holder.playlistName
-        playlistNameTextView.text = playlist.name
-        val playlistImageView = holder.playlistImage
-        val imageResId = R.drawable.song
-        playlistImageView.setImageResource(imageResId)
+        val playlist: Playlist = getItem(position)
+        holder.playlistName.text = playlist.title
+        holder.playlistImage.setImageResource(R.drawable.song)
     }
 
-    override fun getItemCount(): Int = playlists.size
+    override fun getItemCount(): Int {
+        return currentList.size
+    }
 }
