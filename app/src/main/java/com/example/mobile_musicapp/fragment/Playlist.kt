@@ -85,7 +85,7 @@ class Playlist : Fragment() {
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
         }
 
-        playlistTitle.text = playlist.name
+        playlistTitle.text = playlist.title
         "${playlist.songs.size} songs".also { quantitySongs.text = it }
     }
 
