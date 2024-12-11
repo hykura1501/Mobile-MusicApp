@@ -50,7 +50,7 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
         val songNameTextView = holder.songName
         songNameTextView.text = song.title
         val songArtistTextView = holder.songArtist
-        songArtistTextView.text = song.artist
+        songArtistTextView.text = song.artistName
         val songThumbnailView = holder.songThumbnail
         val imageResId = R.drawable.song
         songThumbnailView.setImageResource(imageResId)

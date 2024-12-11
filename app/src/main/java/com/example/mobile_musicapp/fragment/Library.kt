@@ -1,13 +1,15 @@
 package com.example.mobile_musicapp.fragment
 
-import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +18,7 @@ import com.example.mobile_musicapp.adapters.PlaylistAdapter
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.services.MockDao
+import com.example.mobile_musicapp.services.PlaylistDao
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 
 @Suppress("RemoveExplicitTypeArguments")
@@ -34,30 +37,24 @@ class Library : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         connectUI(view)
 
-        // Get sample playlists
-        val playlists = MockDao().getSamplePlaylists()
-
-        // Get new playlist from view model
+        //val playlists = MockDao().getSamplePlaylists()
+        setupRecyclerView()
         val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-        sharedViewModel.addedPlaylist.observe(viewLifecycleOwner) { addedPlaylist ->
-            if (addedPlaylist != null){
-                playlists.add(addedPlaylist)
-                setupRecyclerView(playlists)
+
+        lifecycleScope.launch {
+            try {
+                val fetchedPlaylists = PlaylistDao.getAllPlaylists().toMutableList()
+                sharedViewModel.addAllPlaylists(fetchedPlaylists)
+            } catch (e: Exception) {
+                Log.e("PlaylistFragment", "Error loading playlists", e)
+            }
+
+            sharedViewModel.playlists.observe(viewLifecycleOwner) { updatedPlaylists ->
+                (recyclerView.adapter as? PlaylistAdapter)?.submitList(updatedPlaylists)
             }
         }
-
-        sharedViewModel.deletedPlaylist.observe(viewLifecycleOwner) { deletedPlaylist ->
-            if (deletedPlaylist != null && playlists.contains(deletedPlaylist)) {
-                playlists.remove(deletedPlaylist)
-                setupRecyclerView(playlists)
-            }
-        }
-
-        // Set up recycler view
-        setupRecyclerView(playlists)
 
         createPlaylistButton.setOnClickListener {
             val navController = findNavController()
@@ -65,12 +62,10 @@ class Library : Fragment() {
         }
     }
 
-    private fun setupRecyclerView(playlists: MutableList<Playlist>) {
+    private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = PlaylistAdapter(playlists)
+        val adapter = PlaylistAdapter()
         recyclerView.adapter = adapter
-
-
 
         // Short click
         adapter.onItemClick = { playlist ->
@@ -82,7 +77,6 @@ class Library : Fragment() {
 
         // Long click
         adapter.onItemLongClick = { selectedItem ->
-            // Send data to bottom sheet dialog fragment
             val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
             sharedViewModel.longSelectedPlaylist.value = selectedItem
 
