@@ -12,4 +12,6 @@
     <color name="category_button_checked">#1FDF64</color>
     <color name="blue">#3870B8</color>
     <color name="green">#1ED760</color>
+    <color name="bg_home_fragment">#121212</color>
+
 </resources>
