@@ -11,11 +11,12 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import com.example.mobile_musicapp.R
-import com.example.mobile_musicapp.models.SongModel
-import com.example.mobile_musicapp.services.CurrentPlaylist
 import com.example.mobile_musicapp.services.MockDao
-import com.example.mobile_musicapp.services.IDao
+import com.example.mobile_musicapp.singletons.Favorite
+import com.example.mobile_musicapp.singletons.Queue
+import com.google.android.material.snackbar.Snackbar
 import kotlin.text.*
 
 
@@ -38,14 +39,14 @@ class PlayMusic : Fragment() {
     private lateinit var playButton: ImageButton
     private lateinit var nextButton: ImageButton
     private lateinit var previousButton: ImageButton
+    private lateinit var addToFavoritesButton: ImageButton
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
     private lateinit var seekBar: SeekBar
     private lateinit var currentTime: TextView
     private lateinit var totalTime: TextView
-    private lateinit var song: SongModel
-
-    private var dao : IDao = MockDao()
+    private lateinit var artist: TextView
+    private lateinit var songName: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,71 +88,106 @@ class PlayMusic : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Kết nối giao diện
-        playButton = view.findViewById<ImageButton>(R.id.playButton) as ImageButton
-        seekBar = view.findViewById<SeekBar>(R.id.seekBar) as SeekBar
-        currentTime = view.findViewById<TextView>(R.id.currentTime) as TextView
-        totalTime = view.findViewById<TextView>(R.id.totalTime) as TextView
-        nextButton = view.findViewById<ImageButton>(R.id.nextButton) as ImageButton
-        previousButton = view.findViewById<ImageButton>(R.id.previousButton) as ImageButton
+        val mockDao = MockDao()
+        Queue.songs = mockDao.getSampleSongList()
 
-        // Khởi tạo MediaPlayer với file nhạc trong res/raw
-        song = SongModel(id = "1", title = "Forget Me Now", artist = "Fishy, Trí Dũng", duration = 210, url = "https://res.cloudinary.com/dw0acvowr/video/upload/v1733047809/mp3/qavybvjdbthflfcz2se5.mp3")
-        mediaPlayer?.setDataSource(song.url)
-        mediaPlayer?.prepareAsync() // Prepares the player asynchronously
-
-//        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.forget_me_now)
-        seekBar.isEnabled = false // chặn người dùng thay đổi thời gian
-
-        mediaPlayer?.setOnCompletionListener {
-            isPlaying = false
-        }
+        connectUI(view)
+        prepareMusic()
 
         // Xử lý khi nhấn nút Play/Pause
         playButton.setOnClickListener {
+            isPlaying = !isPlaying
             if (isPlaying) {
-                pauseMusic()
-            } else {
                 playMusic()
+            } else {
+                pauseMusic()
             }
         }
 
         nextButton.setOnClickListener {
-            pauseMusic()
-            mediaPlayer?.reset()
-            CurrentPlaylist.nextSong()
-            dao.openSong(song)
-            //mediaPlayer = MediaPlayer.create(requireContext(), R.raw.forget_me_now)
-
+            nextSong()
         }
 
         previousButton.setOnClickListener {
-            pauseMusic()
-            mediaPlayer?.reset()
-            CurrentPlaylist.previousSong()
-            dao.openSong(song)
-            //mediaPlayer = MediaPlayer.create(requireContext(), R.raw.forget_me_now)
+            previousSong()
+        }
+
+        addToFavoritesButton.setOnClickListener {
+            val song = Queue.getCurrentSong()!!
+            Favorite.addToFavorites(song)
+
+            // Hiển thị thông báo
+            Snackbar.make(view, "Added to Favorites!", Snackbar.LENGTH_SHORT)
+                .setAction("UNDO") {
+                    Favorite.removeFromFavorites(song)
+                    Toast.makeText(context, "Removed from Favorites!", Toast.LENGTH_SHORT).show()
+                }
+                .show()
         }
     }
 
-    private fun prepareMusic(song : SongModel) {
-        //val filename = dao.openSong(song)
-        //val songFile = File(context.cacheDir, fileName)
-
-//        if (songFile.exists()) {
-//            mediaPlayer?.reset()
-//            mediaPlayer?.setDataSource(songFile.absolutePath)
-//            mediaPlayer?.prepare()
-//        }
-    }
-
-    @SuppressLint("DefaultLocale")
-    private fun playMusic() {
-
-        mediaPlayer?.start()
+    private fun prepareMusic() {
+        val song = Queue.getCurrentSong()!!
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer()
+        }
         playButton.setImageResource(R.drawable.ic_pause_black)
         isPlaying = true
 
+        try {
+            mediaPlayer?.reset()
+            mediaPlayer?.setDataSource(song.url)
+            mediaPlayer?.prepareAsync()
+
+            mediaPlayer?.setOnPreparedListener {
+                it.start()
+                updateUI()
+                updateSeekBarAndTime()
+            }
+
+            mediaPlayer?.setOnCompletionListener {
+                nextSong()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+
+    private fun playMusic() {
+        mediaPlayer?.start()
+        playButton.setImageResource(R.drawable.ic_pause_black)
+
         // Thiết lập SeekBar max với duration (tổng thời gian bài hát)
+        updateSeekBarAndTime()
+    }
+
+    private fun pauseMusic() {
+        mediaPlayer?.pause()
+        playButton.setImageResource(R.drawable.ic_play_black)
+    }
+
+    private fun nextSong() {
+        pauseMusic()
+        mediaPlayer?.reset()
+        Queue.nextSong()
+        prepareMusic()
+    }
+
+    private fun previousSong() {
+        pauseMusic()
+        mediaPlayer?.reset()
+        Queue.previousSong()
+        prepareMusic()
+    }
+
+    @SuppressLint("DefaultLocale")
+    private fun updateUI() {
+        val song = Queue.getCurrentSong()!!
+        // TODO update thumbnail
+        artist.text = song.artistName
+        songName.text = song.title
+
         mediaPlayer?.let {
             seekBar.max = it.duration
             val minutes = (it.duration / 1000) / 60
@@ -159,14 +195,15 @@ class PlayMusic : Fragment() {
             val time = String.format("%02d:%02d", minutes, seconds)
             totalTime.text = time
         }
+    }
 
-        // Cập nhật SeekBar theo thời gian phát nhạc
+    private fun updateSeekBarAndTime() {
         val handler = Handler(Looper.getMainLooper())
         handler.post(object : Runnable {
             @SuppressLint("DefaultLocale")
             override fun run() {
                 mediaPlayer?.let {
-                    // Cập nhật tiến trình SeekBar
+                    // Cập nhật SeekBar
                     seekBar.progress = it.currentPosition
 
                     // Cập nhật thời gian hiện tại
@@ -175,7 +212,7 @@ class PlayMusic : Fragment() {
                     val time = String.format("%02d:%02d", minutes, seconds)
                     currentTime.text = time
 
-                    // Lặp lại mỗi giây
+                    // Lặp lại mỗi giây nếu vẫn đang phát
                     if (isPlaying) {
                         handler.postDelayed(this, 1000)
                     }
@@ -184,10 +221,18 @@ class PlayMusic : Fragment() {
         })
     }
 
-    private fun pauseMusic() {
-        mediaPlayer?.pause()
-        playButton.setImageResource(R.drawable.ic_play_black)
-        isPlaying = false
+    private fun connectUI(view: View) {
+        playButton = view.findViewById<ImageButton>(R.id.playButton) as ImageButton
+        seekBar = view.findViewById<SeekBar>(R.id.seekBar) as SeekBar
+        currentTime = view.findViewById<TextView>(R.id.currentTime) as TextView
+        totalTime = view.findViewById<TextView>(R.id.totalTime) as TextView
+        nextButton = view.findViewById<ImageButton>(R.id.nextButton) as ImageButton
+        previousButton = view.findViewById<ImageButton>(R.id.previousButton) as ImageButton
+        addToFavoritesButton = view.findViewById<ImageButton>(R.id.addToFavoritesButton) as ImageButton
+        artist = view.findViewById<TextView>(R.id.artist) as TextView
+        songName = view.findViewById<TextView>(R.id.songName) as TextView
+
+        seekBar.isEnabled = false
     }
 
     override fun onDestroy() {
