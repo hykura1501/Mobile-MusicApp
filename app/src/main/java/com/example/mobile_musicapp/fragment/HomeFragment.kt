@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
 import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.models.Song
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +55,8 @@ class HomeFragment : Fragment() {
                 SongDao.getNewReleaseSongs(page, perPage)
             }
             newReleaseSongsRecyclerView.adapter = SongHorizontalAdapter(newReleaseSongs) { song ->
-                // Handle song item click
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(song)
+                findNavController().navigate(action)
             }
         }
     }
@@ -64,7 +67,8 @@ class HomeFragment : Fragment() {
                 SongDao.getPopularSongs(page, perPage)
             }
             popularSongsRecyclerView.adapter = SongHorizontalAdapter(popularSongs) { song ->
-                // Handle song item click
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(song)
+                findNavController().navigate(action)
             }
         }
     }
