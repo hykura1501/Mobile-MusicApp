@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="false">
+        <vector
+            android:width="32dp"
+            android:height="32dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:fillColor="@color/white"
+                android:pathData="M20,13H4V11H20V13Z M13,20H11V4H13V20Z" />
+        </vector>
+    </item>
+
+    <item android:state_pressed="true">
+        <vector
+            android:width="32dp"
+            android:height="32dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:fillColor="@color/selected"
+                android:pathData="M20,13H4V11H20V13Z M13,20H11V4H13V20Z" />
+        </vector>
+    </item>
+</selector>
