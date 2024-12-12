@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/transparent"
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+    tools:ignore="HardcodedText">
+
+    <ImageView
+        android:id="@+id/songImageView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+
+        android:background="@drawable/rounded_background"
+        android:contentDescription="@string/songImageDescription"
+        android:scaleType="centerCrop"
+        android:src="@drawable/song"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ImageContrastCheck" />
+
+    <TextView
+        android:id="@+id/songNameTextView"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="4dp"
+        android:text="Song name"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/songImageView"
+        app:layout_constraintStart_toStartOf="@+id/songImageView"
+        app:layout_constraintTop_toBottomOf="@+id/songImageView" />
+</androidx.constraintlayout.widget.ConstraintLayout>
