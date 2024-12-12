@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mobile-MusicApp</string>
+    <string name="songImageDescription">Song image</string>
+    <string name="artistImageDescription">Artist image</string>
+    <string name="playlistImageDescription">Playlist image</string>
+
+    <string name="playButton">Play button</string>
+    <string name="previousSongButton">Previous song</string>
+    <string name="nextSongButton">Next song</string>
+    <string name="minimizeButton">Minimize</string>
+    <string name="moreOptionsButton">More options</string>
+    <string name="addToFavoritesButton">Add to favorites</string>
+    <string name="shuffleButton">Shuffle</string>
+    <string name="sleepTimerButton">Sleep timer</string>
+    <string name="startTime">00:00</string>
+
+    <string name="backButton">Back</string>
+    <string name="homeButtonNavigation">Home</string>
+    <string name="searchButtonNavigation">Search</string>
+    <string name="libraryButtonNavigation">Library</string>
+    <string name="profileButtonNavigation">Profile</string>
+    <string name="followButtonContent">Follow</string>
+    <string name="songTitle">Song</string>
+    <string name="descriptionTitle">Description</string>
+
+    <string name="searchTitle">Search</string>
+    <string name="searchBar">What do you want to listen to?</string>
+    <string name="songCategory">Song</string>
+    <string name="artistCategory">Artist</string>
+    <string name="playlistCategory">Playlist</string>
+
+    <string name="newSongReleaseTitle">New Song release</string>
+    <string name="topFavoriteSongTitle">Top favorite song</string>
+    <string name="topPopularSongTitle">Top popular song</string>
+    <string name="likeButton">Like</string>
+
+    <string name="libraryTitle">Library</string>
+    <string name="createPlaylistButton">Create new playlist</string>
+    <string name="newPlaylistInstructions">Give your playlist a name</string>
+    <string name="newPlaylistTitle">New playlist</string>
+    <string name="cancelButton">Cancel</string>
+    <string name="createButton">Create</string>
+
+    <string name="iconDescription">Icon</string>
+    <string name="dashDescription">Dash</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="good_morning">Good morning</string>
+    <string name="voices_from_indie_music">Voices from Indie Music</string>
+</resources>
