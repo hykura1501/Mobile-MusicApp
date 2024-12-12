@@ -4,16 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/white"
-    android:foregroundTint="@color/white"
-    tools:context=".fragment.PlayMusic">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context=".fragment.PlayMusicFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_background">
+        android:background="@drawable/gradient_background_playlist">
 
         <TextView
             android:id="@+id/playlist"
@@ -62,10 +58,9 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/songThumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:background="@drawable/rounded_background"
                 android:contentDescription="@string/songImageDescription"
                 android:src="@drawable/forget_me_now"

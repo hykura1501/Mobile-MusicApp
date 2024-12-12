@@ -3,9 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/library">
+
+    <fragment
+        android:id="@+id/playMusic"
+        android:name="com.example.mobile_musicapp.fragment.PlayMusicFragment"
+        android:label="Play Music">
+    </fragment>
+
     <fragment
         android:id="@+id/library"
-        android:name="com.example.mobile_musicapp.fragment.Library"
+        android:name="com.example.mobile_musicapp.fragment.LibraryFragment"
         android:label="Library" >
         <action
             android:id="@+id/action_library_to_newPlaylist"
@@ -22,7 +29,7 @@
 
     <fragment
         android:id="@+id/newPlaylist"
-        android:name="com.example.mobile_musicapp.fragment.NewPlaylist"
+        android:name="com.example.mobile_musicapp.fragment.NewPlaylistFragment"
         android:label="New Playlist">
         <action
             android:id="@+id/action_newPlaylist_to_library"
@@ -32,7 +39,7 @@
 
     <fragment
         android:id="@+id/playlist"
-        android:name="com.example.mobile_musicapp.fragment.Playlist"
+        android:name="com.example.mobile_musicapp.fragment.PlaylistFragment"
         android:label="New Playlist">
         <action
             android:id="@+id/action_playlist_to_library"

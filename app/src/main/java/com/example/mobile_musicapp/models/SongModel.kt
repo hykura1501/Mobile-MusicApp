@@ -10,8 +10,8 @@ data class Song(
     val thumbnail: String,
     val duration: Int,
     val album : String,
-    var like : Int,
-    var view : Int,
-    val url: String,
+    var liked : Int,
+    var views : Int,
+    val path: String,
     val lyric : String
 )
