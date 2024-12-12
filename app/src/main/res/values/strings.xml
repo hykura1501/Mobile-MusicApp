@@ -103,11 +103,11 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="group_name">"Cloud Ninjas"</string>
-    <string name="sign_in">"Sign in"</string>
-    <string name="if_you_need">"If you need any support?"</string>
-    <string name="click_here">"Click here!"</string>
+    <string name="sign_in">"Login"</string>
+    <string name="register">"Register"</string>
     <string name="enter_your_email">"Enter your email"</string>
     <string name="enter_your_password">"Enter your password"</string>
+    <string name="enter_your_fullName">"Enter your full name"</string>
     <string name="recovery_password">"Recovery password"</string>
     <string name="button_back">"button back"</string>
     <string name="or">"Or"</string>
@@ -115,6 +115,10 @@
     <string name="fb">"fb"</string>
     <string name="not_a_member">"Not a member?"</string>
     <string name="register_now">"Register now"</string>
-    <string name="sign_in_with_google">"Sign in with Google"</string>
-    <string name="sign_in_with_facebook">"Sign in with Facebook"</string>
+    <string name="already_an_account">"Already an account?"</string>
+    <string name="login_now">"Login now"</string>
+    <string name="sign_in_with_google">"Login with Google"</string>
+    <string name="register_with_google">"Register with Google"</string>
+    <string name="sign_in_with_facebook">"Login with Facebook"</string>
+    <string name="register_with_facebook">"Register with Facebook"</string>
 </resources>
