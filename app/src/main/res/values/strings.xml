@@ -115,4 +115,6 @@
     <string name="fb">"fb"</string>
     <string name="not_a_member">"Not a member?"</string>
     <string name="register_now">"Register now"</string>
+    <string name="sign_in_with_google">"Sign in with Google"</string>
+    <string name="sign_in_with_facebook">"Sign in with Facebook"</string>
 </resources>
