@@ -6,13 +6,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.helpers.ImageHelper
 
-class SongHorizontalAdapter(private val songs: List<Song>) : RecyclerView.Adapter<SongHorizontalAdapter.ViewHolder>() {
+class SongHorizontalAdapter(
+    private val songs: List<Song>,
+    private val onItemClick: (Song) -> Unit
+) : RecyclerView.Adapter<SongHorizontalAdapter.ViewHolder>() {
 
-    var onItemClick: ((Song) -> Unit)? = null
+    private val imageHelper = ImageHelper()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val songThumbnail: ImageView = itemView.findViewById(R.id.songThumbnail)
@@ -22,14 +25,14 @@ class SongHorizontalAdapter(private val songs: List<Song>) : RecyclerView.Adapte
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    onItemClick?.invoke(songs[position])
+                    onItemClick(songs[position])
                 }
             }
         }
 
         fun bind(song: Song) {
             songName.text = song.title
-            Glide.with(songThumbnail.context).load(song.thumbnail).into(songThumbnail)
+            imageHelper.loadImage(song.thumbnail, songThumbnail) // Using ImageHelper to load image
         }
     }
 
