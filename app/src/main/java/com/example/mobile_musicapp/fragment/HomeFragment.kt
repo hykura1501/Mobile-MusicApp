@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,10 +15,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class HomeFragment : Fragment() {
 
+    private lateinit var greetingTextView: TextView
     private lateinit var newReleaseSongsRecyclerView: RecyclerView
+    private lateinit var popularSongsRecyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,14 +32,19 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        greetingTextView = view.findViewById(R.id.greetingTextView)
         newReleaseSongsRecyclerView = view.findViewById(R.id.newReleaseSongsRecyclerView)
+        popularSongsRecyclerView = view.findViewById(R.id.popularSongsRecyclerView)
 
-        setupRecyclerView()
-        loadNewReleaseSongs(1, 25) // Example: Fetch the first page with 5 items per page
+        setupRecyclerViews()
+        loadNewReleaseSongs(1, 10)
+        loadPopularSongs(1, 10)
+        updateGreeting()
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerViews() {
         newReleaseSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        popularSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun loadNewReleaseSongs(page: Int, perPage: Int) {
@@ -43,7 +52,31 @@ class HomeFragment : Fragment() {
             val newReleaseSongs = withContext(Dispatchers.IO) {
                 SongDao.getNewReleaseSongs(page, perPage)
             }
-            newReleaseSongsRecyclerView.adapter = SongHorizontalAdapter(newReleaseSongs)
+            newReleaseSongsRecyclerView.adapter = SongHorizontalAdapter(newReleaseSongs) { song ->
+                // Handle song item click
+            }
         }
+    }
+
+    private fun loadPopularSongs(page: Int, perPage: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val popularSongs = withContext(Dispatchers.IO) {
+                SongDao.getPopularSongs(page, perPage)
+            }
+            popularSongsRecyclerView.adapter = SongHorizontalAdapter(popularSongs) { song ->
+                // Handle song item click
+            }
+        }
+    }
+
+    private fun updateGreeting() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val greeting = when (hour) {
+            in 0..11 -> "Good Morning"
+            in 12..17 -> "Good Afternoon"
+            else -> "Good Evening"
+        }
+        greetingTextView.text = greeting
     }
 }

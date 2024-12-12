@@ -17,6 +17,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.util.concurrent.TimeUnit
 
 data class ApiResponsePlaylists(
     val code: Int,
@@ -63,6 +64,18 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("perPage") perPage: Int
     ): Response<ApiResponseSongs>
+
+    @GET("song/popular")
+    suspend fun getPopularSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
+
+    @GET("song/top-likes")
+    suspend fun getTopLikesSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
 }
 
 
@@ -91,6 +104,9 @@ object RetrofitClient {
     private val client = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
         .addInterceptor(loggingInterceptor)
+        .connectTimeout(60, TimeUnit.SECONDS)  // Increase connect timeout
+        .readTimeout(60, TimeUnit.SECONDS)     // Increase read timeout
+        .writeTimeout(60, TimeUnit.SECONDS)    // Increase write timeout
         .build()
 
     val instance: ApiService by lazy {
