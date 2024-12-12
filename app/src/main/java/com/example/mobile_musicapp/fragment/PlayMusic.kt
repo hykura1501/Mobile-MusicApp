@@ -41,9 +41,10 @@ class PlayMusic : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Get the song from the arguments
-        val song = args.song
-        Queue.songs = mutableListOf(song)  // Set the song in the queue as a mutable list
+        // Get the list of songs and selected index from the arguments
+        val songListWithIndex = args.songListWithIndex
+        Queue.songs = songListWithIndex.songs.toMutableList()
+        Queue.currentSongIndex = songListWithIndex.selectedIndex
     }
 
     override fun onCreateView(
@@ -129,6 +130,7 @@ class PlayMusic : Fragment() {
         pauseMusic()
         mediaPlayer?.reset()
         Queue.nextSong()
+        updateUI()  // Update UI with the new song data
         prepareMusic()
     }
 
@@ -136,17 +138,25 @@ class PlayMusic : Fragment() {
         pauseMusic()
         mediaPlayer?.reset()
         Queue.previousSong()
+        updateUI()  // Update UI with the previous song data
         prepareMusic()
     }
 
     @SuppressLint("DefaultLocale")
     private fun updateUI() {
         val song = Queue.getCurrentSong()!!
-        // Update UI with song data
         artist.text = song.artistName
         songName.text = song.title
         val imageHelper = ImageHelper()
         imageHelper.loadImage(song.thumbnail, songImage) // Assuming ImageHelper is used for loading images
+
+        mediaPlayer?.let {
+            seekBar.max = it.duration
+            val minutes = (it.duration / 1000) / 60
+            val seconds = (it.duration / 1000) % 60
+            val time = String.format("%02d:%02d", minutes, seconds)
+            totalTime.text = time
+        }
     }
 
     private fun updateSeekBarAndTime() {
