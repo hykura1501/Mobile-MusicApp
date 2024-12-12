@@ -12,8 +12,8 @@
             android:id="@+id/action_homeFragment_to_playMusicFragment"
             app:destination="@id/playMusicFragment">
             <argument
-                android:name="song"
-                app:argType="com.example.mobile_musicapp.models.Song"
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
                 app:nullable="false" />
         </action>
     </fragment>
@@ -23,8 +23,8 @@
         android:name="com.example.mobile_musicapp.fragment.PlayMusic"
         android:label="Play Music">
         <argument
-            android:name="song"
-            app:argType="com.example.mobile_musicapp.models.Song"
+            android:name="songListWithIndex"
+            app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
             app:nullable="false" />
     </fragment>
 

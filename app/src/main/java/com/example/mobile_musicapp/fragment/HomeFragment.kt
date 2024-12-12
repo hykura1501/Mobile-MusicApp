@@ -13,6 +13,7 @@ import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
 import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.models.SongListWithIndex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,7 +56,8 @@ class HomeFragment : Fragment() {
                 SongDao.getNewReleaseSongs(page, perPage)
             }
             newReleaseSongsRecyclerView.adapter = SongHorizontalAdapter(newReleaseSongs) { song ->
-                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(song)
+                val songListWithIndex = SongListWithIndex(newReleaseSongs, newReleaseSongs.indexOf(song))
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(songListWithIndex)
                 findNavController().navigate(action)
             }
         }
@@ -67,7 +69,8 @@ class HomeFragment : Fragment() {
                 SongDao.getPopularSongs(page, perPage)
             }
             popularSongsRecyclerView.adapter = SongHorizontalAdapter(popularSongs) { song ->
-                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(song)
+                val songListWithIndex = SongListWithIndex(popularSongs, popularSongs.indexOf(song))
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(songListWithIndex)
                 findNavController().navigate(action)
             }
         }
