@@ -26,9 +26,10 @@ import java.util.Calendar
 class HomeFragment : Fragment() {
 
     private lateinit var greetingTextView: TextView
+    private lateinit var favoriteSongsRecyclerView: RecyclerView
     private lateinit var newReleaseSongsRecyclerView: RecyclerView
     private lateinit var popularSongsRecyclerView: RecyclerView
-    private lateinit var favoriteSongsRecyclerView: RecyclerView
+    private lateinit var topLikesSongsRecyclerView: RecyclerView
 
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
@@ -41,14 +42,16 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        favoriteSongsRecyclerView = view.findViewById(R.id.favouriteSongsRecyclerView)
         greetingTextView = view.findViewById(R.id.greetingTextView)
         newReleaseSongsRecyclerView = view.findViewById(R.id.newReleaseSongsRecyclerView)
         popularSongsRecyclerView = view.findViewById(R.id.popularSongsRecyclerView)
-        favoriteSongsRecyclerView = view.findViewById(R.id.favouriteSongsRecyclerView)
+        topLikesSongsRecyclerView = view.findViewById(R.id.topLikesSongsRecyclerView)
 
         setupRecyclerViews()
-        loadNewReleaseSongs(1, 10)
-        loadPopularSongs(1, 10)
+        loadNewReleaseSongs(1, 13)
+        loadPopularSongs(1, 7)
+        loadTopLikesSongs(1, 23)
 
         // Observe loading state and favorite songs from ViewModel
         favoritesViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
@@ -62,9 +65,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
+        favoriteSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         newReleaseSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         popularSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        favoriteSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        topLikesSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun loadNewReleaseSongs(page: Int, perPage: Int) {
@@ -73,7 +77,6 @@ class HomeFragment : Fragment() {
                 SongDao.getNewReleaseSongs(page, perPage)
             }
             newReleaseSongsRecyclerView.adapter = SongHorizontalAdapter(newReleaseSongs) { song ->
-                val songsArray = newReleaseSongs.toTypedArray()
                 val selectedIndex = newReleaseSongs.indexOf(song)
                 val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(newReleaseSongs, selectedIndex))
                 findNavController().navigate(action)
@@ -87,7 +90,6 @@ class HomeFragment : Fragment() {
                 SongDao.getPopularSongs(page, perPage)
             }
             popularSongsRecyclerView.adapter = SongHorizontalAdapter(popularSongs) { song ->
-                val songsArray = popularSongs.toTypedArray()
                 val selectedIndex = popularSongs.indexOf(song)
                 val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(popularSongs, selectedIndex))
                 findNavController().navigate(action)
@@ -95,9 +97,21 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun loadTopLikesSongs(page: Int, perPage: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val topLikesSongs = withContext(Dispatchers.IO) {
+                SongDao.getTopLikesSongs(page, perPage)
+            }
+            topLikesSongsRecyclerView.adapter = SongHorizontalAdapter(topLikesSongs) { song ->
+                val selectedIndex = topLikesSongs.indexOf(song)
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(topLikesSongs, selectedIndex))
+                findNavController().navigate(action)
+            }
+        }
+    }
+
     private fun loadFavoriteSongs(favoriteSongs: List<Song>) {
         favoriteSongsRecyclerView.adapter = SongHorizontalAdapter(favoriteSongs) { song ->
-            val songsArray = favoriteSongs.toTypedArray()
             val selectedIndex = favoriteSongs.indexOf(song)
             val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(favoriteSongs, selectedIndex))
             findNavController().navigate(action)
