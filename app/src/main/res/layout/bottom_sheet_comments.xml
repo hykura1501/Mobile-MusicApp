@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User Comments"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="12dp" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tvError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_comment"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="12dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp">
+            <ProgressBar
+                android:id="@+id/pb_loading"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <!-- Danh sách bình luận -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvComments"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:scrollbars="vertical"
+                android:overScrollMode="always" />
+
+        </RelativeLayout>
+    <!-- Khu vực nhập bình luận -->
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/ll_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:paddingVertical="10dp"
+                android:id="@+id/edt_message"
+                android:hint="@string/nhan_tin"
+                android:paddingStart="10dp"
+                android:background="@drawable/bg_card_bill"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/btn_send"
+                android:paddingHorizontal="10dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_send_black_24dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

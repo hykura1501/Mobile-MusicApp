@@ -5,7 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.adapters.SongPagingAdapter
+import com.example.mobile_musicapp.extension.queryTextChanges
+import com.example.mobile_musicapp.viewModels.SearchViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,18 +28,12 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class DeepSearch : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private lateinit var rcvSong : RecyclerView
+    private lateinit var searchData : SearchView
+    private val songAdapter by lazy {
+        SongPagingAdapter()
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -38,23 +42,43 @@ class DeepSearch : Fragment() {
         return inflater.inflate(R.layout.fragment_deep_search, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DeepSearch.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DeepSearch().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+         val searchViewModel = ViewModelProvider(requireActivity())[SearchViewModel::class.java]
+
+        connectView(view)
+        setUpRecyclerview()
+        searchViewModel.searchedSongs.observe(requireActivity()) { pagingData ->
+            lifecycleScope.launch {
+                songAdapter.submitData(lifecycle, pagingData)
             }
+        }
+
+        searchData.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    searchViewModel.updateQuery(newText)
+                };
+                return true
+            }
+
+        })
+    }
+
+    private fun setUpRecyclerview(){
+        rcvSong.apply {
+            hasFixedSize()
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            adapter = songAdapter
+        }
+    }
+
+    private fun connectView(view: View) {
+        rcvSong = view.findViewById(R.id.topArtistRecyclerView)
+        searchData = view.findViewById(R.id.searchView)
     }
 }

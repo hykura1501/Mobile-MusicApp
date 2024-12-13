@@ -1,10 +1,14 @@
 package com.example.mobile_musicapp.services
 import android.content.Context
+import com.example.mobile_musicapp.models.CommentModel
+import com.example.mobile_musicapp.models.CommentRequest
+import com.example.mobile_musicapp.models.CommentResponse
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -17,12 +21,24 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.time.Duration
 import java.util.concurrent.TimeUnit
+
 
 data class ApiResponsePlaylists(
     val code: Int,
     val data: List<Playlist>
 )
+data class ApiResponseSong(
+    val code: Int,
+    val data: List<Song>
+)
+
+data class ApiResponsePlayedRecently(
+    val code: Int,
+    val message: String
+)
+
 
 data class ApiResponsePlaylist(
     val code: Int,
@@ -54,9 +70,15 @@ data class FavoriteSongsResponse(
 
 
 
+data class ApiResponseComment(
+    val code: Int,
+    val data : CommentModel
+)
 interface ApiService {
     @GET("playlist")
     suspend fun getAllPlaylists(): Response<ApiResponsePlaylists>
+    @GET("song")
+    suspend fun getSongByPage(@Query("page") page: Int, @Query("perPage") size: Int): Response<ApiResponseSong>
 
     @GET("playlist/{id}")
     suspend fun getPlaylist(@Path("id") id: String): Response<ApiResponsePlaylist>
@@ -95,6 +117,19 @@ interface ApiService {
 
     @DELETE("/song/favorite/remove/{songId}")
     suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
+
+    @POST("comment/{id}")
+    suspend fun addComment( @Path("id") id: String, @Body body : CommentRequest): Response<ApiResponseComment>
+
+    @GET("comment/{id}")
+    suspend fun getAllCommentsById( @Path("id") id: String): Response<CommentResponse>
+
+    @GET("other/recently-played")
+    suspend fun getAllPlayedRecently(): Response<ApiResponseSong>
+
+    @POST("other/recently-played/{id}")
+    suspend fun addPlayedRecently(@Path("id") id : String): Response<ApiResponsePlayedRecently>
+
 }
 
 
@@ -104,7 +139,7 @@ object RetrofitClient {
 
     private val authInterceptor = Interceptor { chain ->
         //val token = "Bearer ${getTokenFromPreferences()}"
-        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczNDA3Njc0NywiZXhwIjoxNzM0MjQ5NTQ3fQ.jLYh9jnobhwUaHxt4JknJxtGkm3aZdFRC6p8s_kbels"
+        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczNDA5NjM2NCwiZXhwIjoxNzM0MjY5MTY0fQ.a6rq2ZIuZs2D4bNvs6lt-oYTUAXQEO50hIitBr_JM9Q"
         val newRequest = chain.request().newBuilder()
             .addHeader("Authorization", token)
             .build()

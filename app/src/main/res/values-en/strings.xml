@@ -50,4 +50,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="good_morning">Good morning</string>
     <string name="voices_from_indie_music">Voices from Indie Music</string>
+    <string name="user_comments">User Comments</string>
+    <string name="no_comment">Hiện tại không có bình luận nào</string>
 </resources>
