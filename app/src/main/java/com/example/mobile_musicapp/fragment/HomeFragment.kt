@@ -1,27 +1,27 @@
 package com.example.mobile_musicapp.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobile_musicapp.adapters.SongAdapter
 import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
-import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.SongDao
+import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Calendar
 
 class HomeFragment : Fragment() {
 
@@ -29,6 +29,8 @@ class HomeFragment : Fragment() {
     private lateinit var newReleaseSongsRecyclerView: RecyclerView
     private lateinit var popularSongsRecyclerView: RecyclerView
     private lateinit var favoriteSongsRecyclerView: RecyclerView
+
+    private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +49,15 @@ class HomeFragment : Fragment() {
         setupRecyclerViews()
         loadNewReleaseSongs(1, 10)
         loadPopularSongs(1, 10)
-        loadFavoriteSongs()
+
+        // Observe loading state and favorite songs from ViewModel
+        favoritesViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+            if (!isLoading) {
+                val favoriteSongs = favoritesViewModel.favoriteSongs.value ?: emptyList()
+                loadFavoriteSongs(favoriteSongs)
+            }
+        })
+
         updateGreeting()
     }
 
@@ -85,18 +95,12 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun loadFavoriteSongs() {
-        CoroutineScope(Dispatchers.Main).launch {
-            val favoriteSongs = withContext(Dispatchers.IO) {
-                FavoriteSongDao.getFavoriteSongs()
-            }
-            Log.d("HomeFragment", "Favorite Songs: $favoriteSongs")
-            favoriteSongsRecyclerView.adapter = SongHorizontalAdapter(favoriteSongs) { song ->
-                val songsArray = favoriteSongs.toTypedArray()
-                val selectedIndex = favoriteSongs.indexOf(song)
-                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(favoriteSongs, selectedIndex))
-                findNavController().navigate(action)
-            }
+    private fun loadFavoriteSongs(favoriteSongs: List<Song>) {
+        favoriteSongsRecyclerView.adapter = SongHorizontalAdapter(favoriteSongs) { song ->
+            val songsArray = favoriteSongs.toTypedArray()
+            val selectedIndex = favoriteSongs.indexOf(song)
+            val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(favoriteSongs, selectedIndex))
+            findNavController().navigate(action)
         }
     }
 
