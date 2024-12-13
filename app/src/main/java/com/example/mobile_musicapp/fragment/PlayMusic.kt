@@ -20,6 +20,11 @@ import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.google.android.material.snackbar.Snackbar
 import com.example.mobile_musicapp.helpers.ImageHelper  // Import the ImageHelper class if used for loading images
+import com.example.mobile_musicapp.services.FavoriteSongDao
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlayMusic : Fragment() {
 
@@ -78,14 +83,19 @@ class PlayMusic : Fragment() {
 
         addToFavoritesButton.setOnClickListener {
             val song = Queue.getCurrentSong()!!
-            Favorite.addToFavorites(song)
-
-            Snackbar.make(view, "Added to Favorites!", Snackbar.LENGTH_SHORT)
-                .setAction("UNDO") {
-                    Favorite.removeFromFavorites(song)
-                    Toast.makeText(context, "Removed from Favorites!", Toast.LENGTH_SHORT).show()
+            CoroutineScope(Dispatchers.Main).launch {
+                val result = withContext(Dispatchers.IO) {
+                    FavoriteSongDao.addOrRemoveFavoriteSong(song._id)
                 }
-                .show()
+                result.fold(
+                    onSuccess = { message ->
+                        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+                    },
+                    onFailure = { throwable ->
+                        Toast.makeText(context, throwable.message ?: "Failed to add to Favorites!", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
         }
     }
 
