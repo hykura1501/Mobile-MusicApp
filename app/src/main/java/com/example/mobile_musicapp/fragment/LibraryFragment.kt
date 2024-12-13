@@ -37,7 +37,6 @@ class LibraryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         connectUI(view)
 
-        //val playlists = MockDao().getSamplePlaylists()
         setupRecyclerView()
         val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
 
