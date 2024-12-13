@@ -43,6 +43,16 @@ data class ApiResponseSongs(
     val data: List<Song>
 )
 
+data class FavoriteSongsResponse(
+    val code: Int,
+    val favoriteSongs: List<Song>,
+    val page: Int,
+    val perPage: Int,
+    val total: Int,
+    val totalPage: Int
+)
+
+
 
 interface ApiService {
     @GET("playlist")
@@ -76,6 +86,15 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("perPage") perPage: Int
     ): Response<ApiResponseSongs>
+
+    @GET("/song/favorite")
+    suspend fun getFavoriteSongs(): Response<FavoriteSongsResponse>
+
+    @POST("/song/favorite/add/{songId}")
+    suspend fun addFavoriteSong(@Path("songId") songId: String): Response<Void>
+
+    @DELETE("/song/favorite/remove/{songId}")
+    suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
 }
 
 
@@ -85,7 +104,7 @@ object RetrofitClient {
 
     private val authInterceptor = Interceptor { chain ->
         //val token = "Bearer ${getTokenFromPreferences()}"
-        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczMzg4OTY4MSwiZXhwIjoxNzM0MDYyNDgxfQ.ic6ResHy20gLVqCKAkp9eHpVCJTY8qIBBMPXos33-_g"
+        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczNDA3Njc0NywiZXhwIjoxNzM0MjQ5NTQ3fQ.jLYh9jnobhwUaHxt4JknJxtGkm3aZdFRC6p8s_kbels"
         val newRequest = chain.request().newBuilder()
             .addHeader("Authorization", token)
             .build()
@@ -104,9 +123,9 @@ object RetrofitClient {
     private val client = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
         .addInterceptor(loggingInterceptor)
-        .connectTimeout(60, TimeUnit.SECONDS)  // Increase connect timeout
-        .readTimeout(60, TimeUnit.SECONDS)     // Increase read timeout
-        .writeTimeout(60, TimeUnit.SECONDS)    // Increase write timeout
+        .connectTimeout(10, TimeUnit.SECONDS)  // Increase connect timeout
+        .readTimeout(10, TimeUnit.SECONDS)     // Increase read timeout
+        .writeTimeout(10, TimeUnit.SECONDS)    // Increase write timeout
         .build()
 
     val instance: ApiService by lazy {
