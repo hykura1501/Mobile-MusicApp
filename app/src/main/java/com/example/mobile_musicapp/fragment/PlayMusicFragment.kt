@@ -144,7 +144,7 @@ class PlayMusicFragment : Fragment() {
     @SuppressLint("DefaultLocale")
     private fun updateUI() {
         val song = Queue.getCurrentSong()!!
-        // TODO update thumbnail
+
         Glide.with(this)
             .load(song.thumbnail)
             .placeholder(R.drawable.song)

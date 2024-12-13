@@ -61,7 +61,6 @@
                 android:id="@+id/songThumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/rounded_background"
                 android:contentDescription="@string/songImageDescription"
                 android:src="@drawable/forget_me_now"
                 app:layout_constraintEnd_toEndOf="parent"

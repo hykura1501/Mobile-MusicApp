@@ -15,7 +15,9 @@ import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.SongAdapter
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.models.Playlist
+import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.singletons.Queue
+import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 
 class PlaylistFragment : Fragment() {
@@ -55,6 +57,10 @@ class PlaylistFragment : Fragment() {
         playButton.setOnClickListener {
             if (playlist != null) {
                 Queue.openPlaylist(playlist!!)
+                val playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+                playerBarViewModel.updateSong(Queue.getCurrentSong()!!)
+                playerBarViewModel.togglePlayPause()
+                PlayerManager.prepare()
             }
         }
     }
