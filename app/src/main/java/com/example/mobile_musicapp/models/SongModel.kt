@@ -15,7 +15,7 @@ data class Song(
     val album: String = "",
     var like: Int = 0,
     var view: Int = 0,
-    val url: String = "",
+    val path: String = "", // Using path to align with API
     val lyric: String = ""
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
@@ -46,7 +46,7 @@ data class Song(
         parcel.writeString(album)
         parcel.writeInt(like)
         parcel.writeInt(view)
-        parcel.writeString(url)
+        parcel.writeString(path) // Using path to align with API
         parcel.writeString(lyric)
     }
 

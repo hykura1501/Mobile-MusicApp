@@ -91,6 +91,7 @@ class PlayMusic : Fragment() {
 
     private fun prepareMusic() {
         val song = Queue.getCurrentSong()!!
+        println("Preparing music with URL: ${song.path}")
         if (mediaPlayer == null) {
             mediaPlayer = MediaPlayer()
         }
@@ -99,11 +100,12 @@ class PlayMusic : Fragment() {
 
         try {
             mediaPlayer?.reset()
-            mediaPlayer?.setDataSource(song.url)
+            mediaPlayer?.setDataSource(song.path)
             mediaPlayer?.prepareAsync()
 
             mediaPlayer?.setOnPreparedListener {
                 it.start()
+                updateUI()
                 updateSeekBarAndTime()
             }
 
@@ -112,8 +114,13 @@ class PlayMusic : Fragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            // Log the error
+            println("Error preparing MediaPlayer: ${e.message}")
+            // Show a message to the user
+            Toast.makeText(context, "Error playing music: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun playMusic() {
         mediaPlayer?.start()
