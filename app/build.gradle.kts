@@ -70,4 +70,8 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.4.1")
     implementation("androidx.navigation:navigation-ui-ktx:2.4.1")
+    implementation("androidx.paging:paging-runtime:3.1.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0") // Add this line
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")  // Add this line
+
 }

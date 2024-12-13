@@ -17,8 +17,11 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.components.CommentsBottomSheet
+import com.example.mobile_musicapp.services.MockDao
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.example.mobile_musicapp.helpers.ImageHelper
 import com.example.mobile_musicapp.services.FavoriteSongDao
@@ -33,6 +36,7 @@ class PlayMusic : Fragment() {
     private val args: PlayMusicArgs by navArgs()
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
+    private lateinit var showComment : ImageButton
     private lateinit var playButton: ImageButton
     private lateinit var nextButton: ImageButton
     private lateinit var previousButton: ImageButton
@@ -121,6 +125,11 @@ class PlayMusic : Fragment() {
             addToFavoritesButton.setImageResource(R.drawable.ic_heart_filled)
         } else {
             addToFavoritesButton.setImageResource(R.drawable.ic_heart)
+        }
+
+        showComment.setOnClickListener {
+            val bottomSheet = CommentsBottomSheet()
+            bottomSheet.show(requireActivity().supportFragmentManager,bottomSheet.tag)
         }
     }
 
@@ -242,6 +251,7 @@ class PlayMusic : Fragment() {
         artist = view.findViewById(R.id.artist)
         songName = view.findViewById(R.id.songName)
         songImage = view.findViewById(R.id.imageView)
+        showComment = view.findViewById(R.id.optionsButton)
 
         seekBar.isEnabled = false
     }
