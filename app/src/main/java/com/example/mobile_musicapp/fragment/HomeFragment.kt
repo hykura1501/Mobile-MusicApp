@@ -55,6 +55,7 @@ class HomeFragment : Fragment() {
             val newReleaseSongs = withContext(Dispatchers.IO) {
                 SongDao.getNewReleaseSongs(page, perPage)
             }
+
             newReleaseSongsRecyclerView.adapter = SongHorizontalAdapter(newReleaseSongs) { song ->
                 val songListWithIndex = SongListWithIndex(newReleaseSongs, newReleaseSongs.indexOf(song))
                 val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(songListWithIndex)
@@ -68,6 +69,7 @@ class HomeFragment : Fragment() {
             val popularSongs = withContext(Dispatchers.IO) {
                 SongDao.getPopularSongs(page, perPage)
             }
+
             popularSongsRecyclerView.adapter = SongHorizontalAdapter(popularSongs) { song ->
                 val songListWithIndex = SongListWithIndex(popularSongs, popularSongs.indexOf(song))
                 val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(songListWithIndex)
