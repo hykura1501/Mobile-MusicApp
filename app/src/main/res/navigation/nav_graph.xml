@@ -7,7 +7,25 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.mobile_musicapp.fragment.HomeFragment"
-        android:label="Home" >
+        android:label="Home">
+        <action
+            android:id="@+id/action_homeFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/playMusicFragment"
+        android:name="com.example.mobile_musicapp.fragment.PlayMusic"
+        android:label="Play Music">
+        <argument
+            android:name="songListWithIndex"
+            app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+            app:nullable="false" />
     </fragment>
 
     <fragment
