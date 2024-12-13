@@ -14,13 +14,15 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.google.android.material.snackbar.Snackbar
-import com.example.mobile_musicapp.helpers.ImageHelper  // Import the ImageHelper class if used for loading images
+import com.example.mobile_musicapp.helpers.ImageHelper
 import com.example.mobile_musicapp.services.FavoriteSongDao
+import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,6 +31,7 @@ import kotlinx.coroutines.withContext
 class PlayMusic : Fragment() {
 
     private val args: PlayMusicArgs by navArgs()
+    private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
     private lateinit var playButton: ImageButton
     private lateinit var nextButton: ImageButton
@@ -42,6 +45,7 @@ class PlayMusic : Fragment() {
     private lateinit var artist: TextView
     private lateinit var songName: TextView
     private lateinit var songImage: ImageView
+    private var isFavorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,19 +93,47 @@ class PlayMusic : Fragment() {
                 }
                 result.fold(
                     onSuccess = { message ->
+                        if (isFavorite) {
+                            Favorite.removeFromFavorites(song)
+                            favoritesViewModel.removeFavorite(song)
+                        } else {
+                            Favorite.addToFavorites(song)
+                            favoritesViewModel.addFavorite(song)
+                        }
+                        updateFavoriteIcon()
                         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
                     },
                     onFailure = { throwable ->
-                        Toast.makeText(context, throwable.message ?: "Failed to add to Favorites!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, throwable.message ?: "Failed to update Favorites!", Toast.LENGTH_SHORT).show()
                     }
                 )
             }
+        }
+
+        // Check and update the favorite icon on load
+        updateFavoriteIcon()
+    }
+
+    private fun updateFavoriteIcon() {
+        val song = Queue.getCurrentSong()!!
+        isFavorite = Favorite.getPlaylist().any { it._id == song._id }
+        if (isFavorite) {
+            addToFavoritesButton.setImageResource(R.drawable.ic_heart_filled)
+        } else {
+            addToFavoritesButton.setImageResource(R.drawable.ic_heart)
         }
     }
 
     private fun prepareMusic() {
         val song = Queue.getCurrentSong()!!
-        println("Preparing music with URL: ${song.path}")
+        println("Preparing music with URL: ${song.path}")  // Log the path
+
+        if (song.path.isEmpty()) {
+            // Handle empty path
+            Toast.makeText(context, "Error: Song path is empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         if (mediaPlayer == null) {
             mediaPlayer = MediaPlayer()
         }
@@ -130,7 +162,6 @@ class PlayMusic : Fragment() {
             Toast.makeText(context, "Error playing music: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun playMusic() {
         mediaPlayer?.start()
@@ -174,6 +205,9 @@ class PlayMusic : Fragment() {
             val time = String.format("%02d:%02d", minutes, seconds)
             totalTime.text = time
         }
+
+        // Update the favorite icon when the song changes
+        updateFavoriteIcon()
     }
 
     private fun updateSeekBarAndTime() {
@@ -210,11 +244,5 @@ class PlayMusic : Fragment() {
         songImage = view.findViewById(R.id.imageView)
 
         seekBar.isEnabled = false
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaPlayer?.release()
-        mediaPlayer = null
     }
 }
