@@ -5,7 +5,6 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +13,13 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.helpers.BackgroundHelper
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.google.android.material.snackbar.Snackbar
@@ -39,6 +41,7 @@ class PlayMusic : Fragment() {
     private lateinit var previousButton: ImageButton
     private lateinit var addToFavoritesButton: ImageButton
     private lateinit var minimizeButton: ImageButton
+    private lateinit var playerBackground: ConstraintLayout
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
     private lateinit var seekBar: SeekBar
@@ -215,6 +218,9 @@ class PlayMusic : Fragment() {
 
         // Update the favorite icon when the song changes
         updateFavoriteIcon()
+
+        // Update background with the song's dominant color
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground)
     }
 
     private fun updateSeekBarAndTime() {
@@ -250,6 +256,7 @@ class PlayMusic : Fragment() {
         artist = view.findViewById(R.id.artist)
         songName = view.findViewById(R.id.songName)
         songImage = view.findViewById(R.id.imageView)
+        playerBackground = view.findViewById(R.id.playerBackground)
 
         seekBar.isEnabled = false
     }
