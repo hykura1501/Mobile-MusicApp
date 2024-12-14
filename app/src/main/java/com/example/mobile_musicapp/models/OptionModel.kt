@@ -7,6 +7,7 @@ enum class Option(val title: String, val iconResId: Int) {
     REMOVE_FROM_PLAYLIST("Remove from Playlist", R.drawable.ic_remove_from_playlist),
     DELETE_PLAYLIST("Delete Playlist", R.drawable.ic_remove_playlist),
     DOWNLOAD("Download", R.drawable.ic_download),
+    REPEAT("Repeat", R.drawable.ic_repeat),
     SHARE("Share", R.drawable.ic_share);
 
     companion object {

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="false">
+        <vector
+            android:width="32dp"
+            android:height="32dp"
+            android:viewportWidth="26"
+            android:viewportHeight="20">
+
+            <path
+                android:strokeWidth="2"
+                android:strokeColor="@color/black"
+                android:strokeLineCap="round"
+                android:pathData="M3,4h14" />
+
+            <path
+                android:strokeWidth="2"
+                android:strokeColor="@color/black"
+                android:strokeLineCap="round"
+                android:pathData="M3,8h14" />
+
+            <path
+                android:strokeWidth="2"
+                android:strokeColor="@color/black"
+                android:strokeLineCap="round"
+                android:pathData="M3,12h20" />
+
+            <path
+                android:strokeWidth="2"
+                android:strokeColor="@color/black"
+                android:strokeLineCap="round"
+                android:pathData="M3,16h20" />
+
+            <path
+                android:fillColor="@color/black"
+                android:pathData="M20,3L24,6L20,9Z" />
+        </vector>
+    </item>
+
+    <item android:state_pressed="true">
+        <vector
+            android:width="32dp"
+            android:height="32dp"
+            android:viewportWidth="26"
+            android:viewportHeight="20">
+
+            <path
+                android:strokeWidth="2"
+                android:strokeColor="@color/selected"
+                android:strokeLineCap="round"
+                android:pathData="M3,4h14" />
+
+            <path
+                android:strokeWidth="2"
+                android:strokeColor="@color/selected"
+                android:strokeLineCap="round"
+                android:pathData="M3,8h14" />
+
+            <path
+                android:strokeWidth="2"
+                android:strokeColor="@color/selected"
+                android:strokeLineCap="round"
+                android:pathData="M3,12h20" />
+
+            <path
+                android:strokeWidth="2"
+                android:strokeColor="@color/selected"
+                android:strokeLineCap="round"
+                android:pathData="M3,16h20" />
+
+            <path
+                android:fillColor="@color/selected"
+                android:pathData="M20,3L24,6L20,9Z" />
+        </vector>
+    </item>
+</selector>
