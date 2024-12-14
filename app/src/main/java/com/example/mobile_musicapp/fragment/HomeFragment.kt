@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
@@ -17,6 +18,7 @@ import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +32,8 @@ class HomeFragment : Fragment() {
     private lateinit var newReleaseSongsRecyclerView: RecyclerView
     private lateinit var popularSongsRecyclerView: RecyclerView
     private lateinit var topLikesSongsRecyclerView: RecyclerView
+    private lateinit var playerBar: View
+    private lateinit var bottomNavigation : BottomNavigationView
 
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
@@ -47,6 +51,8 @@ class HomeFragment : Fragment() {
         newReleaseSongsRecyclerView = view.findViewById(R.id.newReleaseSongsRecyclerView)
         popularSongsRecyclerView = view.findViewById(R.id.popularSongsRecyclerView)
         topLikesSongsRecyclerView = view.findViewById(R.id.topLikesSongsRecyclerView)
+        playerBar = view.findViewById(R.id.playerBar)
+        bottomNavigation = playerBar.findViewById(R.id.bottomNavigationView)
 
         setupRecyclerViews()
         loadNewReleaseSongs(1, 13)
@@ -60,10 +66,18 @@ class HomeFragment : Fragment() {
                 loadFavoriteSongs(favoriteSongs)
             }
         })
-
         updateGreeting()
+        handleEvent()
     }
 
+    private fun handleEvent() {
+        bottomNavigation.setOnItemSelectedListener {
+            if (it.itemId == R.id.search) {
+                navigateToSearch()
+            }
+            true
+        }
+    }
     private fun setupRecyclerViews() {
         favoriteSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         newReleaseSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -127,5 +141,8 @@ class HomeFragment : Fragment() {
             else -> "Good Evening"
         }
         greetingTextView.text = greeting
+    }
+    private fun navigateToSearch() {
+        findNavController().navigate(R.id.action_homeFragment_to_search2)
     }
 }
