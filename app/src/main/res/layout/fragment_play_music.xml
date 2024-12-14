@@ -12,11 +12,11 @@
         android:background="@drawable/gradient_background_playlist">
 
         <TextView
-            android:id="@+id/playlist"
+            android:id="@+id/album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Play Music"
+            android:text=""
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,9 +30,9 @@
             android:background="@color/transparent"
             android:contentDescription="@string/minimizeButton"
             android:src="@drawable/ic_minimize"
-            app:layout_constraintBottom_toBottomOf="@+id/playlist"
+            app:layout_constraintBottom_toBottomOf="@+id/album"
             app:layout_constraintStart_toStartOf="@+id/song_image"
-            app:layout_constraintTop_toTopOf="@+id/playlist"
+            app:layout_constraintTop_toTopOf="@+id/album"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
@@ -42,9 +42,9 @@
             android:background="@color/transparent"
             android:contentDescription="@string/moreOptionsButton"
             android:src="@drawable/ic_more_options"
-            app:layout_constraintBottom_toBottomOf="@+id/playlist"
+            app:layout_constraintBottom_toBottomOf="@+id/album"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
-            app:layout_constraintTop_toTopOf="@+id/playlist"
+            app:layout_constraintTop_toTopOf="@+id/album"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.cardview.widget.CardView
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/songImageDescription"
-                android:src="@drawable/forget_me_now"
+                android:src="@drawable/song"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Forget me now"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Fishy, Trí Dũng"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@id/songName"
@@ -109,11 +109,12 @@
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="350dp"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="16dp"
-            android:progressBackgroundTint="@color/white"
-            android:progressTint="@color/light_gray"
+            android:progressTint="@color/white"
+            android:progressDrawable="@drawable/seekbar_progress"
+            android:maxHeight="4dp"
             android:saveEnabled="false"
             android:thumbTint="@color/white"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
@@ -141,7 +142,7 @@
             android:background="@drawable/circle_button"
             android:contentDescription="@string/playButton"
             android:padding="16dp"
-            android:src="@drawable/ic_play_black"
+            android:src="@drawable/ic_pause_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currentTime"
@@ -167,6 +168,7 @@
             android:background="@color/transparent"
             android:contentDescription="@string/shuffleButton"
             android:src="@drawable/ic_shuffle"
+
             app:layout_constraintBottom_toBottomOf="@+id/previousButton"
             app:layout_constraintStart_toStartOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/previousButton"
