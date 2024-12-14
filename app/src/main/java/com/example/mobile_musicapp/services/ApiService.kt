@@ -43,6 +43,21 @@ data class ApiResponseSongs(
     val data: List<Song>
 )
 
+data class LoginRequest(
+    val email: String,
+    val password: String
+)
+
+data class RegisterRequest(
+    val fullName : String,
+    val email: String,
+    val password: String
+)
+
+data class ApiResponseAuth(
+    val code: Int,
+    val token: String
+)
 
 interface ApiService {
     @GET("playlist")
@@ -76,8 +91,18 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("perPage") perPage: Int
     ): Response<ApiResponseSongs>
-}
 
+    @POST("auth/login")
+    suspend fun login(
+        @Body loginRequest: LoginRequest
+    ): Response<ApiResponseAuth>
+
+    @POST("auth/register")
+    suspend fun register(
+        @Body registerRequest: RegisterRequest
+    ): Response<ApiResponseAuth>
+
+}
 
 
 object RetrofitClient {
