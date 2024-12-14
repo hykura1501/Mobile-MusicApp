@@ -16,6 +16,9 @@
                 app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
                 app:nullable="false" />
         </action>
+        <action
+            android:id="@+id/action_homeFragment_to_search2"
+            app:destination="@id/search2" />
     </fragment>
 
     <fragment
@@ -64,5 +67,17 @@
             app:destination="@id/library"
             app:popUpTo="@id/playlist" />
     </fragment>
+    <fragment
+        android:id="@+id/search2"
+        android:name="com.example.mobile_musicapp.fragment.Search"
+        android:label="Search" >
+        <action
+            android:id="@+id/action_search2_to_deepSearch"
+            app:destination="@id/deepSearch" />
+    </fragment>
+    <fragment
+        android:id="@+id/deepSearch"
+        android:name="com.example.mobile_musicapp.fragment.DeepSearch"
+        android:label="DeepSearch" />
 
 </navigation>
