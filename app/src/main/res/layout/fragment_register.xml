@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".Authentication.Login">
+    tools:context=".fragment.Register">
 
     <ImageButton
         android:id="@+id/back"
@@ -117,7 +117,7 @@
         app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnLogin"
         android:layout_width="209dp"
         android:layout_height="68dp"
         android:layout_marginTop="40dp"
@@ -136,10 +136,10 @@
         android:layout_height="1dp"
         android:layout_marginTop="40dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="@+id/btnRegister"
+        app:layout_constraintEnd_toEndOf="@+id/btnLogin"
         app:layout_constraintHorizontal_bias="0.509"
-        app:layout_constraintStart_toStartOf="@+id/btnRegister"
-        app:layout_constraintTop_toBottomOf="@+id/btnRegister" />
+        app:layout_constraintStart_toStartOf="@+id/btnLogin"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
     <TextView
         android:id="@+id/or"
@@ -151,11 +151,11 @@
         android:background="@android:color/white"
         android:gravity="center"
         android:text="@string/or"
-        android:textColor="@color/gray"
+        android:textColor="@android:color/background_dark"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toBottomOf="@+id/btnRegister" />
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
     <LinearLayout
         android:layout_width="match_parent"
