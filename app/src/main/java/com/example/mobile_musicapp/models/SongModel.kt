@@ -1,17 +1,66 @@
 package com.example.mobile_musicapp.models
 
+import android.os.Parcel
+import android.os.Parcelable
+
 data class Song(
-    val userId : String,
-    var deleted : Boolean,
-    val _id: String,
-    val title: String,
-    val artistName: String,
-    val artistId: String,
-    val thumbnail: String,
-    val duration: Int,
-    val album : String,
-    var liked : Int,
-    var views : Int,
-    val path: String,
-    val lyric : String
-)
+    val userId: String = "",
+    var deleted: Boolean = false,
+    val _id: String = "",
+    val title: String = "",
+    val artistName: String = "",
+    val artistId: String = "",
+    val thumbnail: String = "",
+    val duration: Int = 0,
+    val album: String = "",
+    var liked: Int = 0,
+    var views: Int = 0,
+    val path: String = "", // Using path to align with API
+    val lyric: String = ""
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readByte() != 0.toByte(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(userId)
+        parcel.writeByte(if (deleted) 1 else 0)
+        parcel.writeString(_id)
+        parcel.writeString(title)
+        parcel.writeString(artistName)
+        parcel.writeString(artistId)
+        parcel.writeString(thumbnail)
+        parcel.writeInt(duration)
+        parcel.writeString(album)
+        parcel.writeInt(liked)
+        parcel.writeInt(views)
+        parcel.writeString(path) // Using path to align with API
+        parcel.writeString(lyric)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Song> {
+        override fun createFromParcel(parcel: Parcel): Song {
+            return Song(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Song?> {
+            return arrayOfNulls(size)
+        }
+    }
+}

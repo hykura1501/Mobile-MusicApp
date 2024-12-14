@@ -20,6 +20,14 @@ import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.google.android.material.snackbar.Snackbar
 import kotlin.text.*
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
+import com.example.mobile_musicapp.services.FavoriteSongDao
+import com.example.mobile_musicapp.viewModels.FavoritesViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Suppress("RemoveExplicitTypeArguments")
 class PlayMusicFragment : Fragment() {
@@ -30,12 +38,17 @@ class PlayMusicFragment : Fragment() {
     private lateinit var addToFavoritesButton: ImageButton
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
+
     private lateinit var seekBar: SeekBar
     private lateinit var currentTime: TextView
     private lateinit var totalTime: TextView
     private lateinit var artist: TextView
     private lateinit var songName: TextView
     private lateinit var songThumbnail: ImageView
+    private var isFavorite: Boolean = false
+
+    //private val args: PlayMusicArgs by navArgs()
+    private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -74,16 +87,31 @@ class PlayMusicFragment : Fragment() {
 
         addToFavoritesButton.setOnClickListener {
             val song = Queue.getCurrentSong()!!
-            Favorite.addToFavorites(song)
-
-            // Hiển thị thông báo
-            Snackbar.make(view, "Added to Favorites!", Snackbar.LENGTH_SHORT)
-                .setAction("UNDO") {
-                    Favorite.removeFromFavorites(song)
-                    Toast.makeText(context, "Removed from Favorites!", Toast.LENGTH_SHORT).show()
+            CoroutineScope(Dispatchers.Main).launch {
+                val result = withContext(Dispatchers.IO) {
+                    FavoriteSongDao.addOrRemoveFavoriteSong(song._id)
                 }
-                .show()
+                result.fold(
+                    onSuccess = { message ->
+                        if (isFavorite) {
+                            Favorite.removeFromFavorites(song)
+                            favoritesViewModel.removeFavorite(song)
+                        } else {
+                            Favorite.addToFavorites(song)
+                            favoritesViewModel.addFavorite(song)
+                        }
+                        updateFavoriteIcon()
+                        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+                    },
+                    onFailure = { throwable ->
+                        Toast.makeText(context, throwable.message ?: "Failed to update Favorites!", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
         }
+
+        // Check and update the favorite icon on load
+        updateFavoriteIcon()
     }
 
     private fun prepareMusic() {
@@ -161,7 +189,20 @@ class PlayMusicFragment : Fragment() {
             val time = String.format("%02d:%02d", minutes, seconds)
             totalTime.text = time
         }
+
+        updateFavoriteIcon()
     }
+
+    private fun updateFavoriteIcon() {
+        val song = Queue.getCurrentSong()!!
+        isFavorite = Favorite.getPlaylist().any { it._id == song._id }
+        if (isFavorite) {
+            addToFavoritesButton.setImageResource(R.drawable.ic_heart_filled)
+        } else {
+            addToFavoritesButton.setImageResource(R.drawable.ic_heart)
+        }
+    }
+
 
     private fun updateSeekBarAndTime() {
         val handler = Handler(Looper.getMainLooper())

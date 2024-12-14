@@ -2,7 +2,31 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/library">
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.mobile_musicapp.fragment.HomeFragment"
+        android:label="Home">
+        <action
+            android:id="@+id/action_homeFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/playMusicFragment"
+        android:name="com.example.mobile_musicapp.fragment.PlayMusicFragment"
+        android:label="Play Music">
+        <argument
+            android:name="songListWithIndex"
+            app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+            app:nullable="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/playMusic"

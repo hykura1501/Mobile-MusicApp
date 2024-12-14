@@ -1,6 +1,7 @@
 package com.example.mobile_musicapp.services
 import android.content.Context
 import com.example.mobile_musicapp.models.Playlist
+import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -15,6 +16,8 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
+import java.util.concurrent.TimeUnit
 
 data class ApiResponsePlaylists(
     val code: Int,
@@ -35,6 +38,21 @@ data class DeletePlaylistResponse(
     val message: String
 )
 
+data class ApiResponseSongs(
+    val code: Int,
+    val data: List<Song>
+)
+
+data class FavoriteSongsResponse(
+    val code: Int,
+    val favoriteSongs: List<Song>,
+    val page: Int,
+    val perPage: Int,
+    val total: Int,
+    val totalPage: Int
+)
+
+
 
 interface ApiService {
     @GET("playlist")
@@ -50,6 +68,33 @@ interface ApiService {
     suspend fun createPlaylist(
         @Body playlistRequest: CreatePlaylistRequest
     ): Response<ApiResponsePlaylist>
+
+    @GET("song/new-release")
+    suspend fun getNewReleaseSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
+
+    @GET("song/popular")
+    suspend fun getPopularSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
+
+    @GET("song/top-likes")
+    suspend fun getTopLikesSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
+
+    @GET("/song/favorite")
+    suspend fun getFavoriteSongs(): Response<FavoriteSongsResponse>
+
+    @POST("/song/favorite/add/{songId}")
+    suspend fun addFavoriteSong(@Path("songId") songId: String): Response<Void>
+
+    @DELETE("/song/favorite/remove/{songId}")
+    suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
 }
 
 
@@ -78,6 +123,9 @@ object RetrofitClient {
     private val client = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
         .addInterceptor(loggingInterceptor)
+        .connectTimeout(10, TimeUnit.SECONDS)  // Increase connect timeout
+        .readTimeout(10, TimeUnit.SECONDS)     // Increase read timeout
+        .writeTimeout(10, TimeUnit.SECONDS)    // Increase write timeout
         .build()
 
     val instance: ApiService by lazy {
