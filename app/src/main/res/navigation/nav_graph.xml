@@ -65,4 +65,13 @@
             app:popUpTo="@id/playlist" />
     </fragment>
 
+    <fragment
+        android:id="@+id/search"
+        android:name="com.example.mobile_musicapp.fragment.Search"
+        android:label="Search" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.mobile_musicapp.fragment.ProfileFragment"
+        android:label="Profile" />
 </navigation>
