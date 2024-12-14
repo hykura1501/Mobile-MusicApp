@@ -15,6 +15,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Favorite
@@ -37,6 +38,7 @@ class PlayMusic : Fragment() {
     private lateinit var nextButton: ImageButton
     private lateinit var previousButton: ImageButton
     private lateinit var addToFavoritesButton: ImageButton
+    private lateinit var minimizeButton: ImageButton
     private var mediaPlayer: MediaPlayer? = null
     private var isPlaying = false
     private lateinit var seekBar: SeekBar
@@ -112,6 +114,11 @@ class PlayMusic : Fragment() {
 
         // Check and update the favorite icon on load
         updateFavoriteIcon()
+
+        // Set up minimize button as back button
+        minimizeButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun updateFavoriteIcon() {
@@ -239,6 +246,7 @@ class PlayMusic : Fragment() {
         nextButton = view.findViewById(R.id.nextButton)
         previousButton = view.findViewById(R.id.previousButton)
         addToFavoritesButton = view.findViewById(R.id.addToFavoritesButton)
+        minimizeButton = view.findViewById(R.id.minimizeButton)
         artist = view.findViewById(R.id.artist)
         songName = view.findViewById(R.id.songName)
         songImage = view.findViewById(R.id.imageView)
