@@ -327,12 +327,4 @@
         </LinearLayout>
     </ScrollView>
 
-    <include
-        layout="@layout/player_bar"
-        android:id="@+id/playerBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
