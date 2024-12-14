@@ -25,7 +25,13 @@ object Queue {
             songs.remove(song)
         }
     }
-    
+
+
+    fun clearPlaylist() {
+        songs.clear()
+        playedSongs.clear()
+    }
+
     fun getCurrentSong(): Song? {
         return if (songs.isNotEmpty()) songs[currentSongIndex] else null
     }
@@ -35,24 +41,26 @@ object Queue {
         if (songs.isNotEmpty()) {
             playedSongs.add(currentSongIndex)
             currentSongIndex =
-            if (shuffle) {
-                RandomHelper.getRandomSongIndex(playedSongs, songs.size - 1)
-            } else {
-                (currentSongIndex + 1) % songs.size
-            }
+                if (shuffle) {
+                    RandomHelper.getRandomSongIndex(playedSongs, songs.size - 1)
+                } else {
+                    (currentSongIndex + 1) % songs.size
+                }
         }
     }
 
     fun previousSong() {
         if (songs.isNotEmpty()) {
-            if (playedSongs.isNotEmpty()) {
+            currentSongIndex =
                 if (shuffle) {
-                    currentSongIndex = playedSongs.last()
-                    playedSongs.remove(currentSongIndex)
+                    playedSongs.last()
                 } else {
-                    currentSongIndex = (currentSongIndex - 1) % songs.size
+                    if (currentSongIndex == 0) {
+                        songs.size - 1
+                    } else {
+                        (currentSongIndex - 1) % songs.size
+                    }
                 }
-            }
         }
     }
 
