@@ -46,7 +46,7 @@
 
         <action
             android:id="@+id/action_library_to_playlist"
-            app:destination="@id/playlist"
+            app:destination="@id/album"
             app:popUpTo="@id/library">
         </action>
     </fragment>
@@ -62,13 +62,13 @@
     </fragment>
 
     <fragment
-        android:id="@+id/playlist"
+        android:id="@+id/album"
         android:name="com.example.mobile_musicapp.fragment.PlaylistFragment"
         android:label="New Playlist">
         <action
             android:id="@+id/action_playlist_to_library"
             app:destination="@id/library"
-            app:popUpTo="@id/playlist" />
+            app:popUpTo="@id/album" />
     </fragment>
 
 </navigation>

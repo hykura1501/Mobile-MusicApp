@@ -7,7 +7,6 @@ import com.example.mobile_musicapp.models.Song
 val RandomHelper = RandomHelper()
 
 object Queue {
-    var title = ""
     private var songs = mutableListOf<Song>()
     private var playedSongs = mutableListOf<Int>()
     private var currentSongIndex = 0
@@ -26,11 +25,6 @@ object Queue {
         }
     }
 
-
-    fun clearPlaylist() {
-        songs.clear()
-        playedSongs.clear()
-    }
 
     fun getCurrentSong(): Song? {
         return if (songs.isNotEmpty()) songs[currentSongIndex] else null
@@ -51,14 +45,15 @@ object Queue {
 
     fun previousSong() {
         if (songs.isNotEmpty()) {
-            currentSongIndex =
                 if (shuffle) {
-                    playedSongs.last()
+                    if (playedSongs.isNotEmpty()) {
+                        currentSongIndex = playedSongs.last()
+                    }
                 } else {
                     if (currentSongIndex == 0) {
-                        songs.size - 1
+                        currentSongIndex = songs.size - 1
                     } else {
-                        (currentSongIndex - 1) % songs.size
+                        currentSongIndex -= 1
                     }
                 }
         }
@@ -70,9 +65,15 @@ object Queue {
         currentSongIndex = 0
     }
 
+    fun openPlaylist(playlist: MutableList<Song>, index: Int) {
+        clearQueue()
+        currentSongIndex = index
+        songs.addAll(playlist)
+    }
+
     fun openPlaylist(playlist: Playlist) {
         clearQueue()
         songs.addAll(playlist.songs)
-        title = playlist.title
+        currentSongIndex = 0
     }
 }
