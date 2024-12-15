@@ -1,4 +1,5 @@
 package com.example.mobile_musicapp.fragment
+
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Favorite
@@ -20,6 +22,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.mobile_musicapp.helpers.BackgroundHelper
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.services.PlayerManager
@@ -47,6 +50,7 @@ class PlayMusicFragment : Fragment() {
     private lateinit var songName: TextView
     private lateinit var album: TextView
     private lateinit var songThumbnail: ImageView
+    private lateinit var playerBackground: ConstraintLayout
     private var isFavorite: Boolean = false
 
     private val args: PlayMusicFragmentArgs by navArgs()
@@ -180,6 +184,10 @@ class PlayMusicFragment : Fragment() {
         )
         // Check and update the favorite icon on load
         updateFavoriteIcon()
+
+        // Set background using BackgroundHelper
+        val song = Queue.getCurrentSong()!!
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground, cornerRadius = 0f)
     }
 
     @SuppressLint("DefaultLocale")
@@ -204,6 +212,9 @@ class PlayMusicFragment : Fragment() {
         totalTime.text = time
 
         updateFavoriteIcon()
+
+        // Update background when song changes
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground)
     }
 
     private fun updateFavoriteIcon() {
@@ -233,5 +244,7 @@ class PlayMusicFragment : Fragment() {
         songName = view.findViewById<TextView>(R.id.songName) as TextView
         songThumbnail = view.findViewById<ImageView>(R.id.songThumbnail) as ImageView
         album = view.findViewById<TextView>(R.id.album) as TextView
+
+        playerBackground = view.findViewById<ConstraintLayout>(R.id.playerBackground)
     }
 }
