@@ -37,7 +37,6 @@ class PlayerBarViewModel : ViewModel() {
         _shuffleMode.value = !currentMode
     }
 
-
     fun updateSong(newSong: Song) {
         _currentSong.value = newSong
     }
