@@ -78,12 +78,12 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/likeButton"
+                android:id="@+id/queueButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@android:color/transparent"
-                android:contentDescription="@string/likeButton"
-                android:src="@drawable/ic_heart"
+                android:contentDescription="@string/queueButton"
+                android:src="@drawable/ic_queue"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton

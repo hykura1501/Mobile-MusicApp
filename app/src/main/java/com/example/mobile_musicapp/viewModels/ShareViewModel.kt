@@ -4,10 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_musicapp.models.Playlist
+import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.services.PlaylistDao
 import kotlinx.coroutines.launch
 
 class ShareViewModel : ViewModel() {
+    // Playlist
     val playlists = MutableLiveData<MutableList<Playlist>>(mutableListOf())
 
     fun addPlaylist(newPlaylistTitle: String) {
@@ -36,10 +38,16 @@ class ShareViewModel : ViewModel() {
         }
     }
 
+    // Song
+    val removedSong = MutableLiveData<Song>()
+
     // Short press playlist
     val selectedPlaylist = MutableLiveData<Playlist>()
 
     // Long press playlist
     val longSelectedPlaylist = MutableLiveData<Playlist>()
+
+    // Long press song
+    val longSelectedSong = MutableLiveData<Song>()
 
 }
