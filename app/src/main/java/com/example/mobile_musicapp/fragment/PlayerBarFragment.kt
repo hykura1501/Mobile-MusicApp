@@ -107,6 +107,6 @@ class PlayerBarFragment : Fragment() {
         seekBar.max = song.duration * 1000
 
         // Update background using BackgroundHelper
-        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBarBackground)
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBarBackground, cornerRadius = 10f)
     }
 }
