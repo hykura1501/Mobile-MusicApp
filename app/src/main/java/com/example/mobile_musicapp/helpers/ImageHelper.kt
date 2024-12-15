@@ -21,7 +21,16 @@ class ImageHelper {
         }
     }
 
-    fun downloadImage(url: String): Bitmap? {
+    fun downloadImage(url: String, callback: (Bitmap?) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val bitmap = downloadImage(url)
+            withContext(Dispatchers.Main) {
+                callback(bitmap)
+            }
+        }
+    }
+
+    private fun downloadImage(url: String): Bitmap? {
         var bitmap: Bitmap? = null
         try {
             val connection = URL(url).openConnection() as HttpURLConnection
