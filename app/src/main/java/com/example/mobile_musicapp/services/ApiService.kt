@@ -104,7 +104,7 @@ object RetrofitClient {
 
     private val authInterceptor = Interceptor { chain ->
         //val token = "Bearer ${getTokenFromPreferences()}"
-        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczNDA3Njc0NywiZXhwIjoxNzM0MjQ5NTQ3fQ.jLYh9jnobhwUaHxt4JknJxtGkm3aZdFRC6p8s_kbels"
+        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczNDI1MjExMSwiZXhwIjoxNzM0NDI0OTExfQ.EhIUwBQ49k1IN9rsoaVt72LybQMxR3AbgAHJ_JKzTjM"
         val newRequest = chain.request().newBuilder()
             .addHeader("Authorization", token)
             .build()

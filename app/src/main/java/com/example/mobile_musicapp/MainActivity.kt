@@ -9,17 +9,19 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.mobile_musicapp.helpers.NavigationHelper.setupWithNavControllerCustom
+import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
+import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private val favoritesViewModel: FavoritesViewModel by viewModels()
-    private lateinit var navController: NavController
+    private val playerBarViewModel: PlayerBarViewModel by viewModels()
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var previousMenuItem: MenuItem
 
@@ -39,22 +41,22 @@ class MainActivity : AppCompatActivity() {
         // Set up navigation
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-
-        bottomNavigationView = findViewById(R.id.bottomNavigationView)
+        val navController = navHostFragment.navController
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
         previousMenuItem = bottomNavigationView.menu.findItem(R.id.homeFragment)
         bottomNavigationView.setupWithNavControllerCustom(navController)
 
         // Ensure the correct item is selected and toggle visibility when navigating
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            val playerBarFragmentContainer = findViewById<View>(R.id.player_bar_container) // Ensure correct ID
             when (destination.id) {
-                R.id.playMusicFragment, R.id.newPlaylist -> {
+                R.id.playMusicFragment, R.id.newPlaylistFragment -> {
                     bottomNavigationView.visibility = View.GONE
-                    findViewById<View>(R.id.playerBar).visibility = View.GONE
+                    playerBarFragmentContainer?.visibility = View.GONE
                 }
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
-                    findViewById<View>(R.id.playerBar).visibility = View.VISIBLE
+                    playerBarFragmentContainer?.visibility = View.VISIBLE
                     // Ensure previousMenuItem is checked
                     previousMenuItem.isChecked = false
                     val menuItem = bottomNavigationView.menu.findItem(destination.id)
@@ -75,12 +77,16 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        if (savedInstanceState == null) {
-            // No need to replace fragment here as nav_host_fragment will handle it
-        }
+        PlayerManager.initialize(playerBarViewModel)
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        PlayerManager.stop()
     }
 }
