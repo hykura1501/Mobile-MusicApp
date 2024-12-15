@@ -9,30 +9,30 @@
 
             <path
                 android:strokeWidth="2"
-                android:strokeColor="@color/black"
+                android:strokeColor="@color/white"
                 android:strokeLineCap="round"
                 android:pathData="M3,4h14" />
 
             <path
                 android:strokeWidth="2"
-                android:strokeColor="@color/black"
+                android:strokeColor="@color/white"
                 android:strokeLineCap="round"
                 android:pathData="M3,8h14" />
 
             <path
                 android:strokeWidth="2"
-                android:strokeColor="@color/black"
+                android:strokeColor="@color/white"
                 android:strokeLineCap="round"
                 android:pathData="M3,12h20" />
 
             <path
                 android:strokeWidth="2"
-                android:strokeColor="@color/black"
+                android:strokeColor="@color/white"
                 android:strokeLineCap="round"
                 android:pathData="M3,16h20" />
 
             <path
-                android:fillColor="@color/black"
+                android:fillColor="@color/white"
                 android:pathData="M20,3L24,6L20,9Z" />
         </vector>
     </item>

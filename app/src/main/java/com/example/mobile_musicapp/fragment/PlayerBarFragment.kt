@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.models.Song
@@ -22,6 +23,7 @@ import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 class PlayerBarFragment : Fragment() {
     private lateinit var seekBar: SeekBar
     private lateinit var playPauseButton: ImageButton
+    private lateinit var queueButton: ImageButton
     private lateinit var songThumbnail : ImageView
     private lateinit var songTitle : TextView
     private lateinit var songArtist : TextView
@@ -35,6 +37,7 @@ class PlayerBarFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_player_bar, container, false)
         seekBar = view.findViewById(R.id.bottomSeekBar)
         playPauseButton = view.findViewById(R.id.playPauseButton)
+        queueButton = view.findViewById(R.id.queueButton)
         songThumbnail = view.findViewById<ImageView>(R.id.songThumbnail)
         songTitle = view.findViewById<TextView>(R.id.songTitle)
         songArtist = view.findViewById<TextView>(R.id.songArtist)
@@ -79,6 +82,14 @@ class PlayerBarFragment : Fragment() {
         }
         else {
             playerBar.visibility = View.GONE
+        }
+
+        // Queue button logic
+        queueButton.setOnClickListener {
+            if (requireParentFragment() !is QueueFragment) {
+                val navController = requireParentFragment().findNavController()
+                navController.navigate(R.id.action_player_bar_to_queue)
+            }
         }
     }
 
