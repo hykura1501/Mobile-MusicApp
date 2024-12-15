@@ -46,6 +46,9 @@
 
     <string name="iconDescription">Icon</string>
     <string name="dashDescription">Dash</string>
+    <string name="queueTitle">Queue</string>
+    <string name="queueButton">Queue button</string>
+
 
     <string name="recommended_songs">Recommended songs</string>
     <string name="favourite_songs">Favourite songs</string>
