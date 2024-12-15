@@ -34,7 +34,10 @@ object PlayerManager {
                     }
                     else{
                         // If repeat mode is on, keep playing the current song
-                        handler.postDelayed({ prepare()}, 500)
+                        handler.postDelayed({
+                            seekTo(0);
+                            play()
+                        }, 500)
                     }
                 }
             }

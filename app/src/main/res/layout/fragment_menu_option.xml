@@ -33,6 +33,7 @@
             android:layout_height="48dp"
             app:cardCornerRadius="4dp">
             <ImageView
+                android:id="@+id/songThumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/song"
