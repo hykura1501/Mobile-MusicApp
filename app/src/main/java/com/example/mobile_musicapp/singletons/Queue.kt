@@ -1,58 +1,87 @@
 package com.example.mobile_musicapp.singletons
 
 import com.example.mobile_musicapp.helpers.RandomHelper
+import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 
 val RandomHelper = RandomHelper()
 
 object Queue {
-    var songs = mutableListOf<Song>()
-    private val playedSongs = mutableListOf<Int>()
+    private var songs = mutableListOf<Song>()
+    private var playedSongs = mutableListOf<String>()
     private var currentSongIndex = 0
     private var shuffle = false
     
-    fun addSongModel(song: Song) {
+    fun addSong(song: Song) {
         songs.add(song)
     }
     
-    fun removeSongModel(song: Song) {
-        songs.remove(song)
+    fun removeSong(song: Song) {
+        if (playedSongs.contains(song._id)) {
+            playedSongs.remove(song._id)
+        }
+        if (songs.contains(song)) {
+            songs.remove(song)
+        }
     }
-    
-    fun getPlaylist(): List<Song> {
-        return songs.toMutableList()
+
+    fun getSongs(): MutableList<Song> {
+        return songs
     }
-    
-    fun clearPlaylist() {
-        songs.clear()
-        playedSongs.clear()
-    }
-    
+
     fun getCurrentSong(): Song? {
         return if (songs.isNotEmpty()) songs[currentSongIndex] else null
     }
-    
 
     fun nextSong() {
         if (songs.isNotEmpty()) {
-            playedSongs.add(currentSongIndex)
-            currentSongIndex =
+            playedSongs.add(songs[currentSongIndex]._id)
+
             if (shuffle) {
-                RandomHelper.getRandomSongIndex(playedSongs, songs.size - 1)
+//              RandomHelper.getRandomSongIndex(playedSongs, songs.size - 1)
             } else {
-                (currentSongIndex + 1) % songs.size
+                currentSongIndex = (currentSongIndex + 1) % songs.size
             }
         }
     }
 
     fun previousSong() {
         if (songs.isNotEmpty()) {
-            currentSongIndex =
             if (shuffle) {
-                playedSongs.last()
+                if (playedSongs.isNotEmpty()) {
+//                    currentSongIndex = playedSongs.last()
+                }
             } else {
-                (currentSongIndex - 1) % songs.size
+                if (currentSongIndex == 0) {
+                    currentSongIndex = songs.size - 1
+                } else {
+                    currentSongIndex -= 1
+                }
             }
         }
+    }
+
+    private fun clearQueue() {
+        songs.clear()
+        playedSongs.clear()
+        currentSongIndex = 0
+    }
+
+    fun openPlaylist(playlist: MutableList<Song>, index: Int) {
+        clearQueue()
+        currentSongIndex = index
+        songs.addAll(playlist)
+    }
+
+    fun openSong(song: Song) {
+        if (songs.contains(song)) {
+            currentSongIndex = songs.indexOf(song)
+        }
+    }
+
+    fun openPlaylist(playlist: Playlist) {
+        clearQueue()
+        songs.addAll(playlist.songs)
+        currentSongIndex = 0
     }
 }

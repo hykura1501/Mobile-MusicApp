@@ -58,6 +58,16 @@ data class ApiResponseAuth(
     val code: Int,
     val token: String
 )
+data class FavoriteSongsResponse(
+    val code: Int,
+    val favoriteSongs: List<Song>,
+    val page: Int,
+    val perPage: Int,
+    val total: Int,
+    val totalPage: Int
+)
+
+
 
 interface ApiService {
     @GET("playlist")
@@ -92,6 +102,15 @@ interface ApiService {
         @Query("perPage") perPage: Int
     ): Response<ApiResponseSongs>
 
+    @GET("/song/favorite")
+    suspend fun getFavoriteSongs(): Response<FavoriteSongsResponse>
+
+    @POST("/song/favorite/add/{songId}")
+    suspend fun addFavoriteSong(@Path("songId") songId: String): Response<Void>
+
+    @DELETE("/song/favorite/remove/{songId}")
+    suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
+
     @POST("auth/login")
     suspend fun login(
         @Body loginRequest: LoginRequest
@@ -101,9 +120,7 @@ interface ApiService {
     suspend fun register(
         @Body registerRequest: RegisterRequest
     ): Response<ApiResponseAuth>
-
 }
-
 
 object RetrofitClient {
     private const val BASE_URL = "https://musicapp-api-fkq3.onrender.com/"
