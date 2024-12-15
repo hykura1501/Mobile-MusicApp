@@ -16,7 +16,6 @@
                 app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
                 app:nullable="false" />
         </action>
-
         <action
             android:id="@+id/action_player_bar_to_queue"
             app:destination="@id/queue"
@@ -34,40 +33,39 @@
     </fragment>
 
     <fragment
-        android:id="@+id/library"
+        android:id="@+id/libraryFragment"
         android:name="com.example.mobile_musicapp.fragment.LibraryFragment"
         android:label="Library" >
         <action
             android:id="@+id/action_library_to_newPlaylist"
-            app:destination="@id/newPlaylist"
-            app:popUpTo="@id/library">
+            app:destination="@id/newPlaylistFragment"
+            app:popUpTo="@id/libraryFragment">
         </action>
-
         <action
             android:id="@+id/action_library_to_playlist"
-            app:destination="@id/album"
-            app:popUpTo="@id/library">
+            app:destination="@id/albumFragment"
+            app:popUpTo="@id/libraryFragment">
         </action>
     </fragment>
 
     <fragment
-        android:id="@+id/newPlaylist"
+        android:id="@+id/newPlaylistFragment"
         android:name="com.example.mobile_musicapp.fragment.NewPlaylistFragment"
         android:label="New Playlist">
         <action
             android:id="@+id/action_newPlaylist_to_library"
-            app:destination="@id/library"
-            app:popUpTo="@id/newPlaylist" />
+            app:destination="@id/libraryFragment"
+            app:popUpTo="@id/newPlaylistFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/album"
+        android:id="@+id/albumFragment"
         android:name="com.example.mobile_musicapp.fragment.PlaylistFragment"
-        android:label="New Playlist">
+        android:label="Album">
         <action
             android:id="@+id/action_playlist_to_library"
-            app:destination="@id/library"
-            app:popUpTo="@id/album" />
+            app:destination="@id/libraryFragment"
+            app:popUpTo="@id/albumFragment" />
     </fragment>
 
     <fragment
@@ -76,4 +74,13 @@
         android:label="Queue">
     </fragment>
 
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.mobile_musicapp.fragment.SearchFragment"
+        android:label="SearchFragment" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.mobile_musicapp.fragment.ProfileFragment"
+        android:label="ProfileFragment" />
 </navigation>
