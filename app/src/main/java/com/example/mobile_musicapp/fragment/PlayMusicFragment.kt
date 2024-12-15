@@ -187,7 +187,7 @@ class PlayMusicFragment : Fragment() {
 
         // Set background using BackgroundHelper
         val song = Queue.getCurrentSong()!!
-        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground)
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground, cornerRadius = 0f)
     }
 
     @SuppressLint("DefaultLocale")
