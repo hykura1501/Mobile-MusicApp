@@ -7,13 +7,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import com.example.mobile_musicapp.fragment.LibraryFragment
+import com.example.mobile_musicapp.fragment.PlayMusicFragment
+import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
-import android.util.Log
+import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private val favoritesViewModel: FavoritesViewModel by viewModels()
+    private val playerBarViewModel: PlayerBarViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +37,17 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             // No need to replace fragment here as nav_host_fragment will handle it
         }
+
+        PlayerManager.initialize(playerBarViewModel)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        PlayerManager.stop()
     }
 }
