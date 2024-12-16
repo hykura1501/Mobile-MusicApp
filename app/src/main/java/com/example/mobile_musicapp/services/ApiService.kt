@@ -58,7 +58,8 @@ data class RegisterRequest(
 
 data class ApiResponseAuth(
     val code: Int,
-    val token: String
+    val token: String,
+    val message: String
 )
 data class FavoriteSongsResponse(
     val code: Int,

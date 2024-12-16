@@ -5,7 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.databinding.FragmentLoginBinding
+import com.example.mobile_musicapp.databinding.FragmentRegisterBinding
+import com.example.mobile_musicapp.services.AuthApiResult
+import com.example.mobile_musicapp.services.AuthDao
+import com.example.mobile_musicapp.services.TokenManager
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,7 +28,8 @@ class Register : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private var _binding: FragmentRegisterBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -33,8 +42,87 @@ class Register : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false)
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnRegister.setOnClickListener {
+            var email = binding.emailEditText.text.toString()
+            var fullname = binding.fullNameEditText.text.toString()
+            var password = binding.passwordEditText.text.toString()
+            if (email.isEmpty()) {
+                binding.tvErrorEmail.text = "Email is required"
+            } else {
+                binding.tvErrorEmail.text = ""
+            }
+            if (password.isEmpty()) {
+                binding.tvErrorPassword.text = "Password is required"
+            } else {
+                binding.tvErrorPassword.text = ""
+            }
+            if (fullname.isEmpty()) {
+                binding.tvErrorFullName.text = "Full Name is required"
+            } else {
+                binding.tvErrorFullName.text = ""
+            }
+            if (email.isNotEmpty() && password.isNotEmpty() && fullname.isNotEmpty()) {
+                lifecycleScope.launch {
+                    try {
+                        when (val response = AuthDao.register(fullname, email, password)) {
+                            is AuthApiResult.Success -> {
+                                val token = response.data?.token
+                                if (token != null) {
+                                    TokenManager.saveToken(requireContext(), token)
+                                    binding.tvErrorEmail.text = ""
+                                    binding.tvErrorPassword.text = ""
+                                    binding.tvErrorFullName.text = ""
+                                    binding.emailEditText.text.clear()
+                                    binding.passwordEditText.text.clear()
+                                    binding.fullNameEditText.text.clear()
+                                    findNavController().navigate(R.id.action_register_to_home)
+                                } else {
+                                    binding.tvErrorPassword.text = "Unexpected error: Token is missing."
+                                }
+                            }
+                            is AuthApiResult.Error -> {
+                                val errorMessage = response.message
+                                when (val errorCode = response.code) {
+                                    400 -> {
+                                        binding.tvErrorPassword.text = errorMessage
+                                    }
+                                    else -> {
+                                        binding.tvErrorPassword.text = "Error $errorCode: $errorMessage"
+                                    }
+                                }
+                            }
+                            null -> {
+                                binding.tvErrorPassword.text = "Unable to connect to the server. Please try again."
+                            }
+                        }
+                    } catch (e: Exception) {
+                        binding.tvErrorPassword.text = "An error occurred: ${e.message}"
+                    }
+                }
+            }
+        }
+
+        binding.btnLogin.setOnClickListener {
+            findNavController().navigate(R.id.action_register_to_login)
+        }
+
+        binding.btnBack.setOnClickListener {
+            findNavController().navigate(R.id.action_register_to_home)
+        }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

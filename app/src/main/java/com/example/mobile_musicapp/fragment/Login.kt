@@ -13,6 +13,8 @@ import com.example.mobile_musicapp.databinding.FragmentLoginBinding
 import com.example.mobile_musicapp.services.AuthDao
 import com.example.mobile_musicapp.services.TokenManager
 import androidx.navigation.fragment.findNavController
+import com.example.mobile_musicapp.services.AuthApiResult
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -25,15 +27,18 @@ private const val ARG_PARAM2 = "param2"
  */
 
 
-private var _binding: FragmentLoginBinding? = null
+
 // This property is only valid between onCreateView and
 // onDestroyView.
-private val binding get() = _binding!!
+
 
 class Login : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,23 +78,40 @@ class Login : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 lifecycleScope.launch {
                     try {
-                        val token = AuthDao.login(email, password)
-                        if (token != null) {
-                            TokenManager.saveToken(requireContext(), token)
-                            binding.tvErrorEmail.text = ""
-                            binding.tvErrorPassword.text = ""
-                            binding.emailEditText.text.clear()
-                            binding.passwordEditText.text.clear()
-                            findNavController().navigate(R.id.action_login_to_home)
-                        } else {
-                            binding.tvErrorPassword.text = "Login failed"
+                        when (val response = AuthDao.login(email, password)) {
+                            is AuthApiResult.Success -> {
+                                val token = response.data?.token
+                                if (token != null) {
+                                    TokenManager.saveToken(requireContext(), token)
+                                    binding.tvErrorEmail.text = ""
+                                    binding.tvErrorPassword.text = ""
+                                    binding.emailEditText.text.clear()
+                                    binding.passwordEditText.text.clear()
+                                    findNavController().navigate(R.id.action_login_to_home)
+                                } else {
+                                    binding.tvErrorPassword.text = "Unexpected error: Token is missing."
+                                }
+                            }
+                            is AuthApiResult.Error -> {
+                                binding.tvErrorPassword.text = response.message
+                            }
+                            null -> {
+                                binding.tvErrorPassword.text = "Unable to connect to the server. Please try again."
+                            }
                         }
+
                     } catch (e: Exception) {
                         // Handle exception
                         binding.tvErrorPassword.text = "An error occurred: ${e.message}"
                     }
                 }
             }
+        }
+        binding.btnRegister.setOnClickListener {
+            findNavController().navigate(R.id.action_login_to_register)
+        }
+        binding.btnBack.setOnClickListener {
+            findNavController().navigate(R.id.action_login_to_home)
         }
     }
 
