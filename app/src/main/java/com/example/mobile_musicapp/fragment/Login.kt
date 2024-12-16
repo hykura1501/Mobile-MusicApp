@@ -4,10 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.databinding.FragmentLoginBinding
-
+import com.example.mobile_musicapp.services.AuthDao
+import com.example.mobile_musicapp.services.TokenManager
+import androidx.navigation.fragment.findNavController
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -56,12 +61,34 @@ class Login : Fragment() {
             val password = binding.passwordEditText.text.toString()
             if (email.isEmpty()) {
                 binding.tvErrorEmail.text = "Email is required"
+            } else {
+                binding.tvErrorEmail.text = ""
             }
             if (password.isEmpty()) {
                 binding.tvErrorPassword.text = "Password is required"
+            } else {
+                binding.tvErrorPassword.text = ""
             }
-            if (email.isNotEmpty() && password.isNotEmpty()) {
 
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                lifecycleScope.launch {
+                    try {
+                        val token = AuthDao.login(email, password)
+                        if (token != null) {
+                            TokenManager.saveToken(requireContext(), token)
+                            binding.tvErrorEmail.text = ""
+                            binding.tvErrorPassword.text = ""
+                            binding.emailEditText.text.clear()
+                            binding.passwordEditText.text.clear()
+                            findNavController().navigate(R.id.action_login_to_home)
+                        } else {
+                            binding.tvErrorPassword.text = "Login failed"
+                        }
+                    } catch (e: Exception) {
+                        // Handle exception
+                        binding.tvErrorPassword.text = "An error occurred: ${e.message}"
+                    }
+                }
             }
         }
     }

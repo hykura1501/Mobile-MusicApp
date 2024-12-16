@@ -73,6 +73,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="group_name">"Cloud Ninjas"</string>
     <string name="sign_in">"Login"</string>
+    <string name="please_sign_in">"Please login first"</string>
     <string name="register">"Register"</string>
     <string name="enter_your_email">"Enter your email"</string>
     <string name="enter_your_password">"Enter your password"</string>
@@ -90,4 +91,7 @@
     <string name="register_with_google">"Register with Google"</string>
     <string name="sign_in_with_facebook">"Login with Facebook"</string>
     <string name="register_with_facebook">"Register with Facebook"</string>
+
+    <!-- User-->
+    <string name="edit_profile">"Edit Profile"</string>
 </resources>
