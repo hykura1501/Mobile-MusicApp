@@ -1,7 +1,9 @@
 package com.example.mobile_musicapp.services
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.models.User
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -67,6 +69,11 @@ data class FavoriteSongsResponse(
     val totalPage: Int
 )
 
+data class UserResponse(
+    val code: Int,
+    val data: User
+)
+
 
 
 interface ApiService {
@@ -120,23 +127,39 @@ interface ApiService {
     suspend fun register(
         @Body registerRequest: RegisterRequest
     ): Response<ApiResponseAuth>
+
+    @GET("user/me")
+    suspend fun getMe(): Response<UserResponse>
+
 }
+
+object TokenManager {
+    private const val PREFS_NAME = "MyApp"
+    private const val TOKEN_KEY = "TOKEN"
+
+    fun saveToken(context: Context, token: String) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(TOKEN_KEY, token)
+        editor.apply()
+    }
+
+    fun getToken(context: Context): String {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getString(TOKEN_KEY, "") ?: ""
+    }
+}
+
 
 object RetrofitClient {
     private const val BASE_URL = "https://musicapp-api-fkq3.onrender.com/"
 
     private val authInterceptor = Interceptor { chain ->
-        //val token = "Bearer ${getTokenFromPreferences()}"
-        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczMzg4OTY4MSwiZXhwIjoxNzM0MDYyNDgxfQ.ic6ResHy20gLVqCKAkp9eHpVCJTY8qIBBMPXos33-_g"
+        val token = "Bearer ${TokenManager.getToken(App.instance)}"
         val newRequest = chain.request().newBuilder()
             .addHeader("Authorization", token)
             .build()
         chain.proceed(newRequest)
-    }
-
-    private fun getTokenFromPreferences(): String {
-        val sharedPreferences = App.instance.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("TOKEN", "") ?: ""
     }
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
