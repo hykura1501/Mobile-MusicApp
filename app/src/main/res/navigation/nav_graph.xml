@@ -97,5 +97,23 @@
         <action
             android:id="@+id/action_login_to_home"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/register"
+            app:popUpTo="@id/login" />
+    </fragment>
+    <fragment
+        android:id="@+id/register"
+        android:name="com.example.mobile_musicapp.fragment.Register"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register"
+    >
+        <action
+            android:id="@+id/action_register_to_home"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/login"
+            app:popUpTo="@id/register" />
     </fragment>
 </navigation>
