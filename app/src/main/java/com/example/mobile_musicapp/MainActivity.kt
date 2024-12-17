@@ -1,5 +1,6 @@
 package com.example.mobile_musicapp
 
+import android.util.Log
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -18,12 +19,11 @@ import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
-import com.example.mobile_musicapp.services.RetrofitClient
 import com.example.mobile_musicapp.models.Song
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import android.widget.Toast
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.SongDao
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.Toast
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -101,6 +101,7 @@ class MainActivity : AppCompatActivity() {
 
         if (Intent.ACTION_VIEW == action && data != null) {
             val songId = data.lastPathSegment
+            Log.d("MainActivity", "Action: $action, Data: $data, Song ID: $songId")
             if (songId != null) {
                 fetchAndOpenSong(songId)
             }
@@ -110,23 +111,15 @@ class MainActivity : AppCompatActivity() {
     private fun fetchAndOpenSong(songId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = RetrofitClient.instance.getSongById(songId)
-                if (response.isSuccessful) {
-                    val apiResponseSong = response.body()
-                    val song = apiResponseSong?.data
-                    withContext(Dispatchers.Main) {
-                        if (song != null) {
-                            Toast.makeText(this@MainActivity, "Opening song: ${song.title} by ${song.artistName}", Toast.LENGTH_LONG).show()
-                            // Create the SongListWithIndex object
-                            val songListWithIndex = SongListWithIndex(songs = listOf(song), selectedIndex = 0)
-                            // Navigate to PlayMusicFragment
-                            navigateToPlayMusicFragment(songListWithIndex)
-                        } else {
-                            Toast.makeText(this@MainActivity, "Failed to fetch song", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
+                val song = SongDao.getSongById(songId)
+                withContext(Dispatchers.Main) {
+                    if (song != null) {
+                        Toast.makeText(this@MainActivity, "Opening song: ${song.title} by ${song.artistName}", Toast.LENGTH_LONG).show()
+                        // Create the SongListWithIndex object
+                        val songListWithIndex = SongListWithIndex(songs = listOf(song), selectedIndex = 0)
+                        // Navigate to PlayMusicFragment
+                        navigateToPlayMusicFragment(songListWithIndex)
+                    } else {
                         Toast.makeText(this@MainActivity, "Failed to fetch song", Toast.LENGTH_SHORT).show()
                     }
                 }
