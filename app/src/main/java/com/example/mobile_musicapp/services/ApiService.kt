@@ -21,6 +21,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
+data class ApiResponseSong(
+    val code: Int,
+    val data: Song
+)
+
 data class ApiResponsePlaylists(
     val code: Int,
     val data: List<Playlist>
@@ -78,6 +83,7 @@ data class UserResponse(
 
 
 interface ApiService {
+    // playlist ----------------------------------------------------------------
     @GET("playlist")
     suspend fun getAllPlaylists(): Response<ApiResponsePlaylists>
 
@@ -91,6 +97,10 @@ interface ApiService {
     suspend fun createPlaylist(
         @Body playlistRequest: CreatePlaylistRequest
     ): Response<ApiResponsePlaylist>
+
+    // song ----------------------------------------------------------------
+    @GET("song/detail/{songId}")
+    suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSong>
 
     @GET("song/new-release")
     suspend fun getNewReleaseSongs(
@@ -119,6 +129,7 @@ interface ApiService {
     @DELETE("/song/favorite/remove/{songId}")
     suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
 
+    // auth ----------------------------------------------------------------
     @POST("auth/login")
     suspend fun login(
         @Body loginRequest: LoginRequest
@@ -131,7 +142,6 @@ interface ApiService {
 
     @GET("user/me")
     suspend fun getMe(): Response<UserResponse>
-
 }
 
 object TokenManager {
