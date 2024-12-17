@@ -8,6 +8,11 @@ import com.example.mobile_musicapp.services.RetrofitClient
 
 class SongPagingSource : PagingSource<Int, Song>() {
     val TAG = "ItemPagingSource"
+
+    companion object{
+        val cachedSongsSet = mutableSetOf<Song>()
+    }
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Song> {
         val page = params.key ?: 1
 
@@ -17,6 +22,7 @@ class SongPagingSource : PagingSource<Int, Song>() {
             if (response.isSuccessful) {
                 val items = response.body()?.data
 //                items?.forEach { Log.d(TAG, "load: ===> data = $it") }
+                cachedSongsSet.addAll(items?.toSet() ?: emptyList())
                 val nextKey = if (items?.isEmpty() == true) null else page + 1
                 Log.d(TAG, "load: ===> nextKey = ${nextKey}")
                 return LoadResult.Page(

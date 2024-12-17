@@ -69,7 +69,7 @@ class LibraryFragment : Fragment() {
             val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
             sharedViewModel.selectedPlaylist.value = playlist
             val navController = findNavController()
-            navController.navigate(R.id.action_library_to_playlist)
+//            navController.navigate(R.id.action_library_to_playlist)
         }
 
         // Long click

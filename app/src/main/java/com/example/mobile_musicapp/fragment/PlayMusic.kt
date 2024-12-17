@@ -15,9 +15,12 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.components.CommentsBottomSheet
+import com.example.mobile_musicapp.components.SoftInputAssist
 import com.example.mobile_musicapp.services.MockDao
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
@@ -26,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.example.mobile_musicapp.helpers.ImageHelper
 import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
+import com.example.mobile_musicapp.viewModels.SongViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +37,7 @@ import kotlinx.coroutines.withContext
 
 class PlayMusic : Fragment() {
 
-    private val args: PlayMusicArgs by navArgs()
+    private val args: PlayMusicFragmentArgs by navArgs()
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
     private lateinit var showComment : ImageButton
@@ -50,15 +54,21 @@ class PlayMusic : Fragment() {
     private lateinit var songName: TextView
     private lateinit var songImage: ImageView
     private var isFavorite: Boolean = false
+    private lateinit var songViewModel: SongViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Get the list of songs and selected index from the arguments
         val songListWithIndex = args.songListWithIndex
-        Queue.songs = songListWithIndex.songs.toMutableList()
-        Queue.currentSongIndex = songListWithIndex.selectedIndex
+        songListWithIndex.songs.forEach {
+            Queue.addSong(it)
+        }
+        Queue.setCurrentSongIndex(songListWithIndex.selectedIndex)
+//        Queue.currentSongIndex = songListWithIndex.selectedIndex
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -71,7 +81,7 @@ class PlayMusic : Fragment() {
         connectUI(view)
         updateUI()  // Update UI with the selected song data
         prepareMusic()
-
+        songViewModel = ViewModelProvider(requireActivity())[SongViewModel::class.java]
         playButton.setOnClickListener {
             isPlaying = !isPlaying
             if (isPlaying) {
@@ -88,7 +98,10 @@ class PlayMusic : Fragment() {
         previousButton.setOnClickListener {
             previousSong()
         }
-
+        showComment.setOnClickListener {
+            val bottomSheet = CommentsBottomSheet()
+            bottomSheet.show(requireActivity().supportFragmentManager,bottomSheet.tag)
+        }
         addToFavoritesButton.setOnClickListener {
             val song = Queue.getCurrentSong()!!
             CoroutineScope(Dispatchers.Main).launch {
@@ -127,10 +140,7 @@ class PlayMusic : Fragment() {
             addToFavoritesButton.setImageResource(R.drawable.ic_heart)
         }
 
-        showComment.setOnClickListener {
-            val bottomSheet = CommentsBottomSheet()
-            bottomSheet.show(requireActivity().supportFragmentManager,bottomSheet.tag)
-        }
+
     }
 
     private fun prepareMusic() {
@@ -155,6 +165,7 @@ class PlayMusic : Fragment() {
             mediaPlayer?.prepareAsync()
 
             mediaPlayer?.setOnPreparedListener {
+
                 it.start()
                 updateUI()
                 updateSeekBarAndTime()
@@ -250,7 +261,7 @@ class PlayMusic : Fragment() {
         addToFavoritesButton = view.findViewById(R.id.addToFavoritesButton)
         artist = view.findViewById(R.id.artist)
         songName = view.findViewById(R.id.songName)
-        songImage = view.findViewById(R.id.imageView)
+//        songImage = view.findViewById(R.id.imageView)
         showComment = view.findViewById(R.id.optionsButton)
 
         seekBar.isEnabled = false

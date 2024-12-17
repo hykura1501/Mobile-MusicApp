@@ -1,9 +1,11 @@
 package com.example.mobile_musicapp.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobile_musicapp.LanguageChangeActivity
 import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.models.Song
@@ -32,8 +35,9 @@ class HomeFragment : Fragment() {
     private lateinit var newReleaseSongsRecyclerView: RecyclerView
     private lateinit var popularSongsRecyclerView: RecyclerView
     private lateinit var topLikesSongsRecyclerView: RecyclerView
-    private lateinit var playerBar: View
+//    private lateinit var playerBar: View
     private lateinit var bottomNavigation : BottomNavigationView
+    private lateinit var ivSetting : ImageButton
 
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
@@ -51,8 +55,9 @@ class HomeFragment : Fragment() {
         newReleaseSongsRecyclerView = view.findViewById(R.id.newReleaseSongsRecyclerView)
         popularSongsRecyclerView = view.findViewById(R.id.popularSongsRecyclerView)
         topLikesSongsRecyclerView = view.findViewById(R.id.topLikesSongsRecyclerView)
-        playerBar = view.findViewById(R.id.playerBar)
-        bottomNavigation = playerBar.findViewById(R.id.bottomNavigationView)
+//        playerBar = view.findViewById(R.id.playerBar)
+//        bottomNavigation = playerBar.findViewById(R.id.bottomNavigationView)
+        ivSetting = view.findViewById(R.id.settingsButton)
 
         setupRecyclerViews()
         loadNewReleaseSongs(1, 13)
@@ -68,15 +73,22 @@ class HomeFragment : Fragment() {
         })
         updateGreeting()
         handleEvent()
+
+        ivSetting.setOnClickListener {
+
+            val intent = Intent(requireActivity(), LanguageChangeActivity::class.java)
+            startActivity(intent)
+//            requireActivity().finish()
+        }
     }
 
     private fun handleEvent() {
-        bottomNavigation.setOnItemSelectedListener {
-            if (it.itemId == R.id.search) {
-                navigateToSearch()
-            }
-            true
-        }
+//        bottomNavigation.setOnItemSelectedListener {
+//            if (it.itemId == R.id.search) {
+//                navigateToSearch()
+//            }
+//            true
+//        }
     }
     private fun setupRecyclerViews() {
         favoriteSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -141,8 +153,5 @@ class HomeFragment : Fragment() {
             else -> "Good Evening"
         }
         greetingTextView.text = greeting
-    }
-    private fun navigateToSearch() {
-        findNavController().navigate(R.id.action_homeFragment_to_search2)
     }
 }

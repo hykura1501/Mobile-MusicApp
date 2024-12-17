@@ -71,5 +71,5 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
             .into(holder.songThumbnail)
     }
 
-    override fun getItemCount(): Int = songs.size
+    override fun getItemCount(): Int = songsList.size
 }

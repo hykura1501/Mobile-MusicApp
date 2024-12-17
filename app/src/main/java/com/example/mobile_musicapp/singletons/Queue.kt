@@ -15,7 +15,10 @@ object Queue {
     fun addSong(song: Song) {
         songs.add(song)
     }
-    
+
+    fun setCurrentSongIndex(data : Int) {
+        currentSongIndex = data
+    }
     fun removeSong(song: Song) {
         if (playedSongs.contains(song._id)) {
             playedSongs.remove(song._id)
