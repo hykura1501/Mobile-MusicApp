@@ -1,5 +1,6 @@
 package com.example.mobile_musicapp.fragment
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Favorite
@@ -20,6 +22,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.mobile_musicapp.helpers.BackgroundHelper
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.services.PlayerManager
@@ -48,6 +51,7 @@ class PlayMusicFragment : Fragment() {
     private lateinit var songName: TextView
     private lateinit var album: TextView
     private lateinit var songThumbnail: ImageView
+    private lateinit var playerBackground: ConstraintLayout
     private var isFavorite: Boolean = false
 
     private val args: PlayMusicFragmentArgs by navArgs()
@@ -119,7 +123,7 @@ class PlayMusicFragment : Fragment() {
             updateUI()
         }
 
-        // Xử lý khi nhấn nút Play/Pause
+        // Play/Pause button handling
         playButton.setOnClickListener {
             viewModel.togglePlayPause()
 
@@ -161,7 +165,7 @@ class PlayMusicFragment : Fragment() {
                 Option.SHARE.title,
                 Option.GO_TO_QUEUE.title,
             )
-            val actionDialogFragment = MenuOptionFragment.newInstance(options)
+            val actionDialogFragment = MenuOptionFragment.newInstance(options) { handleShare() }
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
         }
 
@@ -201,6 +205,7 @@ class PlayMusicFragment : Fragment() {
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                     PlayerManager.pause()
                 }
+
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     PlayerManager.play()
                 }
@@ -208,6 +213,10 @@ class PlayMusicFragment : Fragment() {
         )
         // Check and update the favorite icon on load
         updateFavoriteIcon()
+
+        // Set background using BackgroundHelper
+        val song = Queue.getCurrentSong()!!
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground, cornerRadius = 0f)
     }
 
     @SuppressLint("DefaultLocale")
@@ -254,6 +263,10 @@ class PlayMusicFragment : Fragment() {
         else {
             repeatButton.setImageResource(R.drawable.ic_repeat)
         }
+
+        // Update background when song changes
+        val song = Queue.getCurrentSong()!!
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground)
     }
 
     private fun updateFavoriteIcon() {
@@ -265,4 +278,22 @@ class PlayMusicFragment : Fragment() {
             addToFavoritesButton.setImageResource(R.drawable.ic_heart)
         }
     }
+
+    private fun handleShare() {
+        val song = Queue.getCurrentSong()
+        if (song != null) {
+            // Construct the shareable link
+            val appLink = "https://adsjgdskjsgdkjsd.web.app/songs/${song._id}"
+
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "Check out this song: ${song.title} by ${song.artistName} $appLink")
+                type = "text/plain"
+            }
+            startActivity(Intent.createChooser(shareIntent, "Share via"))
+        } else {
+            Toast.makeText(context, "No song is currently playing", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }

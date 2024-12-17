@@ -50,5 +50,20 @@ class SongDao {
                 emptyList()
             }
         }
+
+        suspend fun getSongById(songId: String): Song? {
+            return try {
+                val response = RetrofitClient.instance.getSongById(songId)
+                if (response.isSuccessful) {
+                    response.body()?.data
+                } else {
+                    Log.e("SongDao", "Error: ${response.code()} - ${response.message()}")
+                    null
+                }
+            } catch (e: Exception) {
+                Log.e("SongDao", "Exception: ${e.message}")
+                null
+            }
+        }
     }
 }

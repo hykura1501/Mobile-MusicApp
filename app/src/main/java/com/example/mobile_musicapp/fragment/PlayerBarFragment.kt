@@ -1,5 +1,3 @@
-@file:Suppress("RemoveExplicitTypeArguments")
-
 package com.example.mobile_musicapp.fragment
 
 import android.os.Bundle
@@ -15,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.helpers.BackgroundHelper
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.singletons.Queue
@@ -29,6 +28,7 @@ class PlayerBarFragment : Fragment() {
     private lateinit var songTitle : TextView
     private lateinit var songArtist : TextView
     private lateinit var playerBar: View
+    private lateinit var playerBarBackground: View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +43,7 @@ class PlayerBarFragment : Fragment() {
         songTitle = view.findViewById<TextView>(R.id.songTitle)
         songArtist = view.findViewById<TextView>(R.id.songArtist)
         playerBar = view.findViewById(R.id.playerBar)
+        playerBarBackground = view.findViewById(R.id.playerBarBackground)
         seekBar.isEnabled = false
 
 
@@ -113,5 +114,8 @@ class PlayerBarFragment : Fragment() {
             .into(songThumbnail)
 
         seekBar.max = song.duration * 1000
+
+        // Update background using BackgroundHelper
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBarBackground, cornerRadius = 10f)
     }
 }
