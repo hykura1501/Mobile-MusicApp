@@ -2,7 +2,6 @@ package com.example.mobile_musicapp.services
 
 import android.util.Log
 import com.example.mobile_musicapp.models.Song
-import kotlin.random.Random
 
 class SongDao {
     companion object {

@@ -19,6 +19,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
+// Response models
 data class ApiResponsePlaylists(
     val code: Int,
     val data: List<Playlist>

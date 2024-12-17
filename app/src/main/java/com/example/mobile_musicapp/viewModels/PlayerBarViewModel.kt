@@ -7,7 +7,7 @@ import com.example.mobile_musicapp.models.Song
 
 @Suppress("RemoveExplicitTypeArguments")
 class PlayerBarViewModel : ViewModel() {
-    private val _isPlaying = MutableLiveData<Boolean>(true)
+    private val _isPlaying = MutableLiveData<Boolean>(false)
     val isPlaying: LiveData<Boolean> = _isPlaying
 
     private val _shuffleMode = MutableLiveData<Boolean>(false)
@@ -22,9 +22,23 @@ class PlayerBarViewModel : ViewModel() {
     private val _currentPosition = MutableLiveData<Int>(0)
     val currentPosition: LiveData<Int> = _currentPosition
 
+    private val _deleteSong = MutableLiveData<Song>()
+    val deleteSong: LiveData<Song> = _deleteSong
+
+    private val _waiting = MutableLiveData<Boolean>(false)
+    val waiting: LiveData<Boolean> = _waiting
+
+    fun updateWaiting(waiting: Boolean) {
+        _waiting.value = waiting
+    }
+
     fun togglePlayPause() {
         val currentState = _isPlaying.value ?: false
         _isPlaying.value = !currentState
+    }
+
+    fun updatePlayPause(isPlaying: Boolean) {
+        _isPlaying.value = isPlaying
     }
 
     fun toggleRepeatMode() {
@@ -43,5 +57,9 @@ class PlayerBarViewModel : ViewModel() {
 
     fun updatePosition(newPosition: Int) {
         _currentPosition.value = newPosition
+    }
+
+    fun deleteSong(song: Song) {
+        _deleteSong.value = song
     }
 }

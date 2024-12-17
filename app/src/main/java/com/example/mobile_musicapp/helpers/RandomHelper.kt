@@ -1,18 +1,25 @@
 package com.example.mobile_musicapp.helpers
 
+import com.example.mobile_musicapp.models.Song
+
 class RandomHelper {
     private fun getRandomNumber(min: Int, max: Int): Int {
-        require(min < max) { "Invalid range" }
         return (min..max).random()
     }
 
-    fun getRandomSongIndex(playedSong : MutableList<Int>, size : Int) : Int {
-        val list = mutableListOf<Int>()
-        for (i in 0..size) {
-            if (!playedSong.contains(i)) {
-                list.add(i)
-            }
+    fun getRandomSongs(songs: MutableList<Song>, currentSongIndex: Int): MutableList<Song> {
+        val shuffleList = mutableListOf<Song>()
+
+        if (currentSongIndex + 1 < songs.size) {
+            shuffleList.addAll(songs.subList(currentSongIndex + 1, songs.size))
         }
-        return list[getRandomNumber(0, list.size - 1)]
+
+        shuffleList.shuffle()
+
+        val resultList = mutableListOf<Song>()
+        resultList.addAll(songs.subList(0, currentSongIndex + 1))
+        resultList.addAll(shuffleList)
+
+        return resultList
     }
 }

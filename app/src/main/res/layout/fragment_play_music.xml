@@ -100,7 +100,7 @@
             android:layout_height="32dp"
             android:background="@color/transparent"
             android:contentDescription="@string/addToFavoritesButton"
-            android:src="@drawable/ic_add_to_playlist"
+            android:src="@drawable/ic_heart"
             app:layout_constraintBottom_toBottomOf="@+id/artist"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/songName"
@@ -156,7 +156,7 @@
             android:contentDescription="@string/nextSongButton"
             android:src="@drawable/ic_next_music"
             app:layout_constraintBottom_toBottomOf="@+id/playButton"
-            app:layout_constraintEnd_toStartOf="@+id/sleepTimerButton"
+            app:layout_constraintEnd_toStartOf="@+id/repeatButton"
             app:layout_constraintStart_toEndOf="@+id/playButton"
             app:layout_constraintTop_toTopOf="@+id/playButton"
             tools:ignore="TouchTargetSizeCheck" />
@@ -175,12 +175,12 @@
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
-            android:id="@+id/sleepTimerButton"
+            android:id="@+id/repeatButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/sleepTimerButton"
-            android:src="@drawable/ic_sleep_timer"
+            android:contentDescription="@string/repeatButton"
+            android:src="@drawable/ic_repeat"
             app:layout_constraintBottom_toBottomOf="@+id/nextButton"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/nextButton"
@@ -201,7 +201,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/light_gray"
-            app:layout_constraintEnd_toEndOf="@+id/sleepTimerButton"
+            app:layout_constraintEnd_toEndOf="@+id/repeatButton"
             app:layout_constraintTop_toTopOf="@+id/currentTime" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
