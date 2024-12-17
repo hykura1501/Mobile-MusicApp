@@ -3,7 +3,7 @@ package com.example.mobile_musicapp.helpers
 import com.example.mobile_musicapp.models.Song
 
 class RandomHelper {
-    private fun getRandomNumber(min: Int, max: Int): Int {
+    fun getRandomNumber(min: Int, max: Int): Int {
         return (min..max).random()
     }
 
