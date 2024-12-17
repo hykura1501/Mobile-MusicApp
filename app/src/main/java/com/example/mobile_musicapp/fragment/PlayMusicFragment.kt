@@ -1,6 +1,7 @@
 package com.example.mobile_musicapp.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,7 +18,6 @@ import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.google.android.material.snackbar.Snackbar
-import kotlin.text.*
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -96,7 +96,7 @@ class PlayMusicFragment : Fragment() {
             updateUI()
         }
 
-        // Xử lý khi nhấn nút Play/Pause
+        // Play/Pause button handling
         playButton.setOnClickListener {
             viewModel.togglePlayPause()
 
@@ -136,7 +136,7 @@ class PlayMusicFragment : Fragment() {
                 Option.SHARE.title,
                 Option.REPEAT.title,
             )
-            val actionDialogFragment = MenuOptionFragment.newInstance(options)
+            val actionDialogFragment = MenuOptionFragment.newInstance(options) { handleShare() }
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
         }
 
@@ -165,7 +165,7 @@ class PlayMusicFragment : Fragment() {
             }
         }
 
-        seekBar.setOnSeekBarChangeListener (
+        seekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     if (fromUser) {
@@ -182,6 +182,7 @@ class PlayMusicFragment : Fragment() {
                 }
             }
         )
+
         // Check and update the favorite icon on load
         updateFavoriteIcon()
 
@@ -247,4 +248,22 @@ class PlayMusicFragment : Fragment() {
 
         playerBackground = view.findViewById<ConstraintLayout>(R.id.playerBackground)
     }
+
+    private fun handleShare() {
+        val song = Queue.getCurrentSong()
+        if (song != null) {
+            // Construct the shareable link
+            val appLink = "https://adsjgdskjsgdkjsd.web.app/songs/${song._id}"
+
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "Check out this song: ${song.title} by ${song.artistName} $appLink")
+                type = "text/plain"
+            }
+            startActivity(Intent.createChooser(shareIntent, "Share via"))
+        } else {
+            Toast.makeText(context, "No song is currently playing", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }
