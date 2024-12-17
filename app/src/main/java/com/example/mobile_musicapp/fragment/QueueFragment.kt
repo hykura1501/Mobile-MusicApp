@@ -58,6 +58,16 @@ class QueueFragment : Fragment() {
         backButton.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        // Observe navigateToPlayMusicFragment LiveData
+        val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = QueueFragmentDirections.actionQueueFragmentToPlayMusicFragment(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
+        }
     }
 
     private fun setupRecyclerView() {
