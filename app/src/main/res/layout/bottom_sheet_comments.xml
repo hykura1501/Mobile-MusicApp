@@ -1,52 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="500dp"
     android:id="@+id/main"
     android:orientation="vertical"
     android:padding="16dp">
-
     <!-- Tiêu đề -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="User Comments"
+        android:text="@string/user_comments"
         android:textSize="18sp"
         android:textStyle="bold"
         android:gravity="center"
         android:paddingBottom="12dp" />
-
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/tvError"
+    <ScrollView
+        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/no_comment"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingBottom="12dp" />
+        android:layout_height="300dp">
+       <LinearLayout
+           android:orientation="vertical"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="350dp">
-            <ProgressBar
-                android:id="@+id/pb_loading"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <!-- Danh sách bình luận -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvComments"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:scrollbars="vertical"
-                android:overScrollMode="always" />
+           <TextView
+               android:visibility="gone"
+               android:id="@+id/tvError"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="@string/no_comment"
+               android:textSize="18sp"
+               android:textStyle="bold"
+               android:gravity="center"
+               android:paddingBottom="12dp" />
 
-        </RelativeLayout>
-    <!-- Khu vực nhập bình luận -->
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="300dp">
+               <ProgressBar
+                   android:id="@+id/pb_loading"
+                   android:layout_centerInParent="true"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"/>
+               <!-- Danh sách bình luận -->
+               <androidx.recyclerview.widget.RecyclerView
+                   android:id="@+id/rvComments"
+                   android:layout_width="match_parent"
+                   android:layout_height="250dp"
+                   android:scrollbars="vertical"
+                   android:overScrollMode="always" />
+
+           </RelativeLayout>
+       </LinearLayout>
+    </ScrollView>
     <RelativeLayout
+        android:layout_gravity="bottom"
         android:layout_marginTop="10dp"
         android:id="@+id/ll_message"
         android:layout_width="match_parent"
@@ -74,4 +83,4 @@
                 android:layout_height="40dp"/>
         </LinearLayout>
     </RelativeLayout>
-</LinearLayout>
+</FrameLayout>

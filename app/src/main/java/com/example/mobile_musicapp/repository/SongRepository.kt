@@ -25,6 +25,17 @@ class SongRepository {
             }
         ).flow
     }
+    fun getPagedItemsSmaller(): Flow<PagingData<Song>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = true
+            ),
+            pagingSourceFactory = {
+                SongPagingSource()
+            }
+        ).flow
+    }
 
     suspend fun getAllPlayedRecently() = withContext(Dispatchers.IO){
         try {

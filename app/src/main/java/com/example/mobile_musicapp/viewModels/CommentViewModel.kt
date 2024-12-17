@@ -29,7 +29,7 @@ class CommentViewModel : ViewModel() {
         viewModelScope.launch {
            commentRepository.addComment(songId, data)?.let {
                Log.d(TAG, "addComment: ===> ${it.code}")
-               _commentAddMutableLiveData.postValue(Pair(it.code,it.data))
+               _commentAddMutableLiveData.postValue(Pair(it.code,it.data.first()))
            }?: run {
                Log.d(TAG, "addComment: NULL")
                _commentAddMutableLiveData.postValue(Pair(-1, CommentModel(UserInfo("",""),"")))

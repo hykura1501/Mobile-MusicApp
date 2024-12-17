@@ -9,12 +9,12 @@ data class CommentResponse(
 )
 
 data class CommentModel(
-    val userInfo : UserInfo,
-    val content : String,
-    val createdAt : Date = Date()
+    var userInfo : UserInfo,
+    var content : String,
+    var createdAt : Date = Date()
 )
 
 data class UserInfo(
-    val _id: String,
-    val fullName : String,
+    var _id: String,
+    var fullName : String,
 )

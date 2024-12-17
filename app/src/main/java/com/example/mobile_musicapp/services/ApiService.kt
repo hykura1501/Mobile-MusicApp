@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.User
+import com.example.mobile_musicapp.models.UserResponse
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -27,7 +28,7 @@ import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 
-data class ApiResponseSong(
+data class ApiResponseSongDetail(
     val code: Int,
     val data: Song
 )
@@ -122,7 +123,7 @@ interface ApiService {
 
     // song ----------------------------------------------------------------
     @GET("song/detail/{songId}")
-    suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSong>
+    suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSongDetail>
 
     @GET("song/new-release")
     suspend fun getNewReleaseSongs(
@@ -177,6 +178,9 @@ interface ApiService {
     @POST("other/recently-played/{id}")
     suspend fun addPlayedRecently(@Path("id") id : String): Response<ApiResponsePlayedRecently>
 
+    @GET("user/me")
+    suspend fun getInformationUser(): Response<UserResponse>
+
 }
 
 object TokenManager {
@@ -201,7 +205,7 @@ object RetrofitClient {
     private const val BASE_URL = "https://musicapp-api-fkq3.onrender.com/"
 
     private val authInterceptor = Interceptor { chain ->
-        val token = "Bearer ${TokenManager.getToken(App.instance)}"
+        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczNDQ1NzU5NCwiZXhwIjoxNzM0NjMwMzk0fQ.wn0n9Dqic4zO88FEQa9Y7OG00q8xcB8igcv4DZn14gc"
         val newRequest = chain.request().newBuilder()
             .addHeader("Authorization", token)
             .build()

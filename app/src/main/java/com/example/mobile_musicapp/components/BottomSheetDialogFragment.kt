@@ -1,12 +1,13 @@
 package com.example.mobile_musicapp.components
 
-import android.graphics.Rect
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -22,6 +23,7 @@ import com.example.mobile_musicapp.adapters.CommentsAdapter
 import com.example.mobile_musicapp.models.CommentModel
 import com.example.mobile_musicapp.viewModels.CommentViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+
 
 class CommentsBottomSheet : BottomSheetDialogFragment() {
     val TAG = "CommentsBottomSheet"
@@ -46,30 +48,10 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
         val edtContent: EditText = view.findViewById(R.id.edt_message)
         val tvError :TextView = view.findViewById(R.id.tvError)
         val pbLoading :ProgressBar = view.findViewById(R.id.pb_loading)
-        layoutMain = view.findViewById(R.id.main)
+      //  layoutMain = view.findViewById(R.id.main)
         rlMessage = view.findViewById(R.id.ll_message)
         commentViewModel = ViewModelProvider(requireActivity())[CommentViewModel::class.java]
         commentsAdapter = CommentsAdapter()
-
-        viewTreeObserver = OnGlobalLayoutListener {
-            // Get the visible frame of the screen
-            val rect = Rect()
-            layoutMain.getWindowVisibleDisplayFrame(rect)
-
-            val screenHeight: Int =
-                layoutMain.rootView.height // Total screen height
-            val keyboardHeight = screenHeight - rect.bottom // Height of the keyboard
-
-            // Adjust the message layout based on keyboard visibility
-            if (keyboardHeight > screenHeight * 0.15) {
-                // Keyboard is visible
-                rlMessage.translationY = -keyboardHeight + 600f
-            } else {
-                // Keyboard is hidden
-                rlMessage.translationY = 0f
-            }
-        }
-
 
         commentViewModel.getCommentLiveData().observe(requireActivity()){
             pbLoading.visibility = View.GONE
@@ -82,7 +64,8 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
                     tvError.visibility = View.GONE
                     rvComments.visibility = View.VISIBLE
                 }
-                commentsAdapter.submitList(it)
+                commentsList.addAll(it.sortedBy {data -> data.createdAt })
+                commentsAdapter.submitList(it.sortedBy { data -> data.createdAt })
             }
 
         }
@@ -92,7 +75,10 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
                 tvError.visibility = View.GONE
                 rvComments.visibility = View.VISIBLE
                 commentsList.add(it.second)
-                commentsAdapter.submitList(commentsList)
+                edtContent.setText("")
+                hideKeyboard(requireActivity())
+                commentsAdapter.submitList(commentsList.sortedBy { data -> data.createdAt })
+                rvComments.scrollToPosition(commentsList.size - 1)
             }else {
                 if (it.first != 0 ) {
                     Toast.makeText(requireContext(), "Lỗi", Toast.LENGTH_SHORT).show()
@@ -104,7 +90,6 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
                         rvComments.visibility = View.VISIBLE
                     }
                 }
-
             }
         }
 
@@ -118,13 +103,22 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
         }
     }
     override fun onStop() {
-        layoutMain.viewTreeObserver.removeOnGlobalLayoutListener(viewTreeObserver)
+      //  layoutMain.viewTreeObserver.removeOnGlobalLayoutListener(viewTreeObserver)
         super.onStop()
     }
-
+    fun hideKeyboard(activity: Activity) {
+        val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        //Find the currently focused view, so we can grab the correct window token from it.
+        var view = activity.currentFocus
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = View(activity)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
     override fun onResume() {
         super.onResume()
-        layoutMain.viewTreeObserver.addOnGlobalLayoutListener(viewTreeObserver)
+       // layoutMain.viewTreeObserver.addOnGlobalLayoutListener(viewTreeObserver)
     }
 
 }
