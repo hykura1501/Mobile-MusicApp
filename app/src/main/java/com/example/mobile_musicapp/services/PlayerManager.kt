@@ -49,6 +49,7 @@ object PlayerManager {
     fun prepare() {
         val song = Queue.getCurrentSong()
         if (song != null) {
+            mediaPlayer?.reset()
             mediaPlayer?.setDataSource(song.path)
             mediaPlayer?.prepare()
             mediaPlayer?.setOnPreparedListener {

@@ -1,11 +1,8 @@
 package com.example.mobile_musicapp.viewModels
 
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavDirections
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.services.PlaylistDao
@@ -52,14 +49,6 @@ class ShareViewModel : ViewModel() {
 
     // Long press song
     val selectedSong = MutableLiveData<Song>()
-
-    // Destination fragment
-    private val _destinationAction = MutableLiveData<NavDirections>()
-    val destinationAction: LiveData<NavDirections> get() = _destinationAction
-
-    fun setDestinationAction(action: NavDirections) {
-        _destinationAction.value = action
-    }
 
     // Go to PlayMusicFragment
     val navigateToPlayMusicFragment = MutableLiveData<Boolean>()

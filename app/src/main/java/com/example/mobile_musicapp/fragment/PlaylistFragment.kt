@@ -68,6 +68,15 @@ class PlaylistFragment : Fragment() {
                 PlayerManager.prepare()
             }
         }
+
+        // Observe navigateToPlayMusicFragment LiveData
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = PlaylistFragmentDirections.actionAlbumFragmentToPlayMusicFragment(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
+        }
     }
 
     private fun setupRecyclerView(playlist: Playlist) {
