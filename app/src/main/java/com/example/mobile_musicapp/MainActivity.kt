@@ -1,5 +1,7 @@
 package com.example.mobile_musicapp
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -16,7 +18,13 @@ import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
+import com.example.mobile_musicapp.services.RetrofitClient
+import com.example.mobile_musicapp.models.Song
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.Toast
+import com.example.mobile_musicapp.models.SongListWithIndex
+import com.example.mobile_musicapp.services.SongDao
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +43,9 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        // Handle deep link if the activity is launched via a link
+        handleIntent(intent)
+
         // Fetch favorite songs on app start
         Favorite.fetchFavoriteSongs(favoritesViewModel)
 
@@ -48,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         // Ensure the correct item is selected and toggle visibility when navigating
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            val playerBarFragmentContainer = findViewById<View>(R.id.player_bar_container) // Ensure correct ID
+            val playerBarFragmentContainer = findViewById<View>(R.id.player_bar_container)
             when (destination.id) {
                 R.id.playMusicFragment, R.id.newPlaylistFragment, R.id.login, R.id.register -> {
                     bottomNavigationView.visibility = View.GONE
@@ -57,7 +68,6 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
                     playerBarFragmentContainer?.visibility = View.VISIBLE
-                    // Ensure previousMenuItem is checked
                     previousMenuItem.isChecked = false
                     val menuItem = bottomNavigationView.menu.findItem(destination.id)
                     if (menuItem != null) {
@@ -78,6 +88,62 @@ class MainActivity : AppCompatActivity() {
         })
 
         PlayerManager.initialize(playerBarViewModel)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        val action = intent.action
+        val data: Uri? = intent.data
+
+        if (Intent.ACTION_VIEW == action && data != null) {
+            val songId = data.lastPathSegment
+            if (songId != null) {
+                fetchAndOpenSong(songId)
+            }
+        }
+    }
+
+    private fun fetchAndOpenSong(songId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitClient.instance.getSongById(songId)
+                if (response.isSuccessful) {
+                    val apiResponseSong = response.body()
+                    val song = apiResponseSong?.data
+                    withContext(Dispatchers.Main) {
+                        if (song != null) {
+                            Toast.makeText(this@MainActivity, "Opening song: ${song.title} by ${song.artistName}", Toast.LENGTH_LONG).show()
+                            // Create the SongListWithIndex object
+                            val songListWithIndex = SongListWithIndex(songs = listOf(song), selectedIndex = 0)
+                            // Navigate to PlayMusicFragment
+                            navigateToPlayMusicFragment(songListWithIndex)
+                        } else {
+                            Toast.makeText(this@MainActivity, "Failed to fetch song", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, "Failed to fetch song", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "An error occurred: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun navigateToPlayMusicFragment(songListWithIndex: SongListWithIndex) {
+        val navController = findNavController(R.id.nav_host_fragment)
+        val bundle = Bundle().apply {
+            putParcelable("songListWithIndex", songListWithIndex)
+        }
+        navController.navigate(R.id.playMusicFragment, bundle)
     }
 
     override fun onSupportNavigateUp(): Boolean {
