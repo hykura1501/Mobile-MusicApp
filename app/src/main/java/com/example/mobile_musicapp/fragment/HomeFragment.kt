@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
+import com.example.mobile_musicapp.viewModels.ShareViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -60,6 +62,17 @@ class HomeFragment : Fragment() {
                 loadFavoriteSongs(favoriteSongs)
             }
         })
+
+        // Observe navigateToPlayMusicFragment LiveData
+        val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
+        }
+
 
         updateGreeting()
     }

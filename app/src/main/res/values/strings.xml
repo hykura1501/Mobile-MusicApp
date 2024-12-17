@@ -16,6 +16,7 @@
     <string name="favouriteButton">Favourite</string>
     <string name="startTime">00:00</string>
     <string name="settingsButton">Settings</string>
+    <string name="repeatButton">Settings</string>
 
     <string name="backButton">Back</string>
     <string name="homeButtonNavigation">Home</string>

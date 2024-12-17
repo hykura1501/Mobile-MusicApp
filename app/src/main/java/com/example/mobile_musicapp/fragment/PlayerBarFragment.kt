@@ -19,6 +19,7 @@ import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
+import com.example.mobile_musicapp.viewModels.ShareViewModel
 
 class PlayerBarFragment : Fragment() {
     private lateinit var seekBar: SeekBar
@@ -43,6 +44,8 @@ class PlayerBarFragment : Fragment() {
         songArtist = view.findViewById<TextView>(R.id.songArtist)
         playerBar = view.findViewById(R.id.playerBar)
         seekBar.isEnabled = false
+
+
         return view
     }
 
@@ -88,8 +91,14 @@ class PlayerBarFragment : Fragment() {
         queueButton.setOnClickListener {
             if (requireParentFragment() !is QueueFragment) {
                 val navController = requireParentFragment().findNavController()
-                navController.navigate(R.id.action_player_bar_to_queue)
+                navController.navigate(R.id.action_player_bar_to_queueFragment)
             }
+        }
+
+        // Player bar click listener
+        view.setOnClickListener {
+            val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+            shareViewModel.navigateToPlayMusicFragment.value = true
         }
     }
 

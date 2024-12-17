@@ -14,11 +14,12 @@
             <argument
                 android:name="songListWithIndex"
                 app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
-                app:nullable="false" />
+                app:nullable="true" />
         </action>
+
         <action
-            android:id="@+id/action_player_bar_to_queue"
-            app:destination="@id/queue"
+            android:id="@+id/action_player_bar_to_queueFragment"
+            app:destination="@id/queueFragment"
             app:popUpTo="@id/playerBar" />
     </fragment>
 
@@ -29,7 +30,10 @@
         <argument
             android:name="songListWithIndex"
             app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
-            app:nullable="false" />
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_playMusicFragment_to_queueFragment"
+            app:destination="@id/queueFragment"/>
     </fragment>
 
     <fragment
@@ -69,7 +73,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/queue"
+        android:id="@+id/queueFragment"
         android:name="com.example.mobile_musicapp.fragment.QueueFragment"
         android:label="Queue">
     </fragment>

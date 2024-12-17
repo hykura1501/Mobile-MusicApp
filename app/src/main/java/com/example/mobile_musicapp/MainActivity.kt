@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.mobile_musicapp.helpers.NavigationHelper.setupWithNavControllerCustom
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.singletons.Favorite
+import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         PlayerManager.initialize(playerBarViewModel)
+        Queue.initialize(playerBarViewModel)
     }
 
     override fun onSupportNavigateUp(): Boolean {
