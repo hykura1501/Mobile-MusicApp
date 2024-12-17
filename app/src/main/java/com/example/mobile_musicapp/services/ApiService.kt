@@ -3,8 +3,10 @@ import android.content.Context
 import com.example.mobile_musicapp.models.CommentModel
 import com.example.mobile_musicapp.models.CommentRequest
 import com.example.mobile_musicapp.models.CommentResponse
+import android.content.SharedPreferences
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.models.User
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -24,6 +26,11 @@ import retrofit2.http.Query
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
+
+data class ApiResponseSong(
+    val code: Int,
+    val data: Song
+)
 
 data class ApiResponsePlaylists(
     val code: Int,
@@ -59,6 +66,22 @@ data class ApiResponseSongs(
     val data: List<Song>
 )
 
+data class LoginRequest(
+    val email: String,
+    val password: String
+)
+
+data class RegisterRequest(
+    val fullName : String,
+    val email: String,
+    val password: String
+)
+
+data class ApiResponseAuth(
+    val code: Int,
+    val token: String,
+    val message: String
+)
 data class FavoriteSongsResponse(
     val code: Int,
     val favoriteSongs: List<Song>,
@@ -68,6 +91,11 @@ data class FavoriteSongsResponse(
     val totalPage: Int
 )
 
+data class UserResponse(
+    val code: Int,
+    val data: User
+)
+
 
 
 data class ApiResponseComment(
@@ -75,6 +103,7 @@ data class ApiResponseComment(
     val data : CommentModel
 )
 interface ApiService {
+    // playlist ----------------------------------------------------------------
     @GET("playlist")
     suspend fun getAllPlaylists(): Response<ApiResponsePlaylists>
     @GET("song")
@@ -90,6 +119,10 @@ interface ApiService {
     suspend fun createPlaylist(
         @Body playlistRequest: CreatePlaylistRequest
     ): Response<ApiResponsePlaylist>
+
+    // song ----------------------------------------------------------------
+    @GET("song/detail/{songId}")
+    suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSong>
 
     @GET("song/new-release")
     suspend fun getNewReleaseSongs(
@@ -118,6 +151,20 @@ interface ApiService {
     @DELETE("/song/favorite/remove/{songId}")
     suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
 
+    // auth ----------------------------------------------------------------
+    @POST("auth/login")
+    suspend fun login(
+        @Body loginRequest: LoginRequest
+    ): Response<ApiResponseAuth>
+
+    @POST("auth/register")
+    suspend fun register(
+        @Body registerRequest: RegisterRequest
+    ): Response<ApiResponseAuth>
+
+    @GET("user/me")
+    suspend fun getMe(): Response<UserResponse>
+
     @POST("comment/{id}")
     suspend fun addComment( @Path("id") id: String, @Body body : CommentRequest): Response<ApiResponseComment>
 
@@ -132,23 +179,33 @@ interface ApiService {
 
 }
 
+object TokenManager {
+    private const val PREFS_NAME = "MyApp"
+    private const val TOKEN_KEY = "TOKEN"
+
+    fun saveToken(context: Context, token: String) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(TOKEN_KEY, token)
+        editor.apply()
+    }
+
+    fun getToken(context: Context): String {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getString(TOKEN_KEY, "") ?: ""
+    }
+}
 
 
 object RetrofitClient {
     private const val BASE_URL = "https://musicapp-api-fkq3.onrender.com/"
 
     private val authInterceptor = Interceptor { chain ->
-        //val token = "Bearer ${getTokenFromPreferences()}"
-        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczNDA5NjM2NCwiZXhwIjoxNzM0MjY5MTY0fQ.a6rq2ZIuZs2D4bNvs6lt-oYTUAXQEO50hIitBr_JM9Q"
+        val token = "Bearer ${TokenManager.getToken(App.instance)}"
         val newRequest = chain.request().newBuilder()
             .addHeader("Authorization", token)
             .build()
         chain.proceed(newRequest)
-    }
-
-    private fun getTokenFromPreferences(): String {
-        val sharedPreferences = App.instance.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("TOKEN", "") ?: ""
     }
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -158,9 +215,9 @@ object RetrofitClient {
     private val client = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
         .addInterceptor(loggingInterceptor)
-        .connectTimeout(10, TimeUnit.SECONDS)  // Increase connect timeout
-        .readTimeout(10, TimeUnit.SECONDS)     // Increase read timeout
-        .writeTimeout(10, TimeUnit.SECONDS)    // Increase write timeout
+        .connectTimeout(60, TimeUnit.SECONDS)  // Increase connect timeout
+        .readTimeout(60, TimeUnit.SECONDS)     // Increase read timeout
+        .writeTimeout(60, TimeUnit.SECONDS)    // Increase write timeout
         .build()
 
     val instance: ApiService by lazy {
