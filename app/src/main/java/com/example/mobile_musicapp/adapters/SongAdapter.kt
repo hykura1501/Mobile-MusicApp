@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.models.Song
 
@@ -59,13 +60,15 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
         // Get the data model based on position
         val song: Song = songsList[position]
         // Set item views based on your views and data model
-        val songNameTextView = holder.songName
-        songNameTextView.text = song.title
-        val songArtistTextView = holder.songArtist
-        songArtistTextView.text = song.artistName
-        val songThumbnailView = holder.songThumbnail
-        val imageResId = R.drawable.song
-        songThumbnailView.setImageResource(imageResId)
+        val songTitle = holder.songName
+        songTitle.text = song.title
+        val songArtist = holder.songArtist
+        songArtist.text = song.artistName
+
+        Glide.with(holder.itemView.context)
+            .load(song.thumbnail)
+            .error(R.drawable.song)
+            .into(holder.songThumbnail)
     }
 
     override fun getItemCount(): Int = songs.size
