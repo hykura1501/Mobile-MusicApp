@@ -39,9 +39,9 @@ class PlayerBarFragment : Fragment() {
         seekBar = view.findViewById(R.id.bottomSeekBar)
         playPauseButton = view.findViewById(R.id.playPauseButton)
         queueButton = view.findViewById(R.id.queueButton)
-        songThumbnail = view.findViewById<ImageView>(R.id.songThumbnail)
-        songTitle = view.findViewById<TextView>(R.id.songTitle)
-        songArtist = view.findViewById<TextView>(R.id.songArtist)
+        songThumbnail = view.findViewById(R.id.songThumbnail)
+        songTitle = view.findViewById(R.id.songTitle)
+        songArtist = view.findViewById(R.id.songArtist)
         playerBar = view.findViewById(R.id.playerBar)
         playerBarBackground = view.findViewById(R.id.playerBarBackground)
         seekBar.isEnabled = false

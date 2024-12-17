@@ -100,6 +100,8 @@ class PlayMusicFragment : Fragment() {
         album = view.findViewById<TextView>(R.id.album) as TextView
 
         songThumbnail = view.findViewById<ImageView>(R.id.songThumbnail) as ImageView
+
+        playerBackground = view.findViewById<ConstraintLayout>(R.id.playerBackground)
         return view
     }
 
@@ -243,6 +245,9 @@ class PlayMusicFragment : Fragment() {
         updateFavoriteIcon()
         updateShuffleIcon()
         updateRepeatIcon()
+
+        // Update background when song changes
+        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground)
     }
 
     private fun updateShuffleIcon() {
@@ -263,10 +268,6 @@ class PlayMusicFragment : Fragment() {
         else {
             repeatButton.setImageResource(R.drawable.ic_repeat)
         }
-
-        // Update background when song changes
-        val song = Queue.getCurrentSong()!!
-        BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground)
     }
 
     private fun updateFavoriteIcon() {
