@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
 
         loadNewReleaseSongs(1, 13)
         loadPopularSongs(1, 7)
-        loadTopLikesSongs(1, 23)
+        loadTopLikesSongs(1, 29)
 
         val randomHelper = RandomHelper()
         val perPage = randomHelper.getRandomNumber(11, 19)

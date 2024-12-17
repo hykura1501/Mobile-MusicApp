@@ -86,24 +86,6 @@
                     android:scrollbars="horizontal"
                     android:paddingBottom="16dp" />
 
-                <!-- Recommended Songs Section -->
-                <TextView
-                    android:id="@+id/RecommendedSongsHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="Recommended Songs"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recommendedSongsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="horizontal"
-                    android:paddingBottom="16dp" />
-
                 <!-- New Release Songs Section -->
                 <TextView
                     android:id="@+id/newReleaseSongsHeader"
@@ -153,6 +135,24 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/topLikesSongsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal"
+                    android:paddingBottom="16dp" />
+
+                <!-- Recommended Songs Section -->
+                <TextView
+                    android:id="@+id/RecommendedSongsHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="Recommended Songs"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendedSongsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="horizontal"
