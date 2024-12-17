@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.helpers.RandomHelper
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.SongDao
@@ -32,6 +33,7 @@ class HomeFragment : Fragment() {
     private lateinit var newReleaseSongsRecyclerView: RecyclerView
     private lateinit var popularSongsRecyclerView: RecyclerView
     private lateinit var topLikesSongsRecyclerView: RecyclerView
+    private lateinit var recommendedSongsRecyclerView: RecyclerView
 
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
 
@@ -49,11 +51,18 @@ class HomeFragment : Fragment() {
         newReleaseSongsRecyclerView = view.findViewById(R.id.newReleaseSongsRecyclerView)
         popularSongsRecyclerView = view.findViewById(R.id.popularSongsRecyclerView)
         topLikesSongsRecyclerView = view.findViewById(R.id.topLikesSongsRecyclerView)
+        recommendedSongsRecyclerView = view.findViewById(R.id.recommendedSongsRecyclerView)
 
         setupRecyclerViews()
+
         loadNewReleaseSongs(1, 13)
         loadPopularSongs(1, 7)
         loadTopLikesSongs(1, 23)
+
+        val randomHelper = RandomHelper()
+        val perPage = randomHelper.getRandomNumber(11, 19)
+        val page = randomHelper.getRandomNumber(5, 37)
+        loadRecommendedSongs(page, perPage)
 
         // Observe loading state and favorite songs from ViewModel
         favoritesViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
@@ -82,6 +91,7 @@ class HomeFragment : Fragment() {
         newReleaseSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         popularSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         topLikesSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recommendedSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun loadNewReleaseSongs(page: Int, perPage: Int) {
@@ -128,6 +138,20 @@ class HomeFragment : Fragment() {
             val selectedIndex = favoriteSongs.indexOf(song)
             val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(favoriteSongs, selectedIndex))
             findNavController().navigate(action)
+        }
+    }
+
+    private fun loadRecommendedSongs(page: Int, perPage: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val recommendedSongs = withContext(Dispatchers.IO) {
+                // currently using random songs from list of all songs
+                SongDao.getAllSongs(page, perPage)
+            }
+            recommendedSongsRecyclerView.adapter = SongHorizontalAdapter(recommendedSongs) { song ->
+                val selectedIndex = recommendedSongs.indexOf(song)
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(recommendedSongs, selectedIndex))
+                findNavController().navigate(action)
+            }
         }
     }
 

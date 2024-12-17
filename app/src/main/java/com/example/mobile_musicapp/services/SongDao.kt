@@ -65,5 +65,20 @@ class SongDao {
                 null
             }
         }
+
+        suspend fun getAllSongs(page: Int, perPage: Int): List<Song> {
+            return try {
+                val response = RetrofitClient.instance.getAllSongs(page, perPage)
+                if (response.isSuccessful) {
+                    response.body()?.data ?: emptyList()
+                } else {
+                    Log.e("SongDao", "Error: ${response.code()} - ${response.message()}")
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("SongDao", "Exception: ${e.message}")
+                emptyList()
+            }
+        }
     }
 }

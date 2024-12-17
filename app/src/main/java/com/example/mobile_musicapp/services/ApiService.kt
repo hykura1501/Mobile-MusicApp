@@ -103,6 +103,12 @@ interface ApiService {
     @GET("song/detail/{songId}")
     suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSong>
 
+    @GET("song")
+    suspend fun getAllSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
+
     @GET("song/new-release")
     suspend fun getNewReleaseSongs(
         @Query("page") page: Int,
