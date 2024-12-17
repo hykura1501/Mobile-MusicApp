@@ -23,17 +23,19 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
 
     private lateinit var optionsAdapter: OptionAdapter
     private var options: List<Option> = emptyList()
+    private var shareCallback: (() -> Unit)? = null
 
     private lateinit var songThumbnail: ImageView
     private lateinit var songTitle: TextView
     private lateinit var songArtist: TextView
 
     companion object {
-        fun newInstance(options: List<String>): MenuOptionFragment {
+        fun newInstance(options: List<String>, shareCallback: (() -> Unit)? = null): MenuOptionFragment {
             val fragment = MenuOptionFragment()
             val args = Bundle()
             args.putStringArrayList("OPTIONS", ArrayList(options))
             fragment.arguments = args
+            fragment.shareCallback = shareCallback
             return fragment
         }
     }
@@ -46,7 +48,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_menu_option, container, false)
@@ -82,13 +84,12 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
 
     private fun handleOptionClick(option: Option) {
         when (option) {
-            // TODO: Handle click events for each option
-            Option.ADD_TO_PLAYLIST -> { /* Xử lý thêm vào playlist */ }
-            Option.REMOVE_FROM_PLAYLIST -> { /* Xử lý xóa khỏi playlist */ }
+            Option.ADD_TO_PLAYLIST -> { /* Handle add to playlist */ }
+            Option.REMOVE_FROM_PLAYLIST -> { /* Handle remove from playlist */ }
             Option.REMOVE_FROM_QUEUE -> { removeSongFromQueue() }
             Option.DELETE_PLAYLIST -> { deletePlaylist() }
-            Option.DOWNLOAD -> { /* Xử lý tải xuống */ }
-            Option.SHARE -> { /* Xử lý chia sẻ */ }
+            Option.DOWNLOAD -> { /* Handle download */ }
+            Option.SHARE -> { shareCallback?.invoke() }
             Option.REPEAT -> { toggleRepeatMode() }
             Option.GO_TO_QUEUE -> { navigateToQueue() }
         }

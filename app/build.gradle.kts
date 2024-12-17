@@ -20,6 +20,15 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = "release-key"
+            keyPassword = "123456"
+            storeFile = file("keystore/release-key.jks")
+            storePassword = "123456"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -27,6 +36,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
+        }
+        debug {
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -48,27 +61,28 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    // navigation component
+    // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    
+
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
-    // Retrofit - call api
+    // Retrofit
     implementation(libs.retrofit)
     implementation (libs.okhttp3.logging.interceptor)
     implementation (libs.retrofit2.converter.gson)
-    // Glide - load image
-    implementation(libs.github.glide)
-    annotationProcessor(libs.compiler)
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation(libs.androidx.palette.ktx)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
+    implementation("androidx.palette:palette:1.0.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
