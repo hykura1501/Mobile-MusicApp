@@ -33,12 +33,17 @@ class PlaylistFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playlist, container, false)
+        val view = inflater.inflate(R.layout.fragment_playlist, container, false)
+        backButton = view.findViewById(R.id.backButton)
+        playlistTitle = view.findViewById(R.id.playlistTitle)
+        quantitySongs = view.findViewById(R.id.quantitySongs)
+        playButton = view.findViewById(R.id.playButton)
+        recyclerView = view.findViewById(R.id.playlistRecyclerView)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        connectUI(view)
 
         var playlist : Playlist? = null
 
@@ -61,6 +66,15 @@ class PlaylistFragment : Fragment() {
                 playerBarViewModel.updateSong(Queue.getCurrentSong()!!)
                 playerBarViewModel.togglePlayPause()
                 PlayerManager.prepare()
+            }
+        }
+
+        // Observe navigateToPlayMusicFragment LiveData
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = PlaylistFragmentDirections.actionAlbumFragmentToPlayMusicFragment(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
             }
         }
     }
@@ -86,13 +100,5 @@ class PlaylistFragment : Fragment() {
 
         playlistTitle.text = playlist.title
         "${playlist.songs.size} songs".also { quantitySongs.text = it }
-    }
-
-    private fun connectUI(view: View) {
-        backButton = view.findViewById(R.id.backButton)
-        playlistTitle = view.findViewById(R.id.playlistTitle)
-        quantitySongs = view.findViewById(R.id.quantitySongs)
-        playButton = view.findViewById(R.id.playButton)
-        recyclerView = view.findViewById(R.id.playlistRecyclerView)
     }
 }
