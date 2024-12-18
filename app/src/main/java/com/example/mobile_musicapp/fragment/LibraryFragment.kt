@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.PlaylistAdapter
 import com.example.mobile_musicapp.models.Option
+import com.example.mobile_musicapp.models.PlaylistOption
 import com.example.mobile_musicapp.services.PlaylistDao
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 
@@ -88,10 +89,10 @@ class LibraryFragment : Fragment() {
 
             // Create options for bottom sheet dialog fragment
             val options = listOf(
-                Option.DELETE_PLAYLIST.title,
+                PlaylistOption.DELETE_PLAYLIST.title,
             )
-            val actionDialogFragment = MenuOptionFragment.newInstance(options)
-            actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
+            val actionDialogFragment = PlaylistMenuOptionFragment.newInstance(options)
+            actionDialogFragment.show(parentFragmentManager, "PlaylistMenuOptionFragment")
         }
     }
 
