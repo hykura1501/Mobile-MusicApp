@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.OptionAdapter
 import com.example.mobile_musicapp.models.Option
+import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.example.mobile_musicapp.viewModels.ShareViewModel
@@ -70,25 +71,20 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
         }
         recyclerView.adapter = optionsAdapter
 
-        if (Queue.getCurrentSong() == null) return
-        val song = Queue.getCurrentSong()!!
-
-        songArtist.text = song.artistName
-        songTitle.text = song.title
-
-        Glide.with(this)
-            .load(song.thumbnail)
-            .placeholder(R.drawable.song)
-            .error(R.drawable.song)
-            .into(songThumbnail)
+        val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        shareViewModel.selectedSong.observe(viewLifecycleOwner) { song ->
+            song?.let {
+                updateSongUI(song)
+            }
+        }
     }
 
     private fun handleOptionClick(option: Option) {
         when (option) {
+            // TODO: handle option click for each option
             Option.ADD_TO_PLAYLIST -> { /* Handle add to playlist */ }
             Option.REMOVE_FROM_PLAYLIST -> { /* Handle remove from playlist */ }
             Option.REMOVE_FROM_QUEUE -> { removeSongFromQueue() }
-            Option.DELETE_PLAYLIST -> { deletePlaylist() }
             Option.DOWNLOAD -> { /* Handle download */ }
             Option.SHARE -> { shareCallback?.invoke() }
             Option.REPEAT -> { toggleRepeatMode() }
@@ -97,13 +93,15 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
         dismiss()
     }
 
-    private fun deletePlaylist() {
-        val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-        sharedViewModel.longSelectedPlaylist.observe(viewLifecycleOwner) { playlist ->
-            playlist?.let {
-                sharedViewModel.removePlaylist(it)
-            }
-        }
+    private fun updateSongUI(song: Song) {
+        songArtist.text = song.artistName
+        songTitle.text = song.title
+
+        Glide.with(this)
+            .load(song.thumbnail)
+            .placeholder(R.drawable.song)
+            .error(R.drawable.song)
+            .into(songThumbnail)
     }
 
     private fun toggleRepeatMode() {

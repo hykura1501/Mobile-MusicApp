@@ -19,9 +19,8 @@
         </action>
 
         <action
-            android:id="@+id/action_player_bar_to_queueFragment"
-            app:destination="@id/queueFragment"
-            app:popUpTo="@id/playerBar" />
+            android:id="@+id/action_homeFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
     </fragment>
 
     <fragment
@@ -55,6 +54,9 @@
             android:id="@+id/action_libraryFragment_to_playMusicFragment"
             app:destination="@id/playMusicFragment">
         </action>
+        <action
+            android:id="@+id/action_libraryFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
     </fragment>
 
     <fragment
@@ -79,6 +81,9 @@
             android:id="@+id/action_albumFragment_to_playMusicFragment"
             app:destination="@id/playMusicFragment">
         </action>
+        <action
+            android:id="@+id/action_albumFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
     </fragment>
 
     <fragment
@@ -127,8 +132,7 @@
         android:id="@+id/register"
         android:name="com.example.mobile_musicapp.fragment.Register"
         android:label="fragment_register"
-        tools:layout="@layout/fragment_register"
-    >
+        tools:layout="@layout/fragment_register">
         <action
             android:id="@+id/action_register_to_home"
             app:destination="@id/homeFragment" />

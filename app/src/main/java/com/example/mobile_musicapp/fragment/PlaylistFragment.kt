@@ -45,7 +45,7 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var playlist : Playlist? = null
+        var playlist : Playlist?
 
         val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
         sharedViewModel.selectedPlaylist.observe(viewLifecycleOwner) { selectedPlaylist ->
@@ -69,6 +69,7 @@ class PlaylistFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        // This button may be removed if the time have not enough
 //        playButton.setOnClickListener {
 //            if (playlist != null) {
 //                Queue.openPlaylist(playlist!!)
@@ -95,12 +96,7 @@ class PlaylistFragment : Fragment() {
         recyclerView.adapter = adapter
 
         adapter.onItemClick = {
-            // TODO play song
             Queue.openPlaylist(playlist.songs.toMutableList(), playlist.songs.indexOf(it))
-//            val playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
-//            playerBarViewModel.updateSong(Queue.getCurrentSong()!!)
-//            playerBarViewModel.togglePlayPause()
-//            PlayerManager.prepare()
             Queue.openPlaylist(
                 playlist.songs.toMutableList(),
                 playlist.songs.indexOf(it)
@@ -114,6 +110,8 @@ class PlaylistFragment : Fragment() {
         }
 
         adapter.onOptionClick = { selectedItem ->
+            val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+            shareViewModel.selectedSong.value = selectedItem
             // TODO: resolve click event
             val options = listOf(
                 Option.SHARE.title

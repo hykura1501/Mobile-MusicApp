@@ -14,15 +14,13 @@
 
         <TextView
             android:id="@+id/album"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:text=""
             android:textColor="@color/white"
-            android:ellipsize="end"
-            android:maxLines="1"
             app:layout_constraintEnd_toStartOf="@+id/optionsButton"
             app:layout_constraintStart_toEndOf="@+id/minimizeButton"
             app:layout_constraintTop_toTopOf="parent"
@@ -79,6 +77,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
             android:text=""
             android:textColor="@color/white"
             android:textSize="24sp"
@@ -90,14 +89,16 @@
 
         <TextView
             android:id="@+id/artist"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
             android:text=""
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@id/songName"
             app:layout_constraintTop_toBottomOf="@id/songName"
+            app:layout_constraintEnd_toStartOf="@+id/addToFavoritesButton"
             tools:ignore="HardcodedText" />
 
         <ImageButton
