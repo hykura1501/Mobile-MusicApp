@@ -15,11 +15,12 @@
             <argument
                 android:name="songListWithIndex"
                 app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
-                app:nullable="false" />
+                app:nullable="true" />
         </action>
+
         <action
-            android:id="@+id/action_player_bar_to_queue"
-            app:destination="@id/queue"
+            android:id="@+id/action_player_bar_to_queueFragment"
+            app:destination="@id/queueFragment"
             app:popUpTo="@id/playerBar" />
     </fragment>
 
@@ -30,7 +31,10 @@
         <argument
             android:name="songListWithIndex"
             app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
-            app:nullable="false" />
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_playMusicFragment_to_queueFragment"
+            app:destination="@id/queueFragment"/>
     </fragment>
 
     <fragment
@@ -38,14 +42,18 @@
         android:name="com.example.mobile_musicapp.fragment.LibraryFragment"
         android:label="Library" >
         <action
-            android:id="@+id/action_library_to_newPlaylist"
+            android:id="@+id/action_libraryFragment_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment"
             app:popUpTo="@id/libraryFragment">
         </action>
         <action
-            android:id="@+id/action_library_to_playlist"
+            android:id="@+id/action_libraryFragment_to_playlistFragment"
             app:destination="@id/albumFragment"
             app:popUpTo="@id/libraryFragment">
+        </action>
+        <action
+            android:id="@+id/action_libraryFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
         </action>
     </fragment>
 
@@ -54,7 +62,7 @@
         android:name="com.example.mobile_musicapp.fragment.NewPlaylistFragment"
         android:label="New Playlist">
         <action
-            android:id="@+id/action_newPlaylist_to_library"
+            android:id="@+id/action_newPlaylistFragment_to_libraryFragment"
             app:destination="@id/libraryFragment"
             app:popUpTo="@id/newPlaylistFragment" />
     </fragment>
@@ -64,21 +72,34 @@
         android:name="com.example.mobile_musicapp.fragment.PlaylistFragment"
         android:label="Album">
         <action
-            android:id="@+id/action_playlist_to_library"
+            android:id="@+id/action_playlistFragment_to_libraryFragment"
             app:destination="@id/libraryFragment"
             app:popUpTo="@id/albumFragment" />
+        <action
+            android:id="@+id/action_albumFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+        </action>
     </fragment>
 
     <fragment
-        android:id="@+id/queue"
+        android:id="@+id/queueFragment"
         android:name="com.example.mobile_musicapp.fragment.QueueFragment"
         android:label="Queue">
+        <action
+            android:id="@+id/action_queueFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.mobile_musicapp.fragment.SearchFragment"
-        android:label="SearchFragment" />
+        android:label="SearchFragment">
+        <action
+            android:id="@+id/action_searchFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/profileFragment"

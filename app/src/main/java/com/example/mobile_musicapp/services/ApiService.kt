@@ -21,6 +21,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
+// Response models
 data class ApiResponseSong(
     val code: Int,
     val data: Song
@@ -101,6 +102,12 @@ interface ApiService {
     // song ----------------------------------------------------------------
     @GET("song/detail/{songId}")
     suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSong>
+
+    @GET("song")
+    suspend fun getAllSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
 
     @GET("song/new-release")
     suspend fun getNewReleaseSongs(

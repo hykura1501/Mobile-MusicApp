@@ -55,7 +55,16 @@ class LibraryFragment : Fragment() {
 
         createPlaylistButton.setOnClickListener {
             val navController = findNavController()
-            navController.navigate(R.id.action_library_to_newPlaylist)
+            navController.navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+        }
+
+        // Observe navigateToPlayMusicFragment LiveData
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = LibraryFragmentDirections.actionLibraryFragmentToPlayMusicFragment(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
         }
     }
 
@@ -69,7 +78,7 @@ class LibraryFragment : Fragment() {
             val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
             sharedViewModel.selectedPlaylist.value = playlist
             val navController = findNavController()
-            navController.navigate(R.id.action_library_to_playlist)
+            navController.navigate(R.id.action_libraryFragment_to_playlistFragment)
         }
 
         // Long click
