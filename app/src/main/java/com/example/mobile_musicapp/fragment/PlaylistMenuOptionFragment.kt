@@ -19,7 +19,7 @@ import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class MenuOptionFragment : BottomSheetDialogFragment() {
+class ListMenuOptionFragment : BottomSheetDialogFragment() {
 
     private lateinit var optionsAdapter: OptionAdapter
     private var options: List<Option> = emptyList()
@@ -30,8 +30,8 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
     private lateinit var songArtist: TextView
 
     companion object {
-        fun newInstance(options: List<String>, shareCallback: (() -> Unit)? = null): MenuOptionFragment {
-            val fragment = MenuOptionFragment()
+        fun newInstance(options: List<String>, shareCallback: (() -> Unit)? = null): ListMenuOptionFragment {
+            val fragment = ListMenuOptionFragment()
             val args = Bundle()
             args.putStringArrayList("OPTIONS", ArrayList(options))
             fragment.arguments = args
