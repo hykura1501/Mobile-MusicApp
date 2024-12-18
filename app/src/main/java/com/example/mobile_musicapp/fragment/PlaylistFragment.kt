@@ -55,19 +55,29 @@ class PlaylistFragment : Fragment() {
             }
         }
 
+        val playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+        playerBarViewModel.isPlaying.observe(viewLifecycleOwner) {
+            if (playerBarViewModel.isPlaying.value == true) {
+                playButton.setImageResource(R.drawable.ic_pause_black)
+            } else {
+                playButton.setImageResource(R.drawable.ic_play_black)
+            }
+
+        }
+
         backButton.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        playButton.setOnClickListener {
-            if (playlist != null) {
-                Queue.openPlaylist(playlist!!)
-                val playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
-                playerBarViewModel.updateSong(Queue.getCurrentSong()!!)
-                playerBarViewModel.togglePlayPause()
-                PlayerManager.prepare()
-            }
-        }
+//        playButton.setOnClickListener {
+//            if (playlist != null) {
+//                Queue.openPlaylist(playlist!!)
+//                val playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+//                playerBarViewModel.updateSong(Queue.getCurrentSong()!!)
+//                playerBarViewModel.togglePlayPause()
+//                PlayerManager.prepare()
+//            }
+//        }
 
         // Observe navigateToPlayMusicFragment LiveData
         sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
@@ -86,6 +96,21 @@ class PlaylistFragment : Fragment() {
 
         adapter.onItemClick = {
             // TODO play song
+            Queue.openPlaylist(playlist.songs.toMutableList(), playlist.songs.indexOf(it))
+//            val playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+//            playerBarViewModel.updateSong(Queue.getCurrentSong()!!)
+//            playerBarViewModel.togglePlayPause()
+//            PlayerManager.prepare()
+            Queue.openPlaylist(
+                playlist.songs.toMutableList(),
+                playlist.songs.indexOf(it)
+            )
+            val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+            viewModel.updateSong(Queue.getCurrentSong()!!)
+            viewModel.togglePlayPause()
+            PlayerManager.prepare()
+            val action = PlaylistFragmentDirections.actionAlbumFragmentToPlayMusicFragment(null)
+            findNavController().navigate(action)
         }
 
         adapter.onOptionClick = { selectedItem ->
