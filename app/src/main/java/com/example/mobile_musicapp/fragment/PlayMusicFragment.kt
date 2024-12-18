@@ -163,7 +163,6 @@ class PlayMusicFragment : Fragment() {
 
         optionsButton.setOnClickListener {
             val options = listOf(
-                Option.ADD_TO_PLAYLIST.title,
                 Option.SHARE.title,
                 Option.GO_TO_QUEUE.title,
             )
