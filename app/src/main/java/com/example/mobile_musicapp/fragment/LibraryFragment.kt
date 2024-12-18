@@ -89,8 +89,6 @@ class LibraryFragment : Fragment() {
             // Create options for bottom sheet dialog fragment
             val options = listOf(
                 Option.DELETE_PLAYLIST.title,
-                Option.DOWNLOAD.title,
-                Option.SHARE.title
             )
             val actionDialogFragment = MenuOptionFragment.newInstance(options)
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
