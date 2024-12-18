@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -71,6 +72,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
         }
         recyclerView.adapter = optionsAdapter
 
+        if (Queue.getCurrentSong() == null) return
         val song = Queue.getCurrentSong()!!
 
         songArtist.text = song.artistName
@@ -98,6 +100,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
                 bottomSheet.show(requireActivity().supportFragmentManager,bottomSheet.tag)
                 return
             }
+            Option.GO_TO_QUEUE -> { navigateToQueue() }
         }
         dismiss()
     }
@@ -118,11 +121,17 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
 
     private fun removeSongFromQueue() {
         val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-        sharedViewModel.longSelectedSong.observe(viewLifecycleOwner) { song ->
+        val playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+        sharedViewModel.selectedSong.observe(viewLifecycleOwner) { song ->
             song?.let {
                 Queue.removeSong(it)
-                sharedViewModel.removedSong.value = song
+                playerBarViewModel.deleteSong(song)
             }
         }
+    }
+
+    private fun navigateToQueue() {
+        val action = PlayMusicFragmentDirections.actionPlayMusicFragmentToQueueFragment()
+        findNavController().navigate(action)
     }
 }

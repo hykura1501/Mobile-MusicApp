@@ -51,9 +51,22 @@ class QueueFragment : Fragment() {
         }
 
         playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+        playerBarViewModel.shuffleMode.observe(viewLifecycleOwner) {
+            setupRecyclerView()
+        }
 
         backButton.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        // Observe navigateToPlayMusicFragment LiveData
+        val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = QueueFragmentDirections.actionQueueFragmentToPlayMusicFragment(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
         }
     }
 
@@ -74,7 +87,7 @@ class QueueFragment : Fragment() {
 
         adapter.onOptionClick = { selectedItem ->
             val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-            shareViewModel.longSelectedSong.value = selectedItem
+            shareViewModel.selectedSong.value = selectedItem
 
             val options = listOf(
                 Option.REMOVE_FROM_QUEUE.title,

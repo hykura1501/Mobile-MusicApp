@@ -80,6 +80,7 @@ dependencies {
     implementation (libs.retrofit2.converter.gson)
     // Glide
     implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation(libs.androidx.palette.ktx)
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
     implementation("androidx.palette:palette:1.0.0")
 

@@ -125,6 +125,12 @@ interface ApiService {
     @GET("song/detail/{songId}")
     suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSongDetail>
 
+    @GET("song")
+    suspend fun getAllSongs(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int
+    ): Response<ApiResponseSongs>
+
     @GET("song/new-release")
     suspend fun getNewReleaseSongs(
         @Query("page") page: Int,
@@ -198,6 +204,12 @@ object TokenManager {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return sharedPreferences.getString(TOKEN_KEY, "") ?: ""
     }
+    fun clearToken(context: Context) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove(TOKEN_KEY)
+        editor.apply()
+    }
 }
 
 
@@ -205,7 +217,7 @@ object RetrofitClient {
     private const val BASE_URL = "https://musicapp-api-fkq3.onrender.com/"
 
     private val authInterceptor = Interceptor { chain ->
-        val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGNhMmQ2ZjMxYTY0Y2ViMTJiN2U2OCIsImlhdCI6MTczNDQ1NzU5NCwiZXhwIjoxNzM0NjMwMzk0fQ.wn0n9Dqic4zO88FEQa9Y7OG00q8xcB8igcv4DZn14gc"
+        val token = "Bearer ${TokenManager.getToken(App.instance)}"
         val newRequest = chain.request().newBuilder()
             .addHeader("Authorization", token)
             .build()
