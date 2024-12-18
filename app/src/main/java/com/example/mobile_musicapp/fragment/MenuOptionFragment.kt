@@ -70,7 +70,9 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
         }
         recyclerView.adapter = optionsAdapter
 
+        if (Queue.getCurrentSong() == null) return
         val song = Queue.getCurrentSong()!!
+
 
         songArtist.text = song.artistName
         songTitle.text = song.title
