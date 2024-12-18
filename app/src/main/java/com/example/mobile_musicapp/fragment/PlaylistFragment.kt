@@ -116,7 +116,6 @@ class PlaylistFragment : Fragment() {
         adapter.onOptionClick = { selectedItem ->
             // TODO: resolve click event
             val options = listOf(
-                Option.ADD_TO_PLAYLIST.title,
                 Option.SHARE.title
             )
             val actionDialogFragment = MenuOptionFragment.newInstance(options)
