@@ -28,6 +28,7 @@ import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
+import com.example.mobile_musicapp.viewModels.ShareViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -162,6 +163,8 @@ class PlayMusicFragment : Fragment() {
         }
 
         optionsButton.setOnClickListener {
+            val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+            shareViewModel.selectedSong.value = Queue.getCurrentSong()
             val options = listOf(
                 Option.SHARE.title,
                 Option.GO_TO_QUEUE.title,
@@ -202,11 +205,9 @@ class PlayMusicFragment : Fragment() {
                         PlayerManager.seekTo(progress)
                     }
                 }
-
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                     PlayerManager.pause()
                 }
-
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     PlayerManager.play()
                 }
@@ -295,5 +296,4 @@ class PlayMusicFragment : Fragment() {
             Toast.makeText(context, "No song is currently playing", Toast.LENGTH_SHORT).show()
         }
     }
-
 }
