@@ -48,6 +48,9 @@ class ShareViewModel : ViewModel() {
     val longSelectedPlaylist = MutableLiveData<Playlist>()
 
     // Long press song
-    val longSelectedSong = MutableLiveData<Song>()
+    val selectedSong = MutableLiveData<Song>()
+
+    // Go to PlayMusicFragment
+    val navigateToPlayMusicFragment = MutableLiveData<Boolean>()
 
 }

@@ -40,7 +40,7 @@
         android:ellipsize="end"
         android:textAlignment="textStart"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/songThumbnailContainer"
         app:layout_constraintTop_toTopOf="@+id/songThumbnailContainer" />
 

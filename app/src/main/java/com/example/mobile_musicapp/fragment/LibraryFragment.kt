@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.PlaylistAdapter
 import com.example.mobile_musicapp.models.Option
+import com.example.mobile_musicapp.models.PlaylistOption
 import com.example.mobile_musicapp.services.PlaylistDao
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 
@@ -55,7 +56,16 @@ class LibraryFragment : Fragment() {
 
         createPlaylistButton.setOnClickListener {
             val navController = findNavController()
-            navController.navigate(R.id.action_library_to_newPlaylist)
+            navController.navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+        }
+
+        // Observe navigateToPlayMusicFragment LiveData
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = LibraryFragmentDirections.actionLibraryFragmentToPlayMusicFragment(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
         }
     }
 
@@ -69,7 +79,7 @@ class LibraryFragment : Fragment() {
             val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
             sharedViewModel.selectedPlaylist.value = playlist
             val navController = findNavController()
-//            navController.navigate(R.id.action_library_to_playlist)
+            navController.navigate(R.id.action_libraryFragment_to_playlistFragment)
         }
 
         // Long click
@@ -79,12 +89,10 @@ class LibraryFragment : Fragment() {
 
             // Create options for bottom sheet dialog fragment
             val options = listOf(
-                Option.DELETE_PLAYLIST.title,
-                Option.DOWNLOAD.title,
-                Option.SHARE.title
+                PlaylistOption.DELETE_PLAYLIST.title,
             )
-            val actionDialogFragment = MenuOptionFragment.newInstance(options)
-            actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
+            val actionDialogFragment = PlaylistMenuOptionFragment.newInstance(options)
+            actionDialogFragment.show(parentFragmentManager, "PlaylistMenuOptionFragment")
         }
     }
 

@@ -1,5 +1,4 @@
 package com.example.mobile_musicapp.fragment
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -18,6 +17,7 @@ import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.google.android.material.snackbar.Snackbar
+import kotlin.text.*
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -44,6 +44,7 @@ class PlayMusicFragment : Fragment() {
     private lateinit var addToFavoritesButton: ImageButton
     private lateinit var minimizeButton: ImageButton
     private lateinit var shuffleButton: ImageButton
+    private lateinit var repeatButton: ImageButton
     private lateinit var optionsButton: ImageButton
     private lateinit var seekBar: SeekBar
     private lateinit var currentTime: TextView
@@ -64,16 +65,47 @@ class PlayMusicFragment : Fragment() {
 
         // Get the list of songs and selected index from the arguments
         val songListWithIndex = args.songListWithIndex
-        Queue.openPlaylist(songListWithIndex.songs.toMutableList(), songListWithIndex.selectedIndex)
-        val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
-        viewModel.updateSong(Queue.getCurrentSong()!!)
+        if (songListWithIndex != null) {
+            Queue.openPlaylist(
+                songListWithIndex.songs.toMutableList(),
+                songListWithIndex.selectedIndex
+            )
+            val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+            viewModel.updateSong(Queue.getCurrentSong()!!)
+            viewModel.togglePlayPause()
+            PlayerManager.prepare()
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_play_music, container, false)
+
+        // Button
+        val view = inflater.inflate(R.layout.fragment_play_music, container, false)
+        playButton = view.findViewById<ImageButton>(R.id.playButton) as ImageButton
+        nextButton = view.findViewById<ImageButton>(R.id.nextButton) as ImageButton
+        previousButton = view.findViewById<ImageButton>(R.id.previousButton) as ImageButton
+        addToFavoritesButton = view.findViewById<ImageButton>(R.id.addToFavoritesButton) as ImageButton
+        minimizeButton = view.findViewById<ImageButton>(R.id.minimizeButton) as ImageButton
+        shuffleButton = view.findViewById<ImageButton>(R.id.shuffleButton) as ImageButton
+        optionsButton = view.findViewById<ImageButton>(R.id.optionsButton) as ImageButton
+        repeatButton = view.findViewById<ImageButton>(R.id.repeatButton) as ImageButton
+
+        seekBar = view.findViewById<SeekBar>(R.id.seekBar) as SeekBar
+
+        // Textview
+        currentTime = view.findViewById<TextView>(R.id.currentTime) as TextView
+        totalTime = view.findViewById<TextView>(R.id.totalTime) as TextView
+        artist = view.findViewById<TextView>(R.id.artist) as TextView
+        songName = view.findViewById<TextView>(R.id.songName) as TextView
+        album = view.findViewById<TextView>(R.id.album) as TextView
+
+        songThumbnail = view.findViewById<ImageView>(R.id.songThumbnail) as ImageView
+
+        playerBackground = view.findViewById<ConstraintLayout>(R.id.playerBackground)
+        return view
     }
 
     @SuppressLint("DefaultLocale")
@@ -81,8 +113,6 @@ class PlayMusicFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Connect UI components
-        connectUI(view)
-        PlayerManager.prepare()
         Queue.getCurrentSong()?.let {
             songViewModel.addPlayedRecently(it._id)
         }
@@ -129,19 +159,20 @@ class PlayMusicFragment : Fragment() {
 
         shuffleButton.setOnClickListener {
             viewModel.toggleShuffleMode()
-            if (viewModel.shuffleMode.value == true) {
-                shuffleButton.setImageResource(R.drawable.ic_shuffle_filled)
-            } else {
-                shuffleButton.setImageResource(R.drawable.ic_shuffle)
-            }
+            updateShuffleIcon()
+            Queue.toggleShuffleMode()
+        }
+
+        repeatButton.setOnClickListener {
+            viewModel.toggleRepeatMode()
+            updateRepeatIcon()
         }
 
         optionsButton.setOnClickListener {
             val options = listOf(
-                Option.ADD_TO_PLAYLIST.title,
                 Option.COMMENT.title,
                 Option.SHARE.title,
-                Option.REPEAT.title,
+                Option.GO_TO_QUEUE.title,
             )
             val actionDialogFragment = MenuOptionFragment.newInstance(options) { handleShare() }
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
@@ -172,7 +203,7 @@ class PlayMusicFragment : Fragment() {
             }
         }
 
-        seekBar.setOnSeekBarChangeListener(
+        seekBar.setOnSeekBarChangeListener (
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     if (fromUser) {
@@ -189,7 +220,6 @@ class PlayMusicFragment : Fragment() {
                 }
             }
         )
-
         // Check and update the favorite icon on load
         updateFavoriteIcon()
 
@@ -220,9 +250,31 @@ class PlayMusicFragment : Fragment() {
         totalTime.text = time
 
         updateFavoriteIcon()
+        updateShuffleIcon()
+        updateRepeatIcon()
 
         // Update background when song changes
         BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground)
+    }
+
+    private fun updateShuffleIcon() {
+        val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+        if (viewModel.shuffleMode.value == true) {
+            shuffleButton.setImageResource(R.drawable.ic_shuffle_filled)
+        }
+        else {
+            shuffleButton.setImageResource(R.drawable.ic_shuffle)
+        }
+    }
+
+    private fun updateRepeatIcon() {
+        val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+        if (viewModel.repeatMode.value == true) {
+            repeatButton.setImageResource(R.drawable.ic_repeat_filled)
+        }
+        else {
+            repeatButton.setImageResource(R.drawable.ic_repeat)
+        }
     }
 
     private fun updateFavoriteIcon() {
@@ -233,27 +285,6 @@ class PlayMusicFragment : Fragment() {
         } else {
             addToFavoritesButton.setImageResource(R.drawable.ic_heart)
         }
-    }
-
-    private fun connectUI(view: View) {
-        playButton = view.findViewById<ImageButton>(R.id.playButton) as ImageButton
-        nextButton = view.findViewById<ImageButton>(R.id.nextButton) as ImageButton
-        previousButton = view.findViewById<ImageButton>(R.id.previousButton) as ImageButton
-        addToFavoritesButton = view.findViewById<ImageButton>(R.id.addToFavoritesButton) as ImageButton
-        minimizeButton = view.findViewById<ImageButton>(R.id.minimizeButton) as ImageButton
-        shuffleButton = view.findViewById<ImageButton>(R.id.shuffleButton) as ImageButton
-        optionsButton = view.findViewById<ImageButton>(R.id.optionsButton) as ImageButton
-
-        seekBar = view.findViewById<SeekBar>(R.id.seekBar) as SeekBar
-
-        currentTime = view.findViewById<TextView>(R.id.currentTime) as TextView
-        totalTime = view.findViewById<TextView>(R.id.totalTime) as TextView
-        artist = view.findViewById<TextView>(R.id.artist) as TextView
-        songName = view.findViewById<TextView>(R.id.songName) as TextView
-        songThumbnail = view.findViewById<ImageView>(R.id.songThumbnail) as ImageView
-        album = view.findViewById<TextView>(R.id.album) as TextView
-
-        playerBackground = view.findViewById<ConstraintLayout>(R.id.playerBackground)
     }
 
     private fun handleShare() {

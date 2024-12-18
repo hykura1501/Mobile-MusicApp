@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/rounded_bottom_dialog_fragment"
-    tools:context=".fragment.MenuOptionFragment">
+    tools:context=".fragment.PlaylistMenuOptionFragment">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
             android:layout_height="48dp"
             app:cardCornerRadius="4dp">
             <ImageView
-                android:id="@+id/songThumbnail"
+                android:id="@+id/playlistThumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/song"
@@ -46,7 +46,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/songTitle"
+                android:id="@+id/playlistTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
@@ -57,10 +57,10 @@
                 tools:ignore="SmallSp, hardcodedText"/>
 
             <TextView
-                android:id="@+id/songArtist"
+                android:id="@+id/playlist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="Playlist"
                 android:textSize="12sp"
                 android:textColor="@color/gray"
                 android:layout_marginStart="8dp"

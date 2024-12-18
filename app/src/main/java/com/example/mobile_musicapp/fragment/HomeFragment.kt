@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,11 +18,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.LanguageChangeActivity
 import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
 import com.example.mobile_musicapp.R
+import com.example.mobile_musicapp.helpers.RandomHelper
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.mobile_musicapp.viewModels.ShareViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,8 +37,8 @@ class HomeFragment : Fragment() {
     private lateinit var newReleaseSongsRecyclerView: RecyclerView
     private lateinit var popularSongsRecyclerView: RecyclerView
     private lateinit var topLikesSongsRecyclerView: RecyclerView
+    private lateinit var recommendedSongsRecyclerView: RecyclerView
 //    private lateinit var playerBar: View
-    private lateinit var bottomNavigation : BottomNavigationView
     private lateinit var ivSetting : ImageButton
 
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
@@ -58,11 +60,18 @@ class HomeFragment : Fragment() {
 //        playerBar = view.findViewById(R.id.playerBar)
 //        bottomNavigation = playerBar.findViewById(R.id.bottomNavigationView)
         ivSetting = view.findViewById(R.id.settingsButton)
+        recommendedSongsRecyclerView = view.findViewById(R.id.recommendedSongsRecyclerView)
 
         setupRecyclerViews()
+
         loadNewReleaseSongs(1, 13)
         loadPopularSongs(1, 7)
-        loadTopLikesSongs(1, 23)
+        loadTopLikesSongs(1, 29)
+
+        val randomHelper = RandomHelper()
+        val perPage = randomHelper.getRandomNumber(11, 19)
+        val page = randomHelper.getRandomNumber(5, 37)
+        loadRecommendedSongs(page, perPage)
 
         // Observe loading state and favorite songs from ViewModel
         favoritesViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
@@ -71,6 +80,18 @@ class HomeFragment : Fragment() {
                 loadFavoriteSongs(favoriteSongs)
             }
         })
+
+        // Observe navigateToPlayMusicFragment LiveData
+        val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
+        }
+
+
         updateGreeting()
         handleEvent()
 
@@ -95,6 +116,7 @@ class HomeFragment : Fragment() {
         newReleaseSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         popularSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         topLikesSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recommendedSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun loadNewReleaseSongs(page: Int, perPage: Int) {
@@ -141,6 +163,20 @@ class HomeFragment : Fragment() {
             val selectedIndex = favoriteSongs.indexOf(song)
             val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(favoriteSongs, selectedIndex))
             findNavController().navigate(action)
+        }
+    }
+
+    private fun loadRecommendedSongs(page: Int, perPage: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val recommendedSongs = withContext(Dispatchers.IO) {
+                // currently using random songs from list of all songs
+                SongDao.getAllSongs(page, perPage)
+            }
+            recommendedSongsRecyclerView.adapter = SongHorizontalAdapter(recommendedSongs) { song ->
+                val selectedIndex = recommendedSongs.indexOf(song)
+                val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(recommendedSongs, selectedIndex))
+                findNavController().navigate(action)
+            }
         }
     }
 

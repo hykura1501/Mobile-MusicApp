@@ -19,6 +19,8 @@
             android:layout_marginTop="24dp"
             android:text=""
             android:textColor="@color/white"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -72,7 +74,7 @@
 
         <TextView
             android:id="@+id/songName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text=""
@@ -81,6 +83,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/song_image"
             app:layout_constraintTop_toBottomOf="@+id/song_image"
+            app:layout_constraintEnd_toStartOf="@+id/addToFavoritesButton"
             tools:ignore="HardcodedText" />
 
         <TextView
@@ -101,7 +104,7 @@
             android:layout_height="32dp"
             android:background="@color/transparent"
             android:contentDescription="@string/addToFavoritesButton"
-            android:src="@drawable/ic_add_to_playlist"
+            android:src="@drawable/ic_heart"
             app:layout_constraintBottom_toBottomOf="@+id/artist"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/songName"
@@ -157,7 +160,7 @@
             android:contentDescription="@string/nextSongButton"
             android:src="@drawable/ic_next_music"
             app:layout_constraintBottom_toBottomOf="@+id/playButton"
-            app:layout_constraintEnd_toStartOf="@+id/sleepTimerButton"
+            app:layout_constraintEnd_toStartOf="@+id/repeatButton"
             app:layout_constraintStart_toEndOf="@+id/playButton"
             app:layout_constraintTop_toTopOf="@+id/playButton"
             tools:ignore="TouchTargetSizeCheck" />
@@ -176,12 +179,12 @@
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
-            android:id="@+id/sleepTimerButton"
+            android:id="@+id/repeatButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/sleepTimerButton"
-            android:src="@drawable/ic_sleep_timer"
+            android:contentDescription="@string/repeatButton"
+            android:src="@drawable/ic_repeat"
             app:layout_constraintBottom_toBottomOf="@+id/nextButton"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/nextButton"
@@ -202,7 +205,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/light_gray"
-            app:layout_constraintEnd_toEndOf="@+id/sleepTimerButton"
+            app:layout_constraintEnd_toEndOf="@+id/repeatButton"
             app:layout_constraintTop_toTopOf="@+id/currentTime" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
