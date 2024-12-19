@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.CommentsAdapter
 import com.example.mobile_musicapp.models.CommentModel
+import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.CommentViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -69,7 +71,9 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
             }
 
         }
-        commentViewModel.getAllCommentsById("6759b3067819cda0f773db64")
+        Queue.getCurrentSong()?.let {
+            commentViewModel.getAllCommentsById(it._id)
+        }
         commentViewModel.getCommentAddLiveData().observe(requireActivity()){
             if (it.first == 201) {
                 tvError.visibility = View.GONE
@@ -98,7 +102,9 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
 
         ivSend.setOnClickListener {
             if (edtContent.text.toString().trim().isNotEmpty()){
-                commentViewModel.addComment("6759b3067819cda0f773db64", edtContent.text.toString().trim())
+                Queue.getCurrentSong()?.let {
+                    commentViewModel.addComment(it._id, edtContent.text.toString().trim())
+                }
             }
         }
     }
