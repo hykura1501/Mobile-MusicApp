@@ -17,13 +17,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.SongAdapter
 import com.example.mobile_musicapp.adapters.SongPagingAdapter
-import com.example.mobile_musicapp.extension.queryTextChanges
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.repository.SongPagingSource
 import com.example.mobile_musicapp.viewModels.SearchViewModel
 import com.example.mobile_musicapp.viewModels.SongViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
@@ -31,11 +29,7 @@ import kotlinx.coroutines.launch
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [DeepSearch.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class DeepSearch : Fragment() {
 
     private lateinit var rcvSong : RecyclerView
@@ -125,7 +119,7 @@ class DeepSearch : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
                     searchViewModel.updateQuery(newText)
-                };
+                }
                 return true
             }
 
@@ -146,9 +140,9 @@ class DeepSearch : Fragment() {
         }
 
         rbPlaylist.setOnCheckedChangeListener { compoundButton, b ->
-            if (b) {
-//                searchViewModel.getAllPlayedList()
-            }
+//            if (b) {
+////                searchViewModel.getAllPlayedList()
+//            }
         }
     }
 
