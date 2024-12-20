@@ -30,6 +30,7 @@ import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.example.mobile_musicapp.viewModels.SongViewModel
+import com.example.mobile_musicapp.viewModels.ShareViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -169,6 +170,8 @@ class PlayMusicFragment : Fragment() {
         }
 
         optionsButton.setOnClickListener {
+            val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+            shareViewModel.selectedSong.value = Queue.getCurrentSong()
             val options = listOf(
                 Option.COMMENT.title,
                 Option.SHARE.title,
