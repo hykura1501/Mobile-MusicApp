@@ -172,8 +172,8 @@
 
     <TextView
         android:id="@+id/or"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="36dp"
         android:layout_marginTop="10dp"
         android:width="40dp"
         android:height="40dp"
