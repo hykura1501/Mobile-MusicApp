@@ -95,7 +95,8 @@ class PlayerBarFragment : Fragment() {
                 when (requireParentFragment()) {
                     is HomeFragment -> navController.navigate(R.id.action_homeFragment_to_queueFragment)
                     is LibraryFragment -> navController.navigate(R.id.action_libraryFragment_to_queueFragment)
-//                    is SearchFragment -> navController.navigate(R.id.action_searchFragment_to_queueFragment)
+                    is SearchFragment -> navController.navigate(R.id.action_searchFragment_to_queueFragment)
+                    is DeepSearchFragment -> navController.navigate(R.id.action_deepSearchFragment_to_queueFragment)
                     is PlaylistFragment -> navController.navigate(R.id.action_albumFragment_to_queueFragment)
                 }
             }
