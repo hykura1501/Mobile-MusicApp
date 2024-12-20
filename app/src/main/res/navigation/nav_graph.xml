@@ -1,43 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/library">
+    app:startDestination="@id/login">
+
     <fragment
-        android:id="@+id/library"
-        android:name="com.example.mobile_musicapp.fragment.Library"
+        android:id="@+id/homeFragment"
+        android:name="com.example.mobile_musicapp.fragment.HomeFragment"
+        android:label="Home">
+        <action
+            android:id="@+id/action_homeFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="true" />
+        </action>
+
+        <action
+            android:id="@+id/action_homeFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/playMusicFragment"
+        android:name="com.example.mobile_musicapp.fragment.PlayMusicFragment"
+        android:label="Play Music">
+        <argument
+            android:name="songListWithIndex"
+            app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_playMusicFragment_to_queueFragment"
+            app:destination="@id/queueFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.example.mobile_musicapp.fragment.LibraryFragment"
         android:label="Library" >
         <action
-            android:id="@+id/action_library_to_newPlaylist"
-            app:destination="@id/newPlaylist"
-            app:popUpTo="@id/library">
+            android:id="@+id/action_libraryFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment"
+            app:popUpTo="@id/libraryFragment">
         </action>
-
         <action
-            android:id="@+id/action_library_to_playlist"
-            app:destination="@id/playlist"
-            app:popUpTo="@id/library">
+            android:id="@+id/action_libraryFragment_to_playlistFragment"
+            app:destination="@id/albumFragment"
+            app:popUpTo="@id/libraryFragment">
+        </action>
+        <action
+            android:id="@+id/action_libraryFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+        </action>
+        <action
+            android:id="@+id/action_libraryFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.example.mobile_musicapp.fragment.NewPlaylistFragment"
+        android:label="New Playlist">
+        <action
+            android:id="@+id/action_newPlaylistFragment_to_libraryFragment"
+            app:destination="@id/libraryFragment"
+            app:popUpTo="@id/newPlaylistFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.example.mobile_musicapp.fragment.PlaylistFragment"
+        android:label="Album">
+        <action
+            android:id="@+id/action_playlistFragment_to_libraryFragment"
+            app:destination="@id/libraryFragment"
+            app:popUpTo="@id/albumFragment" />
+        <action
+            android:id="@+id/action_albumFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+        </action>
+        <action
+            android:id="@+id/action_albumFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/queueFragment"
+        android:name="com.example.mobile_musicapp.fragment.QueueFragment"
+        android:label="Queue">
+        <action
+            android:id="@+id/action_queueFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
         </action>
     </fragment>
 
     <fragment
-        android:id="@+id/newPlaylist"
-        android:name="com.example.mobile_musicapp.fragment.NewPlaylist"
-        android:label="New Playlist">
+        android:id="@+id/searchFragment"
+        android:name="com.example.mobile_musicapp.fragment.SearchFragment"
+        android:label="SearchFragment">
+
         <action
-            android:id="@+id/action_newPlaylist_to_library"
-            app:destination="@id/library"
-            app:popUpTo="@id/newPlaylist" />
+            android:id="@+id/action_searchFragment_to_deepSearchFragment"
+            app:destination="@id/deepSearch">
+        </action>
+        <action
+            android:id="@+id/action_searchFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment" >
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="false" />
+        </action>
+
+        <action
+            android:id="@+id/action_searchFragment_to_playMusicFragment_no_args"
+            app:destination="@id/playMusicFragment"/>
+
+        <action
+            android:id="@+id/action_searchFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/playlist"
-        android:name="com.example.mobile_musicapp.fragment.Playlist"
-        android:label="New Playlist">
+        android:id="@+id/profileFragment"
+        android:name="com.example.mobile_musicapp.fragment.ProfileFragment"
+        android:label="ProfileFragment">
         <action
-            android:id="@+id/action_playlist_to_library"
-            app:destination="@id/library"
-            app:popUpTo="@id/playlist" />
+            android:id="@+id/action_profileFragment_to_login"
+            app:destination="@id/login"
+            app:popUpTo="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/login"
+        android:name="com.example.mobile_musicapp.fragment.Login"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_login_to_home"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/register"
+            app:popUpTo="@id/login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/register"
+        android:name="com.example.mobile_musicapp.fragment.Register"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_register_to_home"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/login"
+            app:popUpTo="@id/register" />
+    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/search2"-->
+<!--        android:name="com.example.mobile_musicapp.fragment.Search"-->
+<!--        android:label="Search">-->
+<!--        <action-->
+<!--            android:id="@+id/action_search2_to_deepSearch"-->
+<!--            app:destination="@id/deepSearch" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_search2_to_playMusicFragment"-->
+<!--            app:destination="@id/playMusicFragment">-->
+<!--            <argument-->
+<!--                android:name="songListWithIndex"-->
+<!--                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"-->
+<!--                app:nullable="false" />-->
+<!--        </action>-->
+<!--    </fragment>-->
+    <fragment
+        android:id="@+id/deepSearch"
+        android:name="com.example.mobile_musicapp.fragment.DeepSearchFragment"
+        android:label="DeepSearch">
+        <action
+
+            android:id="@+id/action_deepSearchFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="false" />
+        </action>
+        <action
+            android:id="@+id/action_deepSearchFragment_to_PlayMusicFragment_no_args"
+            app:destination="@id/playMusicFragment" />
+        <action
+            android:id="@+id/action_deepSearchFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
     </fragment>
 
 </navigation>

@@ -4,26 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/white"
-    android:foregroundTint="@color/white"
-    tools:context=".fragment.PlayMusic">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context=".fragment.PlayMusicFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/playerBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_background">
+        android:background="@drawable/gradient_background_playlist">
 
         <TextView
-            android:id="@+id/playlist"
-            android:layout_width="wrap_content"
+            android:id="@+id/album"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Indie Viet 2020"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:text=""
             android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/optionsButton"
+            app:layout_constraintStart_toEndOf="@+id/minimizeButton"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
 
@@ -34,9 +33,9 @@
             android:background="@color/transparent"
             android:contentDescription="@string/minimizeButton"
             android:src="@drawable/ic_minimize"
-            app:layout_constraintBottom_toBottomOf="@+id/playlist"
+            app:layout_constraintBottom_toBottomOf="@+id/album"
             app:layout_constraintStart_toStartOf="@+id/song_image"
-            app:layout_constraintTop_toTopOf="@+id/playlist"
+            app:layout_constraintTop_toTopOf="@+id/album"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
@@ -46,9 +45,9 @@
             android:background="@color/transparent"
             android:contentDescription="@string/moreOptionsButton"
             android:src="@drawable/ic_more_options"
-            app:layout_constraintBottom_toBottomOf="@+id/playlist"
+            app:layout_constraintBottom_toBottomOf="@+id/album"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
-            app:layout_constraintTop_toTopOf="@+id/playlist"
+            app:layout_constraintTop_toTopOf="@+id/album"
             tools:ignore="TouchTargetSizeCheck" />
 
         <androidx.cardview.widget.CardView
@@ -62,13 +61,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/songThumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
-                android:background="@drawable/rounded_background"
                 android:contentDescription="@string/songImageDescription"
-                android:src="@drawable/forget_me_now"
+                android:src="@drawable/song"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -77,27 +74,31 @@
 
         <TextView
             android:id="@+id/songName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Forget me now"
+            android:layout_marginEnd="24dp"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/song_image"
             app:layout_constraintTop_toBottomOf="@+id/song_image"
+            app:layout_constraintEnd_toStartOf="@+id/addToFavoritesButton"
             tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/artist"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Fishy, Trí Dũng"
+            android:layout_marginEnd="24dp"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@id/songName"
             app:layout_constraintTop_toBottomOf="@id/songName"
+            app:layout_constraintEnd_toStartOf="@+id/addToFavoritesButton"
             tools:ignore="HardcodedText" />
 
         <ImageButton
@@ -106,7 +107,7 @@
             android:layout_height="32dp"
             android:background="@color/transparent"
             android:contentDescription="@string/addToFavoritesButton"
-            android:src="@drawable/ic_add_to_playlist"
+            android:src="@drawable/ic_heart"
             app:layout_constraintBottom_toBottomOf="@+id/artist"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/songName"
@@ -115,11 +116,12 @@
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="350dp"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="16dp"
-            android:progressBackgroundTint="@color/white"
-            android:progressTint="@color/light_gray"
+            android:progressTint="@color/white"
+            android:progressDrawable="@drawable/seekbar_progress"
+            android:maxHeight="4dp"
             android:saveEnabled="false"
             android:thumbTint="@color/white"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
@@ -147,7 +149,7 @@
             android:background="@drawable/circle_button"
             android:contentDescription="@string/playButton"
             android:padding="16dp"
-            android:src="@drawable/ic_play_black"
+            android:src="@drawable/ic_pause_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currentTime"
@@ -161,7 +163,7 @@
             android:contentDescription="@string/nextSongButton"
             android:src="@drawable/ic_next_music"
             app:layout_constraintBottom_toBottomOf="@+id/playButton"
-            app:layout_constraintEnd_toStartOf="@+id/sleepTimerButton"
+            app:layout_constraintEnd_toStartOf="@+id/repeatButton"
             app:layout_constraintStart_toEndOf="@+id/playButton"
             app:layout_constraintTop_toTopOf="@+id/playButton"
             tools:ignore="TouchTargetSizeCheck" />
@@ -173,18 +175,19 @@
             android:background="@color/transparent"
             android:contentDescription="@string/shuffleButton"
             android:src="@drawable/ic_shuffle"
+
             app:layout_constraintBottom_toBottomOf="@+id/previousButton"
             app:layout_constraintStart_toStartOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/previousButton"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
-            android:id="@+id/sleepTimerButton"
+            android:id="@+id/repeatButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@color/transparent"
-            android:contentDescription="@string/sleepTimerButton"
-            android:src="@drawable/ic_sleep_timer"
+            android:contentDescription="@string/repeatButton"
+            android:src="@drawable/ic_repeat"
             app:layout_constraintBottom_toBottomOf="@+id/nextButton"
             app:layout_constraintEnd_toEndOf="@+id/song_image"
             app:layout_constraintTop_toTopOf="@+id/nextButton"
@@ -205,7 +208,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/light_gray"
-            app:layout_constraintEnd_toEndOf="@+id/sleepTimerButton"
+            app:layout_constraintEnd_toEndOf="@+id/repeatButton"
             app:layout_constraintTop_toTopOf="@+id/currentTime" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

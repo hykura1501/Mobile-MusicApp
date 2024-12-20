@@ -4,36 +4,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/transparent"
+    android:id="@+id/layout_main"
     android:layout_marginTop="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:ignore="HardcodedText">
 
-    <ImageView
-        android:id="@+id/songImageView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/rounded_background"
-        android:contentDescription="@string/songImageDescription"
-        android:scaleType="centerCrop"
-        android:src="@drawable/song"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/songThumbnailContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ImageContrastCheck" />
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/songImageView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/songImageDescription"
+            android:scaleType="fitCenter"
+            android:src="@drawable/song"
+            tools:ignore="ImageContrastCheck" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/songNameTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/optionsButton"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:text="Song name"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textAlignment="textStart"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/songImageView"
-        app:layout_constraintTop_toTopOf="@+id/songImageView" />
+        app:layout_constraintStart_toEndOf="@+id/songThumbnailContainer"
+        app:layout_constraintTop_toTopOf="@+id/songThumbnailContainer" />
 
     <TextView
         android:id="@+id/artistNameTextView"
@@ -45,8 +54,8 @@
         android:textAlignment="viewStart"
         android:textColor="@color/gray"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/songImageView"
-        app:layout_constraintStart_toEndOf="@+id/songImageView" />
+        app:layout_constraintBottom_toBottomOf="@+id/songThumbnailContainer"
+        app:layout_constraintStart_toEndOf="@+id/songThumbnailContainer" />
 
     <ImageButton
         android:id="@+id/optionsButton"
@@ -60,6 +69,6 @@
         android:layout_marginBottom="0dp"
         android:contentDescription="@string/moreOptionsButton"
         android:background="@color/transparent"
-        android:src="@drawable/ic_more_options"
-        />
+        android:src="@drawable/ic_more_options" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

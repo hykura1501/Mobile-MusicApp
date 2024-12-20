@@ -45,25 +45,27 @@
             app:iconTint="@color/dark_gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/searchTitle"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/genreRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="0dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/iconMaterialButton"
             app:layout_constraintEnd_toEndOf="@+id/iconMaterialButton"
             app:layout_constraintTop_toBottomOf="@+id/iconMaterialButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include
-        layout="@layout/player_bar"
-        android:id="@+id/playerBar"
+    <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:id="@+id/playerBarFragment"
+        android:name="com.example.mobile_musicapp.fragment.PlayerBarFragment"
+        android:layout_gravity="bottom"/>
+
 </FrameLayout>

@@ -73,8 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginStart="24dp"
-                    android:padding="16dp">
+                    android:padding="8dp">
 
                     <RadioButton
                         android:id="@+id/songCategoryRadioButton"
@@ -85,8 +84,8 @@
                         android:text="@string/songCategory"
                         android:textColor="@color/white"
                         android:button="@null"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         tools:ignore="ButtonStyle" />
 
                     <RadioButton
@@ -95,11 +94,11 @@
                         android:layout_height="48dp"
                         android:layout_marginStart="16dp"
                         android:background="@drawable/search_radio_button"
-                        android:text="@string/artistCategory"
+                        android:text="@string/recently_played"
                         android:textColor="@color/white"
                         android:button="@null"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         tools:ignore="ButtonStyle" />
 
                     <RadioButton
@@ -111,28 +110,44 @@
                         android:text="@string/playlistCategory"
                         android:textColor="@color/white"
                         android:button="@null"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         tools:ignore="ButtonStyle" />
 
                 </RadioGroup>
             </LinearLayout>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/topArtistRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="80dp"
-            android:orientation="vertical" />
+           <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/rcv_song"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_marginHorizontal="16dp"
+               android:layout_marginTop="16dp"
+               android:orientation="vertical" />
+
+           <androidx.recyclerview.widget.RecyclerView
+               android:visibility="gone"
+               android:layout_marginHorizontal="16dp"
+               android:id="@+id/rcv_song_recently"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_marginTop="16dp"
+               android:orientation="vertical" />
+           <androidx.recyclerview.widget.RecyclerView
+               android:visibility="gone"
+               android:layout_marginHorizontal="16dp"
+               android:id="@+id/rcv_playlist"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_marginTop="16dp"
+               android:orientation="vertical" />
     </LinearLayout>
 
-    <include
-        layout="@layout/player_bar"
-        android:id="@+id/playerBar"
+    <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
-
+        android:id="@+id/playerBarFragment"
+        android:name="com.example.mobile_musicapp.fragment.PlayerBarFragment"
+        android:layout_gravity="bottom"/>
 </FrameLayout>
