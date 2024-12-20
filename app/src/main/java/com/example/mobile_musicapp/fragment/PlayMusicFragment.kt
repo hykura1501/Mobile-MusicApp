@@ -19,6 +19,7 @@ import com.example.mobile_musicapp.singletons.Queue
 import com.google.android.material.snackbar.Snackbar
 import kotlin.text.*
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -28,6 +29,7 @@ import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
+import com.example.mobile_musicapp.viewModels.SongViewModel
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,6 +59,7 @@ class PlayMusicFragment : Fragment() {
 
     private val args: PlayMusicFragmentArgs by navArgs()
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
+    private val songViewModel : SongViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +113,10 @@ class PlayMusicFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Connect UI components
+        Queue.getCurrentSong()?.let {
+            songViewModel.addPlayedRecently(it._id)
+        }
         updateUI()
 
         val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
@@ -166,6 +173,7 @@ class PlayMusicFragment : Fragment() {
             val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
             shareViewModel.selectedSong.value = Queue.getCurrentSong()
             val options = listOf(
+                Option.COMMENT.title,
                 Option.SHARE.title,
                 Option.GO_TO_QUEUE.title,
             )
@@ -205,9 +213,11 @@ class PlayMusicFragment : Fragment() {
                         PlayerManager.seekTo(progress)
                     }
                 }
+
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                     PlayerManager.pause()
                 }
+
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     PlayerManager.play()
                 }
@@ -296,4 +306,5 @@ class PlayMusicFragment : Fragment() {
             Toast.makeText(context, "No song is currently playing", Toast.LENGTH_SHORT).show()
         }
     }
+
 }
