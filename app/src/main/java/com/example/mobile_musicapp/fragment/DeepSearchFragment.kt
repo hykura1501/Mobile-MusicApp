@@ -17,26 +17,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.SongAdapter
 import com.example.mobile_musicapp.adapters.SongPagingAdapter
-import com.example.mobile_musicapp.extension.queryTextChanges
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.repository.SongPagingSource
 import com.example.mobile_musicapp.viewModels.SearchViewModel
+import com.example.mobile_musicapp.viewModels.ShareViewModel
 import com.example.mobile_musicapp.viewModels.SongViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DeepSearch.newInstance] factory method to
- * create an instance of this fragment.
- */
-class DeepSearch : Fragment() {
+class DeepSearchFragment : Fragment() {
 
     private lateinit var rcvSong : RecyclerView
     private lateinit var rcvPlayedRecently : RecyclerView
@@ -53,7 +42,7 @@ class DeepSearch : Fragment() {
         SongPagingAdapter{
             val selectedIndex = SongPagingSource.cachedSongsSet.indexOfFirst { data -> data._id == it._id }
             if (selectedIndex != -1 ){
-                val action = DeepSearchDirections.actionDeepSearchToPlayMusicFragment(
+                val action = DeepSearchFragmentDirections.actionDeepSearchFragmentToPlayMusicFragment(
                     SongListWithIndex(SongPagingSource.cachedSongsSet.toList(), selectedIndex)
                 )
                 findNavController().navigate(action)
@@ -81,10 +70,19 @@ class DeepSearch : Fragment() {
         setUpPlayRecentlyRecyclerview()
         setUpPlaylistRecyclerview()
 
+        val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = DeepSearchFragmentDirections.actionDeepSearchFragmentToPlayMusicFragmentNoArgs(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
+        }
+
         songRecentlyAdapter.onItemClick = { song ->
             val selectedIndex = songPlayRecentlyList.indexOfFirst { data -> data._id == song._id }
             if (selectedIndex != -1 ){
-                val action = DeepSearchDirections.actionDeepSearchToPlayMusicFragment(
+                val action = DeepSearchFragmentDirections.actionDeepSearchFragmentToPlayMusicFragment(
                     SongListWithIndex(songPlayRecentlyList, selectedIndex)
                 )
                 findNavController().navigate(action)
@@ -125,10 +123,9 @@ class DeepSearch : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
                     searchViewModel.updateQuery(newText)
-                };
+                }
                 return true
             }
-
         })
 
         rbSong.setOnCheckedChangeListener { compoundButton, b ->
@@ -146,9 +143,9 @@ class DeepSearch : Fragment() {
         }
 
         rbPlaylist.setOnCheckedChangeListener { compoundButton, b ->
-            if (b) {
-//                searchViewModel.getAllPlayedList()
-            }
+//            if (b) {
+////                searchViewModel.getAllPlayedList()
+//            }
         }
     }
 

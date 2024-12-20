@@ -5,22 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
-import com.example.mobile_musicapp.adapters.SongAdapter
 import com.example.mobile_musicapp.adapters.SongPagingAdapter
-import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.repository.SongPagingSource
 import com.example.mobile_musicapp.viewModels.SearchViewModel
+import com.example.mobile_musicapp.viewModels.ShareViewModel
 import kotlinx.coroutines.FlowPreview
 
-class Search : Fragment() {
+class SearchFragment : Fragment() {
 
     private lateinit var rcvSong : RecyclerView
     private lateinit var searchData : Button
@@ -30,7 +28,7 @@ class Search : Fragment() {
         SongPagingAdapter {
             val selectedIndex = SongPagingSource.cachedSongsSet.indexOfFirst { data -> data._id == it._id }
             if (selectedIndex != -1 ){
-                val action = SearchDirections.actionSearchFragmentToPlayMusicFragment(
+                val action = SearchFragmentDirections.actionSearchFragmentToPlayMusicFragment(
                     SongListWithIndex(SongPagingSource.cachedSongsSet.toList(), selectedIndex)
                 )
                 findNavController().navigate(action)
@@ -49,14 +47,27 @@ class Search : Fragment() {
     @OptIn(FlowPreview::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-         searchViewModel =  ViewModelProvider(requireActivity())[SearchViewModel::class.java]
+
         connectView(view)
         setUpRecyclerview()
+
+        searchViewModel =  ViewModelProvider(requireActivity())[SearchViewModel::class.java]
+
         searchViewModel.pagedSongsSmaller.observe(requireActivity()) {
             songAdapter.submitData(lifecycle,it)
         }
+
         searchData.setOnClickListener {
-            findNavController().navigate(R.id.action_searchFragment_to_deepSearch2)
+            findNavController().navigate(R.id.action_searchFragment_to_deepSearchFragment)
+        }
+
+        val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
+            if (shouldNavigate == true) {
+                val action = SearchFragmentDirections.actionSearchFragmentToPlayMusicFragmentNoArgs(null)
+                findNavController().navigate(action)
+                sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
+            }
         }
     }
     private fun setUpRecyclerview(){
@@ -83,7 +94,7 @@ class Search : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            Search().apply {
+            SearchFragment().apply {
                 arguments = Bundle().apply {
 
                 }
