@@ -66,7 +66,7 @@ class ProfileFragment : Fragment() {
                 }
 
                 if (userResponse != null) {
-                    User = userResponse
+//                    User = userRespone
                     isLogin = true
                     showUserProfile()
                 } else {
@@ -82,6 +82,16 @@ class ProfileFragment : Fragment() {
         binding.btnLogin.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_login)
         }
+        binding.btnLogout.setOnClickListener {
+            lifecycleScope.launch {
+                try {
+                    TokenManager.clearToken(requireContext())
+                    showLoginButton()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     private fun showLoadingState() {
@@ -94,6 +104,9 @@ class ProfileFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
         binding.userProfile.visibility = View.VISIBLE
         binding.loginLayout.visibility = View.GONE
+        binding.tvFullName.text = User?.fullName
+        binding.tvEmail.text = User?.email
+
     }
 
     private fun showLoginButton() {

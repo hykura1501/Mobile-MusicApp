@@ -1,12 +1,17 @@
 package com.example.mobile_musicapp.services
 import android.content.Context
+import com.example.mobile_musicapp.models.CommentModel
+import com.example.mobile_musicapp.models.CommentRequest
+import com.example.mobile_musicapp.models.CommentResponse
 import android.content.SharedPreferences
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.User
+import com.example.mobile_musicapp.models.UserResponse
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -19,10 +24,11 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-// Response models
-data class ApiResponseSong(
+
+data class ApiResponseSongDetail(
     val code: Int,
     val data: Song
 )
@@ -31,6 +37,16 @@ data class ApiResponsePlaylists(
     val code: Int,
     val data: List<Playlist>
 )
+data class ApiResponseSong(
+    val code: Int,
+    val data: List<Song>
+)
+
+data class ApiResponsePlayedRecently(
+    val code: Int,
+    val message: String
+)
+
 
 data class ApiResponsePlaylist(
     val code: Int,
@@ -83,10 +99,16 @@ data class UserResponse(
 
 
 
+data class ApiResponseComment(
+    val code: Int,
+    val data : CommentModel
+)
 interface ApiService {
     // playlist ----------------------------------------------------------------
     @GET("playlist")
     suspend fun getAllPlaylists(): Response<ApiResponsePlaylists>
+    @GET("song")
+    suspend fun getSongByPage(@Query("page") page: Int, @Query("perPage") size: Int): Response<ApiResponseSong>
 
     @GET("playlist/{id}")
     suspend fun getPlaylist(@Path("id") id: String): Response<ApiResponsePlaylist>
@@ -101,7 +123,7 @@ interface ApiService {
 
     // song ----------------------------------------------------------------
     @GET("song/detail/{songId}")
-    suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSong>
+    suspend fun getSongById(@Path("songId") songId: String): Response<ApiResponseSongDetail>
 
     @GET("song")
     suspend fun getAllSongs(
@@ -149,6 +171,22 @@ interface ApiService {
 
     @GET("user/me")
     suspend fun getMe(): Response<UserResponse>
+
+    @POST("comment/{id}")
+    suspend fun addComment( @Path("id") id: String, @Body body : CommentRequest): Response<ApiResponseComment>
+
+    @GET("comment/{id}")
+    suspend fun getAllCommentsById( @Path("id") id: String): Response<CommentResponse>
+
+    @GET("other/recently-played")
+    suspend fun getAllPlayedRecently(): Response<ApiResponseSong>
+
+    @POST("other/recently-played/{id}")
+    suspend fun addPlayedRecently(@Path("id") id : String): Response<ApiResponsePlayedRecently>
+
+    @GET("user/me")
+    suspend fun getInformationUser(): Response<UserResponse>
+
 }
 
 object TokenManager {
@@ -165,6 +203,12 @@ object TokenManager {
     fun getToken(context: Context): String {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return sharedPreferences.getString(TOKEN_KEY, "") ?: ""
+    }
+    fun clearToken(context: Context) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove(TOKEN_KEY)
+        editor.apply()
     }
 }
 

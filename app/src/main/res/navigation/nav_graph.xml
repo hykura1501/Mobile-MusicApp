@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/login">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_homeFragment_to_queueFragment"
             app:destination="@id/queueFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
 
     <fragment
@@ -98,11 +101,20 @@
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.mobile_musicapp.fragment.SearchFragment"
+        android:name="com.example.mobile_musicapp.fragment.Search"
         android:label="SearchFragment">
+
+        <action
+            android:id="@+id/action_searchFragment_to_deepSearch2"
+            app:destination="@id/deepSearch">
+        </action>
         <action
             android:id="@+id/action_searchFragment_to_playMusicFragment"
-            app:destination="@id/playMusicFragment">
+            app:destination="@id/playMusicFragment" >
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="false" />
         </action>
     </fragment>
 
@@ -141,4 +153,35 @@
             app:destination="@id/login"
             app:popUpTo="@id/register" />
     </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/search2"-->
+<!--        android:name="com.example.mobile_musicapp.fragment.Search"-->
+<!--        android:label="Search">-->
+<!--        <action-->
+<!--            android:id="@+id/action_search2_to_deepSearch"-->
+<!--            app:destination="@id/deepSearch" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_search2_to_playMusicFragment"-->
+<!--            app:destination="@id/playMusicFragment">-->
+<!--            <argument-->
+<!--                android:name="songListWithIndex"-->
+<!--                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"-->
+<!--                app:nullable="false" />-->
+<!--        </action>-->
+<!--    </fragment>-->
+    <fragment
+        android:id="@+id/deepSearch"
+        android:name="com.example.mobile_musicapp.fragment.DeepSearch"
+        android:label="DeepSearch">
+        <action
+
+            android:id="@+id/action_deepSearch_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
 </navigation>
