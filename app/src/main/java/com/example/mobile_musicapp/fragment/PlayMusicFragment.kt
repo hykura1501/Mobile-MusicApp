@@ -19,6 +19,7 @@ import com.example.mobile_musicapp.singletons.Queue
 import com.google.android.material.snackbar.Snackbar
 import kotlin.text.*
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -28,6 +29,7 @@ import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
+import com.example.mobile_musicapp.viewModels.SongViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,6 +58,7 @@ class PlayMusicFragment : Fragment() {
 
     private val args: PlayMusicFragmentArgs by navArgs()
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
+    private val songViewModel : SongViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +112,10 @@ class PlayMusicFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Connect UI components
+        Queue.getCurrentSong()?.let {
+            songViewModel.addPlayedRecently(it._id)
+        }
         updateUI()
 
         val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
@@ -163,6 +170,7 @@ class PlayMusicFragment : Fragment() {
 
         optionsButton.setOnClickListener {
             val options = listOf(
+                Option.COMMENT.title,
                 Option.SHARE.title,
                 Option.GO_TO_QUEUE.title,
             )

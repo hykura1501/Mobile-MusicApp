@@ -14,8 +14,20 @@ import com.example.mobile_musicapp.models.Song
 
 class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAdapter.ViewHolder>() {
 
+    private val songsList = mutableListOf<Song>()
     var onItemClick: ((Song) -> Unit)? = null
     var onOptionClick: ((Song) -> Unit)? = null
+
+    init {
+        songsList.clear()
+        songsList.addAll(songs)
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun submitList(data : List<Song>) {
+        songsList.clear()
+        songsList.addAll(data)
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val songName: TextView = view.findViewById(R.id.songNameTextView)
@@ -27,11 +39,11 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    onItemClick?.invoke(songs[position])
+                    onItemClick?.invoke(songsList[position])
                 }
             }
             optionsButton.setOnClickListener {
-                onOptionClick?.invoke(songs[adapterPosition])
+                onOptionClick?.invoke(songsList[adapterPosition])
             }
         }
     }
@@ -46,7 +58,7 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Get the data model based on position
-        val song: Song = songs[position]
+        val song: Song = songsList[position]
         // Set item views based on your views and data model
         val songTitle = holder.songName
         songTitle.text = song.title
@@ -59,5 +71,5 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
             .into(holder.songThumbnail)
     }
 
-    override fun getItemCount(): Int = songs.size
+    override fun getItemCount(): Int = songsList.size
 }

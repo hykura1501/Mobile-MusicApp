@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.OptionAdapter
+import com.example.mobile_musicapp.components.CommentsBottomSheet
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
@@ -29,6 +30,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
     private lateinit var songTitle: TextView
     private lateinit var songArtist: TextView
 
+//
     companion object {
         fun newInstance(options: List<String>, shareCallback: (() -> Unit)? = null): MenuOptionFragment {
             val fragment = MenuOptionFragment()
@@ -92,6 +94,12 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
             Option.DOWNLOAD -> { /* Handle download */ }
             Option.SHARE -> { shareCallback?.invoke() }
             Option.REPEAT -> { toggleRepeatMode() }
+            Option.COMMENT -> {
+                dismiss()
+                val bottomSheet = CommentsBottomSheet()
+                bottomSheet.show(requireActivity().supportFragmentManager,bottomSheet.tag)
+                return
+            }
             Option.GO_TO_QUEUE -> { navigateToQueue() }
         }
         dismiss()

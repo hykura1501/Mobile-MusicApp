@@ -74,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="Favourite Songs"
+                    android:text="@string/favourite_songs"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -92,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="New Release Songs"
+                    android:text="@string/newSongReleaseTitle"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="Popular Songs"
+                    android:text="@string/topPopularSongTitle"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
