@@ -118,10 +118,6 @@
             </LinearLayout>
         </LinearLayout>
 
-<!--       <FrameLayout-->
-<!--           android:layout_width="match_parent"-->
-<!--           android:layout_height="match_parent">-->
-
            <androidx.recyclerview.widget.RecyclerView
                android:id="@+id/rcv_song"
                android:layout_width="match_parent"
@@ -146,8 +142,12 @@
                android:layout_height="match_parent"
                android:layout_marginTop="16dp"
                android:orientation="vertical" />
-<!--       </FrameLayout>-->
     </LinearLayout>
 
-
+    <androidx.fragment.app.FragmentContainerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/playerBarFragment"
+        android:name="com.example.mobile_musicapp.fragment.PlayerBarFragment"
+        android:layout_gravity="bottom"/>
 </FrameLayout>
