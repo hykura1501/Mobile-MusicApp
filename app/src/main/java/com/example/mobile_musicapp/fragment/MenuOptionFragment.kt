@@ -31,7 +31,6 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
     private lateinit var songTitle: TextView
     private lateinit var songArtist: TextView
 
-//
     companion object {
         fun newInstance(options: List<String>, shareCallback: (() -> Unit)? = null): MenuOptionFragment {
             val fragment = MenuOptionFragment()
@@ -84,7 +83,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
     private fun handleOptionClick(option: Option) {
         when (option) {
             // TODO: handle option click for each option
-            Option.ADD_TO_PLAYLIST -> { /* Handle add to playlist */ }
+            Option.ADD_TO_PLAYLIST -> { addSongToPlaylist() }
             Option.ADD_TO_QUEUE -> { addSongToQueue() }
             Option.REMOVE_FROM_PLAYLIST -> { /* Handle remove from playlist */ }
             Option.REMOVE_FROM_QUEUE -> { removeSongFromQueue() }
@@ -139,6 +138,16 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
         shareViewModel.selectedSong.observe(viewLifecycleOwner) { song ->
             song?.let {
                 Queue.addSong(it)
+            }
+        }
+    }
+
+    private fun addSongToPlaylist() {
+        val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        shareViewModel.selectedSong.observe(viewLifecycleOwner) { song ->
+            song?.let {
+                val actionDialogFragment = ChoosingPlaylistFragment()
+                actionDialogFragment.show(parentFragmentManager, "ChoosingPlaylistFragment")
             }
         }
     }

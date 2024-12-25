@@ -21,6 +21,20 @@ class ShareViewModel : ViewModel() {
         }
     }
 
+    fun updatePlaylist(playlistId: String) {
+        val currentPlaylists = playlists.value ?: mutableListOf()
+        viewModelScope.launch {
+            val updatedPlaylist = PlaylistDao.getPlaylist(playlistId)
+            if (updatedPlaylist != null) {
+                val index = currentPlaylists.indexOfFirst { it.playlistId == playlistId }
+                if (index != -1) {
+                    currentPlaylists[index] = updatedPlaylist
+                    playlists.postValue(currentPlaylists)
+                }
+            }
+        }
+    }
+
     fun addAllPlaylists(playlists: MutableList<Playlist>) {
         this.playlists.value = playlists
     }
@@ -36,6 +50,10 @@ class ShareViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun getAllPlaylists() : MutableList<Playlist> {
+        return playlists.value ?: mutableListOf()
     }
 
     // Song
