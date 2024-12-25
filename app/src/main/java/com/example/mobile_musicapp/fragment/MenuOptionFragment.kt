@@ -85,6 +85,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
         when (option) {
             // TODO: handle option click for each option
             Option.ADD_TO_PLAYLIST -> { /* Handle add to playlist */ }
+            Option.ADD_TO_QUEUE -> { addSongToQueue() }
             Option.REMOVE_FROM_PLAYLIST -> { /* Handle remove from playlist */ }
             Option.REMOVE_FROM_QUEUE -> { removeSongFromQueue() }
             Option.DOWNLOAD -> { /* Handle download */ }
@@ -131,5 +132,14 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
     private fun navigateToQueue() {
         val action = PlayMusicFragmentDirections.actionPlayMusicFragmentToQueueFragment()
         findNavController().navigate(action)
+    }
+
+    private fun addSongToQueue() {
+        val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        shareViewModel.selectedSong.observe(viewLifecycleOwner) { song ->
+            song?.let {
+                Queue.addSong(it)
+            }
+        }
     }
 }
