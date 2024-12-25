@@ -69,17 +69,6 @@ class PlaylistFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        // This button may be removed if the time have not enough
-//        playButton.setOnClickListener {
-//            if (playlist != null) {
-//                Queue.openPlaylist(playlist!!)
-//                val playerBarViewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
-//                playerBarViewModel.updateSong(Queue.getCurrentSong()!!)
-//                playerBarViewModel.togglePlayPause()
-//                PlayerManager.prepare()
-//            }
-//        }
-
         // Observe navigateToPlayMusicFragment LiveData
         sharedViewModel.navigateToPlayMusicFragment.observe(viewLifecycleOwner) { shouldNavigate ->
             if (shouldNavigate == true) {
