@@ -11,20 +11,16 @@ import com.example.mobile_musicapp.models.UserResponse
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 
@@ -37,6 +33,7 @@ data class ApiResponsePlaylists(
     val code: Int,
     val data: List<Playlist>
 )
+
 data class ApiResponseSong(
     val code: Int,
     val data: List<Song>
@@ -92,6 +89,10 @@ data class FavoriteSongsResponse(
     val totalPage: Int
 )
 
+data class AddSongToPlaylistRequest(
+    val songId: String
+)
+
 data class UserResponse(
     val code: Int,
     val data: User
@@ -107,6 +108,7 @@ interface ApiService {
     // playlist ----------------------------------------------------------------
     @GET("playlist")
     suspend fun getAllPlaylists(): Response<ApiResponsePlaylists>
+
     @GET("song")
     suspend fun getSongByPage(@Query("page") page: Int, @Query("perPage") size: Int): Response<ApiResponseSong>
 
@@ -120,6 +122,11 @@ interface ApiService {
     suspend fun createPlaylist(
         @Body playlistRequest: CreatePlaylistRequest
     ): Response<ApiResponsePlaylist>
+
+    @POST("playlist/add-song/{playlistId}")
+    suspend fun addSongToPlaylist(
+        @Path("playlistId") playlistId: String,
+        @Body request: AddSongToPlaylistRequest)
 
     // song ----------------------------------------------------------------
     @GET("song/detail/{songId}")
