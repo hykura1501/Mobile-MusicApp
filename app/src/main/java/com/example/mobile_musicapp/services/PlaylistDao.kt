@@ -77,5 +77,16 @@ class PlaylistDao {
                 Log.e("PlaylistDao", "Exception: ${e.message}")
             }
         }
+
+        suspend fun removeSongFromPlaylist(playlistId: String, songId: String) {
+            try {
+                val response = RetrofitClient.instance.removeSongFromPlaylist(
+                    playlistId,
+                    RemoveSongFromPlaylistRequest(songId)
+                )
+            } catch (e: Exception) {
+                Log.e("PlaylistDao", "Exception: ${e.message}")
+            }
+        }
     }
 }

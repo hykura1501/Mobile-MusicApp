@@ -71,4 +71,7 @@ class ShareViewModel : ViewModel() {
     // Go to PlayMusicFragment
     val navigateToPlayMusicFragment = MutableLiveData<Boolean>()
 
+    // Removed song in playlist
+    val removedSongInPlaylist = MutableLiveData<Song>()
+
 }

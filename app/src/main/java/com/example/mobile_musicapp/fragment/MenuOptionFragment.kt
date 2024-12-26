@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +17,12 @@ import com.example.mobile_musicapp.adapters.OptionAdapter
 import com.example.mobile_musicapp.components.CommentsBottomSheet
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.services.PlaylistDao
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.launch
 
 class MenuOptionFragment : BottomSheetDialogFragment() {
 
@@ -85,7 +88,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
             // TODO: handle option click for each option
             Option.ADD_TO_PLAYLIST -> { addSongToPlaylist() }
             Option.ADD_TO_QUEUE -> { addSongToQueue() }
-            Option.REMOVE_FROM_PLAYLIST -> { /* Handle remove from playlist */ }
+            Option.REMOVE_FROM_PLAYLIST -> { removeSongFromPlaylist() }
             Option.REMOVE_FROM_QUEUE -> { removeSongFromQueue() }
             Option.DOWNLOAD -> { /* Handle download */ }
             Option.SHARE -> { shareCallback?.invoke() }
@@ -148,6 +151,24 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
             song?.let {
                 val actionDialogFragment = ChoosingPlaylistFragment()
                 actionDialogFragment.show(parentFragmentManager, "ChoosingPlaylistFragment")
+            }
+        }
+    }
+
+    private fun removeSongFromPlaylist() {
+        val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        shareViewModel.selectedSong.observe(viewLifecycleOwner) { song ->
+            song?.let {
+                val playlist = shareViewModel.selectedPlaylist.value
+
+                if (playlist != null) {
+                    lifecycleScope.launch {
+                        PlaylistDao.removeSongFromPlaylist(playlist.playlistId, song._id)
+                        shareViewModel.updatePlaylist(playlist.playlistId)
+                    }
+
+                    shareViewModel.removedSongInPlaylist.value = song
+                }
             }
         }
     }
