@@ -38,7 +38,6 @@ class SearchFragment : Fragment() {
             onOptionClick = {
                 val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
                 shareViewModel.selectedSong.value = it
-                // TODO: resolve click event
                 val options = listOf(
                     Option.SHARE.title,
                     Option.ADD_TO_PLAYLIST.title,

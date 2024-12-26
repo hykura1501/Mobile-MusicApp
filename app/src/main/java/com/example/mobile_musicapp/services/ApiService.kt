@@ -18,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -93,6 +94,22 @@ data class AddSongToPlaylistRequest(
     val songId: String
 )
 
+data class RemoveSongFromPlaylistRequest(
+    val songId: String
+)
+
+data class PlaylistResponse(
+    val _id: String,
+    val userId: String,
+    val title: String,
+    val deleted: Boolean,
+    val songIds: List<String>,
+    val createdAt: String,
+    val updatedAt: String,
+    val __v: Int
+)
+
+
 data class UserResponse(
     val code: Int,
     val data: User
@@ -127,6 +144,14 @@ interface ApiService {
     suspend fun addSongToPlaylist(
         @Path("playlistId") playlistId: String,
         @Body request: AddSongToPlaylistRequest)
+
+    // DELETE is not official support body
+    @HTTP(method = "DELETE", path = "playlist/remove-song/{playlistId}", hasBody = true)
+    suspend fun removeSongFromPlaylist(
+        @Path("playlistId") playlistId: String,
+        @Body request: RemoveSongFromPlaylistRequest
+    ): PlaylistResponse
+
 
     // song ----------------------------------------------------------------
     @GET("song/detail/{songId}")

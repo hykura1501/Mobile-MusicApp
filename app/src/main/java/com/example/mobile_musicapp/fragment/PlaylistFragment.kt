@@ -45,7 +45,7 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var playlist : Playlist?
+        var playlist : Playlist? = null
 
         val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
         sharedViewModel.selectedPlaylist.observe(viewLifecycleOwner) { selectedPlaylist ->
@@ -77,6 +77,17 @@ class PlaylistFragment : Fragment() {
                 sharedViewModel.navigateToPlayMusicFragment.value = false // Reset
             }
         }
+
+        sharedViewModel.removedSongInPlaylist.observe(viewLifecycleOwner) { removedSong ->
+            removedSong?.let {
+                if (playlist != null) {
+                    val newPlaylist = playlist!!
+                    newPlaylist.songs.remove(it)
+                    (recyclerView.adapter as SongAdapter).submitList(newPlaylist.songs)
+                    "${newPlaylist.songs.size} songs".also { quantitySongs.text = it }
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView(playlist: Playlist) {
@@ -103,7 +114,9 @@ class PlaylistFragment : Fragment() {
             shareViewModel.selectedSong.value = selectedItem
             // TODO: resolve click event
             val options = listOf(
-                Option.SHARE.title
+                Option.SHARE.title,
+                Option.REMOVE_FROM_PLAYLIST.title,
+                Option.ADD_TO_QUEUE.title
             )
             val actionDialogFragment = MenuOptionFragment.newInstance(options)
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
