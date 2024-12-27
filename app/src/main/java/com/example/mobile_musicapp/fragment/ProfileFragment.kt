@@ -66,7 +66,7 @@ class ProfileFragment : Fragment() {
                 }
 
                 if (userResponse != null) {
-//                    User = userRespone
+                    User = userResponse
                     isLogin = true
                     showUserProfile()
                 } else {

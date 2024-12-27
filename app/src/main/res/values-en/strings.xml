@@ -102,4 +102,6 @@
     <string name="queueTitle">Queue</string>
     <string name="queueButton">Queue button</string>
     <string name="repeatButton">Repeat button</string>
+
+    <string name="default_web_client_id">120145876571-sg6599t69ae3qdvc5ck189s9bjtaucg0.apps.googleusercontent.com</string>
 </resources>

@@ -25,6 +25,7 @@ import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.SongDao
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.widget.Toast
+import com.example.mobile_musicapp.services.TokenManager
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -97,17 +98,47 @@ class MainActivity : AppCompatActivity() {
         handleIntent(intent)
     }
 
-    private fun handleIntent(intent: Intent) {
-        val action = intent.action
-        val data: Uri? = intent.data
 
-        if (Intent.ACTION_VIEW == action && data != null) {
-            val songId = data.lastPathSegment
-            Log.d("MainActivity", "Action: $action, Data: $data, Song ID: $songId")
-            if (songId != null) {
-                fetchAndOpenSong(songId)
+    private fun handleIntent(intent: Intent) {
+        intent?.data?.let { uri ->
+            Log.d("MainActivity", "Received URI: $uri") // Thêm log kiểm tra URI
+            if (uri.scheme == "music-app" && uri.host == "callback") {
+                val jwtToken = uri.getQueryParameter("token")
+                if (!jwtToken.isNullOrEmpty()) {
+                    Log.d("MainActivity", "Received Token: $jwtToken") // Log token
+                    saveJwtToken(jwtToken)
+                    navigateToMainScreen()
+                } else {
+                    Log.e("MainActivity", "Token is missing in callback URI")
+                }
+            } else {
+                Log.d("MainActivity", "Unhandled URI: $uri")
+                handleOtherUri(uri)
             }
+        } ?: run {
+            Log.e("MainActivity", "Intent data is null")
         }
+    }
+
+
+    private fun handleOtherUri(uri: Uri) {
+        val action = intent?.action
+        val songId = uri.lastPathSegment
+        if (!songId.isNullOrEmpty()) {
+            Log.d("MainActivity", "Action: $action, Data: $uri, Song ID: $songId")
+            fetchAndOpenSong(songId)
+        } else {
+            Log.w("MainActivity", "Unhandled URI: $uri")
+        }
+    }
+
+    private fun saveJwtToken(token: String) {
+        TokenManager.saveToken(this, token)
+    }
+
+    private fun navigateToMainScreen() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun fetchAndOpenSong(songId: String) {
