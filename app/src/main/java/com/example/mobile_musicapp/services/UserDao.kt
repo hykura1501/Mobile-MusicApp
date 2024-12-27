@@ -8,8 +8,7 @@ class UserDao {
             return try {
                 val response = RetrofitClient.instance.getMe()
                 if (response.isSuccessful) {
-//                    response.body()?.data
-                    null
+                    response.body()?.data
                 } else {
                     null
                 }

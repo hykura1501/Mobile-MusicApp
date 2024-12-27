@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.User
-import com.example.mobile_musicapp.models.UserResponse
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -76,6 +75,10 @@ data class RegisterRequest(
     val fullName : String,
     val email: String,
     val password: String
+)
+
+data class GoogleLoginRequest(
+    val idToken: String
 )
 
 data class ApiResponseAuth(
@@ -167,6 +170,11 @@ interface ApiService {
     @POST("auth/register")
     suspend fun register(
         @Body registerRequest: RegisterRequest
+    ): Response<ApiResponseAuth>
+
+    @POST("auth/login/google")
+    suspend fun loginGoogle(
+        @Body request: GoogleLoginRequest
     ): Response<ApiResponseAuth>
 
     @GET("user/me")
