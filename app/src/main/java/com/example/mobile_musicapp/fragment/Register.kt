@@ -1,147 +1,185 @@
 package com.example.mobile_musicapp.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.mobile_musicapp.R
-import com.example.mobile_musicapp.databinding.FragmentLoginBinding
 import com.example.mobile_musicapp.databinding.FragmentRegisterBinding
 import com.example.mobile_musicapp.services.AuthApiResult
 import com.example.mobile_musicapp.services.AuthDao
 import com.example.mobile_musicapp.services.TokenManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-/**
- * A simple [Fragment] subclass.
- * Use the [Register.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Register : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 100
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnRegister.setOnClickListener {
-            var email = binding.emailEditText.text.toString()
-            var fullname = binding.fullNameEditText.text.toString()
-            var password = binding.passwordEditText.text.toString()
-            if (email.isEmpty()) {
-                binding.tvErrorEmail.text = "Email is required"
-            } else {
-                binding.tvErrorEmail.text = ""
-            }
-            if (password.isEmpty()) {
-                binding.tvErrorPassword.text = "Password is required"
-            } else {
-                binding.tvErrorPassword.text = ""
-            }
-            if (fullname.isEmpty()) {
-                binding.tvErrorFullName.text = "Full Name is required"
-            } else {
-                binding.tvErrorFullName.text = ""
-            }
-            if (email.isNotEmpty() && password.isNotEmpty() && fullname.isNotEmpty()) {
-                lifecycleScope.launch {
-                    try {
-                        when (val response = AuthDao.register(fullname, email, password)) {
-                            is AuthApiResult.Success -> {
-                                val token = response.data?.token
-                                if (token != null) {
-                                    TokenManager.saveToken(requireContext(), token)
-                                    binding.tvErrorEmail.text = ""
-                                    binding.tvErrorPassword.text = ""
-                                    binding.tvErrorFullName.text = ""
-                                    binding.emailEditText.text.clear()
-                                    binding.passwordEditText.text.clear()
-                                    binding.fullNameEditText.text.clear()
-                                    findNavController().navigate(R.id.action_register_to_home)
-                                } else {
-                                    binding.tvErrorPassword.text = "Unexpected error: Token is missing."
-                                }
-                            }
-                            is AuthApiResult.Error -> {
-                                val errorMessage = response.message
-                                when (val errorCode = response.code) {
-                                    400 -> {
-                                        binding.tvErrorPassword.text = errorMessage
-                                    }
-                                    else -> {
-                                        binding.tvErrorPassword.text = "Error $errorCode: $errorMessage"
-                                    }
-                                }
-                            }
-                            null -> {
-                                binding.tvErrorPassword.text = "Unable to connect to the server. Please try again."
-                            }
-                        }
-                    } catch (e: Exception) {
-                        binding.tvErrorPassword.text = "An error occurred: ${e.message}"
+        // Initialize Google Sign-In Client
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+
+        binding.btnRegister.setOnClickListener { registerUser() }
+        binding.btnLogin.setOnClickListener { navigateToLogin() }
+        binding.btnBack.setOnClickListener { navigateToHome() }
+        binding.btnGoogle.setOnClickListener { signInWithGoogle() }
+    }
+
+    private fun registerUser() {
+        val email = binding.emailEditText.text.toString().trim()
+        val fullname = binding.fullNameEditText.text.toString().trim()
+        val password = binding.passwordEditText.text.toString().trim()
+
+        var isValid = true
+        if (email.isEmpty()) {
+            binding.tvErrorEmail.text = "Email is required"
+            isValid = false
+        } else {
+            binding.tvErrorEmail.text = ""
+        }
+
+        if (password.isEmpty()) {
+            binding.tvErrorPassword.text = "Password is required"
+            isValid = false
+        } else {
+            binding.tvErrorPassword.text = ""
+        }
+
+        if (fullname.isEmpty()) {
+            binding.tvErrorFullName.text = "Full Name is required"
+            isValid = false
+        } else {
+            binding.tvErrorFullName.text = ""
+        }
+
+        if (isValid) {
+            lifecycleScope.launch {
+                try {
+                    when (val response = AuthDao.register(fullname, email, password)) {
+                        is AuthApiResult.Success -> handleAuthSuccess(response.data?.token)
+                        is AuthApiResult.Error -> handleAuthError(response.code, response.message)
+                        null -> showError("Unable to connect to the server. Please try again.")
                     }
+                } catch (e: Exception) {
+                    showError("An error occurred: ${e.message}")
                 }
             }
         }
+    }
 
-        binding.btnLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_register_to_login)
-        }
-
-        binding.btnBack.setOnClickListener {
-            findNavController().navigate(R.id.action_register_to_home)
+    private fun signInWithGoogle() {
+        googleSignInClient.signOut().addOnCompleteListener {
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
+    }
+
+    private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
+        try {
+            val account = task.getResult(ApiException::class.java)
+            if (account != null) {
+                val idToken = account.idToken
+                Log.d("Register", "ID Token: $idToken")
+                if (!idToken.isNullOrEmpty()) {
+                    sendIdTokenToServer(idToken)
+                }
+            }
+        } catch (e: ApiException) {
+            Log.e("Register", "Google Sign-In failed: ${e.message}")
+            Toast.makeText(requireContext(), "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun sendIdTokenToServer(idToken: String) {
+        lifecycleScope.launch {
+            try {
+                when (val response = AuthDao.loginGoogle(idToken)) {
+                    is AuthApiResult.Success -> handleAuthSuccess(response.data?.token)
+                    is AuthApiResult.Error -> showError(response.message)
+                    null -> showError("Unable to connect to the server. Please try again.")
+                }
+            } catch (e: Exception) {
+                showError("An error occurred: ${e.message}")
+            }
+        }
+    }
+
+    private fun handleAuthSuccess(token: String?) {
+        if (token != null) {
+            TokenManager.saveToken(requireContext(), token)
+            clearInputs()
+            navigateToHome()
+        } else {
+            showError("Unexpected error: Token is missing.")
+        }
+    }
+
+    private fun handleAuthError(code: Int, message: String) {
+        val errorMessage = when (code) {
+            400 -> message
+            else -> "Error $code: $message"
+        }
+        showError(errorMessage)
+    }
+
+    private fun showError(message: String) {
+        binding.tvErrorPassword.text = message
+    }
+
+    private fun clearInputs() {
+        binding.emailEditText.text.clear()
+        binding.passwordEditText.text.clear()
+        binding.fullNameEditText.text.clear()
+    }
+
+    private fun navigateToHome() {
+        findNavController().navigate(R.id.action_register_to_home)
+    }
+
+    private fun navigateToLogin() {
+        findNavController().navigate(R.id.action_register_to_login)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Register.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Register().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }
