@@ -15,6 +15,8 @@ import com.example.mobile_musicapp.databinding.FragmentLoginBinding
 import com.example.mobile_musicapp.services.AuthDao
 import com.example.mobile_musicapp.services.TokenManager
 import com.example.mobile_musicapp.services.AuthApiResult
+import com.facebook.CallbackManager
+import com.facebook.FacebookSdk
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -22,11 +24,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
+import com.facebook.*
+import com.facebook.login.LoginResult
+
 
 class Login : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var callbackManager: CallbackManager
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 100
@@ -82,6 +89,55 @@ class Login : Fragment() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+
+        callbackManager = CallbackManager.Factory.create()
+        binding.fbLoginButton.setPermissions("email", "public_profile")
+        binding.fbLoginButton.setFragment(this)
+
+        binding.fbLoginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                val accessToken = loginResult.accessToken.token
+                Log.d("Login", "Facebook Access Token: $accessToken")
+
+                // Gửi Access Token lên server
+                sendAccessTokenToServer(accessToken)
+            }
+
+            override fun onCancel() {
+                Toast.makeText(requireContext(), "Facebook Login Cancelled", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onError(exception: FacebookException) {
+                Log.e("Login", "Facebook Login Error: ${exception.message}")
+                Toast.makeText(requireContext(), "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        binding.btnFacebook.setOnClickListener {
+            binding.fbLoginButton.performClick()
+        }
+    }
+
+    private fun sendAccessTokenToServer(accessToken: String) {
+        lifecycleScope.launch {
+            try {
+                when (val response = AuthDao.loginFacebook(accessToken)) {
+                    is AuthApiResult.Success -> {
+                        val token = response.data?.token
+                        if (token != null) {
+                            TokenManager.saveToken(requireContext(), token)
+                            navigateToHome()
+                        } else {
+                            showError("Unexpected error: Token is missing.")
+                        }
+                    }
+                    is AuthApiResult.Error -> showError(response.message)
+                    null -> showError("Unable to connect to the server. Please try again.")
+                }
+            } catch (e: Exception) {
+                showError("An error occurred: ${e.message}")
+            }
+        }
     }
 
     private fun signInWithGoogle() {
@@ -94,11 +150,16 @@ class Login : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        // Facebook Login callback
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+
+        // Google Sign-In callback
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
     }
+
 
     private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
         try {

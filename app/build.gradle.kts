@@ -96,5 +96,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")  // Add this line
 
     implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("com.facebook.android:facebook-login:latest.release")
 
 }

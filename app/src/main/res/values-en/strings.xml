@@ -104,4 +104,6 @@
     <string name="repeatButton">Repeat button</string>
 
     <string name="default_web_client_id">120145876571-sg6599t69ae3qdvc5ck189s9bjtaucg0.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">967125375370459</string>
+    <string name="facebook_client_token">938ac1b3f5fd4cf1b29cfae8db60e980</string>
 </resources>
