@@ -81,6 +81,10 @@ data class GoogleLoginRequest(
     val idToken: String
 )
 
+data class FacebookLoginRequest(
+    val accessToken: String
+)
+
 data class ApiResponseAuth(
     val code: Int,
     val token: String,
@@ -175,6 +179,11 @@ interface ApiService {
     @POST("auth/login/google")
     suspend fun loginGoogle(
         @Body request: GoogleLoginRequest
+    ): Response<ApiResponseAuth>
+
+    @POST("auth/login/facebook")
+    suspend fun loginFacebook(
+        @Body request: FacebookLoginRequest
     ): Response<ApiResponseAuth>
 
     @GET("user/me")

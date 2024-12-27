@@ -104,4 +104,6 @@
     <string name="repeatButton">Nút lặp lại </string>
 
     <string name="default_web_client_id">120145876571-bchb2bg4u88m1h2r495bkkl2gerhm18u.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">967125375370459</string>
+    <string name="facebook_client_token">938ac1b3f5fd4cf1b29cfae8db60e980</string>
 </resources>

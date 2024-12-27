@@ -62,5 +62,21 @@ class AuthDao {
                 null
             }
         }
+        suspend fun loginFacebook(accessToken: String): AuthApiResult? {
+            return try {
+                val response = RetrofitClient.instance.loginFacebook(FacebookLoginRequest(accessToken))
+                if (response.isSuccessful) {
+                    AuthApiResult.Success(response.body())
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = Gson().fromJson(errorBody, JsonObject::class.java)
+                    val errorMessage = errorJson["message"]?.asString ?: "Unknown error"
+                    val statusCode = errorJson["code"]?.asInt ?: -1
+                    AuthApiResult.Error(statusCode, errorMessage)
+                }
+            } catch (e: Exception) {
+                null
+            }
+        }
     }
 }

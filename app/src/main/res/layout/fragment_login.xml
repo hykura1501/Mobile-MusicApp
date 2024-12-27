@@ -216,6 +216,12 @@
             app:iconTint="@null"
             app:strokeColor="@android:color/holo_blue_dark" />
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/fbLoginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
