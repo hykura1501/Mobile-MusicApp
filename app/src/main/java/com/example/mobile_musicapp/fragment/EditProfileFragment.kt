@@ -14,14 +14,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.databinding.FragmentEditProfileBinding
 import com.example.mobile_musicapp.models.User
+import com.example.mobile_musicapp.services.UserDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 
 class EditProfileFragment : Fragment() {
 
@@ -30,6 +36,7 @@ class EditProfileFragment : Fragment() {
 
     private var photoUri: Uri? = null
     private lateinit var currentPhotoPath: String
+    private var isChangeAvatar = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,11 +49,10 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Nhận User từ arguments
         val user = EditProfileFragmentArgs.fromBundle(requireArguments()).user
         binding.fullNameEditText.setText(user.fullName)
         binding.emailEditText.setText(user.email)
-
+        binding.phoneEditText.setText(user.phone)
         val url = user.avatar
         if (!url.isNullOrEmpty()) {
             Glide.with(binding.ivProfilePicture.context)
@@ -56,12 +62,10 @@ class EditProfileFragment : Fragment() {
             binding.ivProfilePicture.setImageResource(R.drawable.default_profile_avatar)
         }
 
-        // Xử lý nút Back
         binding.btnBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
 
-        // Xử lý chọn ảnh
         binding.choseAvatar.setOnClickListener {
             val options = arrayOf("Chụp ảnh", "Chọn từ thư viện")
             val builder = AlertDialog.Builder(requireContext())
@@ -74,6 +78,63 @@ class EditProfileFragment : Fragment() {
             }
             builder.show()
         }
+
+        binding.btnSave.setOnClickListener {
+            val fullName = binding.fullNameEditText.text.toString()
+            val email = binding.emailEditText.text.toString()
+            val phone = binding.phoneEditText.text.toString()
+
+            if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+                Toast.makeText(requireContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+            } else {
+                lifecycleScope.launch {
+                    try {
+                        val file = photoUri?.let { getFileFromUri(it) }
+
+                        if (isChangeAvatar) {
+                            val userResponse = withContext(Dispatchers.IO) {
+                                UserDao.updateMe(fullName, email, phone, file)
+                            }
+                            if (userResponse != null) {
+                                Toast.makeText(requireContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show()
+                                requireActivity().onBackPressed()
+                            } else {
+                                Toast.makeText(requireContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            val userResponse = withContext(Dispatchers.IO) {
+                                UserDao.updateMeWithoutAvatar(fullName, email, phone)
+                            }
+                            if (userResponse != null) {
+                                Toast.makeText(requireContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show()
+                                requireActivity().onBackPressed()
+                            } else {
+                                Toast.makeText(requireContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Toast.makeText(requireContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getFileFromUri(uri: Uri): File? {
+        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = requireContext().contentResolver.query(uri, filePathColumn, null, null, null)
+        cursor?.moveToFirst()
+
+        val columnIndex = cursor?.getColumnIndex(filePathColumn[0]) ?: -1
+        val filePath = columnIndex?.let { cursor?.getString(it) }
+        cursor?.close()
+
+        return if (filePath != null) {
+            File(filePath)
+        } else {
+            null
+        }
     }
 
     private fun openCamera() {
@@ -82,7 +143,7 @@ class EditProfileFragment : Fragment() {
             val photoFile = createImageFile()
             photoUri = FileProvider.getUriForFile(
                 requireContext(),
-                "com.example.mobile_musicapp.fileprovider", // Thay bằng authority của bạn
+                "com.example.mobile_musicapp.fileprovider",
                 photoFile
             )
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
@@ -92,7 +153,6 @@ class EditProfileFragment : Fragment() {
             Toast.makeText(requireContext(), "Lỗi khi mở camera: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun checkAndRequestCameraPermission() {
         if (requireContext().checkSelfPermission(android.Manifest.permission.CAMERA)
@@ -114,7 +174,6 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
@@ -124,6 +183,7 @@ class EditProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
+            isChangeAvatar = true
             when (requestCode) {
                 REQUEST_CAMERA -> {
                     binding.ivProfilePicture.setImageURI(photoUri)
@@ -131,6 +191,7 @@ class EditProfileFragment : Fragment() {
                 REQUEST_GALLERY -> {
                     val selectedImageUri = data?.data
                     binding.ivProfilePicture.setImageURI(selectedImageUri)
+                    photoUri = selectedImageUri  // Lưu URI của ảnh chọn từ thư viện
                 }
             }
         }
