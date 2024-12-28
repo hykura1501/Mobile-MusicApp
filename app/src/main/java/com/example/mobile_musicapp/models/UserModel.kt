@@ -1,8 +1,9 @@
 package com.example.mobile_musicapp.models
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class User (
     var _id: String = "",
     var fullName: String = "",
@@ -10,4 +11,4 @@ data class User (
     var deleted: Boolean = false,
     var favoriteSongs: MutableList<Song> = mutableListOf(),
     var avatar: String = ""
-)
+) : Parcelable

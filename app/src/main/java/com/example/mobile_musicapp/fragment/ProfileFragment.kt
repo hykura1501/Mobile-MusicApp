@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.databinding.FragmentLoginBinding
 import com.example.mobile_musicapp.databinding.FragmentProfileBinding
@@ -17,21 +19,24 @@ import com.example.mobile_musicapp.services.UserDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.URL
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-private var _binding: FragmentProfileBinding? = null
-// This property is only valid between onCreateView and
-// onDestroyView.
-private val binding get() = _binding!!
 
 class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+
+    private var _binding: FragmentProfileBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     private var User : User? = User()
     private var isLogin: Boolean = false
@@ -92,6 +97,14 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
+        binding.uploadedSong.setOnClickListener {
+            Toast.makeText(context, "Upload Song", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnEditProfile.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(User!!)
+            findNavController().navigate(action)
+        }
     }
 
     private fun showLoadingState() {
@@ -107,6 +120,14 @@ class ProfileFragment : Fragment() {
         binding.tvFullName.text = User?.fullName
         binding.tvEmail.text = User?.email
 
+        val url = User?.avatar
+        if (url != null) {
+            Glide.with(binding.ivProfilePicture.context)
+                .load(url)
+                .into(binding.ivProfilePicture)
+        } else {
+            binding.ivProfilePicture.setImageResource(R.drawable.default_profile_avatar)
+        }
     }
 
     private fun showLoginButton() {
