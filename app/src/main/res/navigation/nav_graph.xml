@@ -134,6 +134,22 @@
             android:id="@+id/action_profileFragment_to_login"
             app:destination="@id/login"
             app:popUpTo="@id/profileFragment" />
+        <action android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment"
+            app:popUpTo="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.mobile_musicapp.fragment.EditProfileFragment"
+        android:label="EditProfileFragment">
+        <argument
+            android:name="user"
+            app:argType="com.example.mobile_musicapp.models.User" />
+        <action
+            android:id="@+id/action_editProfileFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/editProfileFragment" />
     </fragment>
 
     <fragment

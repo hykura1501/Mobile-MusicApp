@@ -106,4 +106,12 @@
     <string name="default_web_client_id">120145876571-bchb2bg4u88m1h2r495bkkl2gerhm18u.apps.googleusercontent.com</string>
     <string name="facebook_app_id">967125375370459</string>
     <string name="facebook_client_token">938ac1b3f5fd4cf1b29cfae8db60e980</string>
+
+
+    <string name="upload_song">Bài hát đã đăng tải</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="full_name">Họ và tên</string>
+    <string name="phone">Số điện thoại</string>
+    <string name="enter_your_phone">Nhập số điện thoại của bạn</string>
 </resources>
