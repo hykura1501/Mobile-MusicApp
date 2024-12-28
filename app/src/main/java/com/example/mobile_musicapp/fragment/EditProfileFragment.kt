@@ -91,48 +91,38 @@ class EditProfileFragment : Fragment() {
                     try {
                         val file = photoUri?.let { getFileFromUri(it) }
 
-                        if (isChangeAvatar) {
-                            val userResponse = withContext(Dispatchers.IO) {
+                        val userResponse = withContext(Dispatchers.IO) {
+                            if (isChangeAvatar && file != null) {
                                 UserDao.updateMe(fullName, email, phone, file)
-                            }
-                            if (userResponse != null) {
-                                Toast.makeText(requireContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show()
-                                requireActivity().onBackPressed()
                             } else {
-                                Toast.makeText(requireContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show()
-                            }
-                        } else {
-                            val userResponse = withContext(Dispatchers.IO) {
                                 UserDao.updateMeWithoutAvatar(fullName, email, phone)
                             }
-                            if (userResponse != null) {
-                                Toast.makeText(requireContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show()
-                                requireActivity().onBackPressed()
-                            } else {
-                                Toast.makeText(requireContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show()
-                            }
+                        }
+
+                        if (userResponse != null) {
+                            Toast.makeText(requireContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show()
+                            requireActivity().onBackPressed()
+                        } else {
+                            Toast.makeText(requireContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show()
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        Toast.makeText(requireContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Cập nhật thông tin thất bại: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
+
     }
 
     private fun getFileFromUri(uri: Uri): File? {
-        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = requireContext().contentResolver.query(uri, filePathColumn, null, null, null)
-        cursor?.moveToFirst()
-
-        val columnIndex = cursor?.getColumnIndex(filePathColumn[0]) ?: -1
-        val filePath = columnIndex?.let { cursor?.getString(it) }
-        cursor?.close()
-
-        return if (filePath != null) {
-            File(filePath)
-        } else {
+        return try {
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            val file = File(requireContext().cacheDir, "temp_image_${System.currentTimeMillis()}.jpg")
+            file.outputStream().use { inputStream?.copyTo(it) }
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }
@@ -186,16 +176,21 @@ class EditProfileFragment : Fragment() {
             isChangeAvatar = true
             when (requestCode) {
                 REQUEST_CAMERA -> {
-                    binding.ivProfilePicture.setImageURI(photoUri)
+                    if (photoUri != null) {
+                        binding.ivProfilePicture.setImageURI(photoUri)
+                    } else {
+                        Toast.makeText(requireContext(), "Không thể tải ảnh từ camera", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 REQUEST_GALLERY -> {
                     val selectedImageUri = data?.data
                     binding.ivProfilePicture.setImageURI(selectedImageUri)
-                    photoUri = selectedImageUri  // Lưu URI của ảnh chọn từ thư viện
+                    photoUri = selectedImageUri
                 }
             }
         }
     }
+
 
     private fun createImageFile(): File {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
