@@ -26,6 +26,7 @@ import com.example.mobile_musicapp.services.SongDao
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.widget.Toast
 import com.example.mobile_musicapp.services.TokenManager
+import com.facebook.FacebookSdk
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -91,6 +92,8 @@ class MainActivity : AppCompatActivity() {
 
         PlayerManager.initialize(playerBarViewModel)
         Queue.initialize(playerBarViewModel)
+
+        FacebookSdk.sdkInitialize(this)
     }
 
     override fun onNewIntent(intent: Intent) {
