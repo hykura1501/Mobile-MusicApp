@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
 import com.facebook.*
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 
 
@@ -33,7 +35,9 @@ class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var callbackManager: CallbackManager
+    private val callbackManager: CallbackManager by lazy {
+        CallbackManager.Factory.create()
+    }
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 100
@@ -90,16 +94,12 @@ class Login : Fragment() {
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
-        callbackManager = CallbackManager.Factory.create()
         binding.fbLoginButton.setPermissions("email", "public_profile")
         binding.fbLoginButton.setFragment(this)
-
         binding.fbLoginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
                 val accessToken = loginResult.accessToken.token
                 Log.d("Login", "Facebook Access Token: $accessToken")
-
-                // Gửi Access Token lên server
                 sendAccessTokenToServer(accessToken)
             }
 
@@ -126,6 +126,7 @@ class Login : Fragment() {
                         val token = response.data?.token
                         if (token != null) {
                             TokenManager.saveToken(requireContext(), token)
+                            LoginManager.getInstance().logOut()
                             navigateToHome()
                         } else {
                             showError("Unexpected error: Token is missing.")
