@@ -7,6 +7,7 @@ import kotlinx.android.parcel.Parcelize
 data class User (
     var _id: String = "",
     var fullName: String = "",
+    var phone: String = "",
     var email: String = "",
     var deleted: Boolean = false,
     var favoriteSongs: MutableList<Song> = mutableListOf(),
