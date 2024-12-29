@@ -254,7 +254,7 @@ object TokenManager {
 
 
 object RetrofitClient {
-    private const val BASE_URL = "https://musicapp-api-fkq3.onrender.com/"
+    private const val BASE_URL = "https://backend-mobile-xi.vercel.app/"
 
     private val authInterceptor = Interceptor { chain ->
         val token = "Bearer ${TokenManager.getToken(App.instance)}"
