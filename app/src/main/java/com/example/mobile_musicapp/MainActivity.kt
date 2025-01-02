@@ -1,11 +1,12 @@
 package com.example.mobile_musicapp
 
-import android.util.Log
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -15,19 +16,20 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.mobile_musicapp.helpers.NavigationHelper.setupWithNavControllerCustom
+import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.PlayerManager
+import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
-import com.example.mobile_musicapp.models.Song
-import com.example.mobile_musicapp.models.SongListWithIndex
-import com.example.mobile_musicapp.services.SongDao
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import android.widget.Toast
-import com.example.mobile_musicapp.services.TokenManager
 import com.facebook.FacebookSdk
-import kotlinx.coroutines.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import vn.zalopay.sdk.ZaloPaySDK
 
 class MainActivity : AppCompatActivity() {
 
@@ -98,7 +100,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleIntent(intent)
+//        handleIntent(intent)
+        ZaloPaySDK.getInstance().onResult(intent)
     }
 
 
