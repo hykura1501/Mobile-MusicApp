@@ -105,6 +105,10 @@ class ProfileFragment : Fragment() {
             val action = ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(User!!)
             findNavController().navigate(action)
         }
+
+        binding.getPremium.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_preminumFragment)
+        }
     }
 
     private fun showLoadingState() {

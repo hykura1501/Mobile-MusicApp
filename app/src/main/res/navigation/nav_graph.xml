@@ -137,6 +137,10 @@
         <action android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment"
             app:popUpTo="@id/profileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_preminumFragment"
+            app:destination="@id/premium"
+            app:popUpTo="@id/profileFragment" />
     </fragment>
 
     <fragment
@@ -214,6 +218,15 @@
         <action
             android:id="@+id/action_deepSearchFragment_to_queueFragment"
             app:destination="@id/queueFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/premium"
+        android:name="com.example.mobile_musicapp.fragment.PremiumFragment"
+        android:label="fragment_premium"
+        tools:layout="@layout/fragment_premium">
+    >
+
     </fragment>
 
 </navigation>
