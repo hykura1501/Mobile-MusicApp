@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
-import okhttp3.internal.wait
 
 // This object uses to manage the media player
 object PlayerManager {
