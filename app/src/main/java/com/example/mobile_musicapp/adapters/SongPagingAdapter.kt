@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.models.Song
 
-class SongPagingAdapter( private val onClick: (Song) -> Unit) : PagingDataAdapter<Song, SongPagingAdapter.ItemViewHolder>(ItemComparator) {
+class SongPagingAdapter( private val onClick: (Song) -> Unit, private val onOptionClick: (Song) -> Unit) : PagingDataAdapter<Song, SongPagingAdapter.ItemViewHolder>(ItemComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.song_item_vertical_layout, parent, false)
@@ -24,19 +24,22 @@ class SongPagingAdapter( private val onClick: (Song) -> Unit) : PagingDataAdapte
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = getItem(position)
         if (item != null) {
-            holder.bind(item, onClick)
+            holder.bind(item, onClick, onOptionClick)
         }
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val TAG = "ItemPagingAdapter"
-        fun bind(item: Song, onClick : (Song) -> Unit) {
+        fun bind(item: Song, onClick : (Song) -> Unit, onOptionClick: (Song) -> Unit) {
             Log.d(TAG, "bind: =====> data = $item")
             // Bind item to UI components
             itemView.findViewById<TextView>(R.id.songNameTextView).text = item.title
             itemView.findViewById<TextView>(R.id.artistNameTextView).text = item.artistName
             itemView.findViewById<ConstraintLayout>(R.id.layout_main).setOnClickListener {
                 onClick(item)
+            }
+            itemView.findViewById<ImageView>(R.id.optionsButton).setOnClickListener {
+                onOptionClick(item)
             }
             val songImageView = itemView.findViewById<ImageView>(R.id.songImageView)
             if (item.thumbnail.isNotEmpty()) {
