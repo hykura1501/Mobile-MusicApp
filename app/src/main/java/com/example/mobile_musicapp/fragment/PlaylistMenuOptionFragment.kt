@@ -23,7 +23,6 @@ class PlaylistMenuOptionFragment : BottomSheetDialogFragment() {
 
     private lateinit var playlistThumbnail: ImageView
     private lateinit var playlistTitle: TextView
-    private lateinit var songArtist: TextView
 
     companion object {
         fun newInstance(options: List<String>, shareCallback: (() -> Unit)? = null): PlaylistMenuOptionFragment {

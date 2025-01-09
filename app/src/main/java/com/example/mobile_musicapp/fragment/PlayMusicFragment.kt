@@ -176,6 +176,7 @@ class PlayMusicFragment : Fragment() {
                 Option.COMMENT.title,
                 Option.SHARE.title,
                 Option.GO_TO_QUEUE.title,
+                Option.SLEEP_TIMER.title,
             )
             val actionDialogFragment = MenuOptionFragment.newInstance(options) { handleShare() }
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")

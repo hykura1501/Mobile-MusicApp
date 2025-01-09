@@ -96,6 +96,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
                 bottomSheet.show(requireActivity().supportFragmentManager,bottomSheet.tag)
                 return
             }
+            Option.SLEEP_TIMER -> { /* Handle sleep timer */ }
             Option.GO_TO_QUEUE -> { navigateToQueue() }
         }
         dismiss()
