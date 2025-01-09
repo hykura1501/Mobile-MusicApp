@@ -44,11 +44,6 @@ class ChoosingSleepTimerFragment : BottomSheetDialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = SleepTimerAdapter(timerOptions) { selectedTime ->
             PlayerManager.startSleepCountdown(selectedTime)
-//            AlertDialog.Builder(context)
-//                .setTitle("Sleep time")
-//                .setMessage("Select time ${selectedTime} minutes")
-//                .setIconAttribute(android.R.attr.alertDialogIcon)
-//                .show()
             dismiss()
         }
     }
