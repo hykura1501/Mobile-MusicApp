@@ -59,7 +59,7 @@ class PlayerBarViewModel : ViewModel() {
         _currentPosition.value = newPosition
     }
 
-    fun deleteSong(song: Song) {
-        _deleteSong.value = song
+    fun deleteSong(deleteSong: Song) {
+        _deleteSong.value = deleteSong
     }
 }
