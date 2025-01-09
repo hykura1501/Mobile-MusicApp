@@ -99,7 +99,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
                 bottomSheet.show(requireActivity().supportFragmentManager,bottomSheet.tag)
                 return
             }
-            Option.SLEEP_TIMER -> { /* Handle sleep timer */ }
+            Option.SLEEP_TIMER -> { sleepTimer() }
             Option.GO_TO_QUEUE -> { navigateToQueue() }
         }
         dismiss()
@@ -172,5 +172,10 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    private fun sleepTimer() {
+        val actionDialogFragment = ChoosingSleepTimerFragment()
+        actionDialogFragment.show(parentFragmentManager, "ChoosingSleepTimerFragment")
     }
 }
