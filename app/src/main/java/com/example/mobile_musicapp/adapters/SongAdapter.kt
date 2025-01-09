@@ -22,6 +22,7 @@ class SongAdapter(private val songs : List<Song>) : RecyclerView.Adapter<SongAda
         songsList.clear()
         songsList.addAll(songs)
     }
+
     @SuppressLint("NotifyDataSetChanged")
     fun submitList(data : List<Song>) {
         songsList.clear()

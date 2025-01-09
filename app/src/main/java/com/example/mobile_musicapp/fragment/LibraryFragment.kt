@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.PlaylistAdapter
-import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.models.PlaylistOption
 import com.example.mobile_musicapp.services.PlaylistDao
 import com.example.mobile_musicapp.viewModels.ShareViewModel
@@ -31,12 +30,14 @@ class LibraryFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_library, container, false)
+        val view = inflater.inflate(R.layout.fragment_library, container, false)
+        createPlaylistButton = view.findViewById<ImageButton>(R.id.createPlaylistButton)!!
+        recyclerView = view.findViewById(R.id.playlistRecyclerView)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        connectUI(view)
 
         setupRecyclerView()
         val sharedViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
@@ -94,10 +95,5 @@ class LibraryFragment : Fragment() {
             val actionDialogFragment = PlaylistMenuOptionFragment.newInstance(options)
             actionDialogFragment.show(parentFragmentManager, "PlaylistMenuOptionFragment")
         }
-    }
-
-    private fun connectUI(view: View) {
-        createPlaylistButton = view.findViewById<ImageButton>(R.id.createPlaylistButton)!!
-        recyclerView = view.findViewById(R.id.playlistRecyclerView)
     }
 }
