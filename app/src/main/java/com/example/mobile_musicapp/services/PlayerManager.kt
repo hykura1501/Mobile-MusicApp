@@ -5,13 +5,37 @@ import android.os.Handler
 import android.os.Looper
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
-import okhttp3.internal.wait
 
 // This object uses to manage the media player
 object PlayerManager {
     private var mediaPlayer: MediaPlayer? = null
     private var viewModel = PlayerBarViewModel()
     private val handler = Handler(Looper.getMainLooper())
+
+    private val sleepHandler = Handler(Looper.getMainLooper())
+    private var sleepRunnable : Runnable? = null
+
+    fun startSleepCountdown(minutes: Int) {
+        val sleepTimeMillis = minutes * 60 * 1000L // transfer to milliseconds
+        if (sleepRunnable != null) {
+            sleepHandler.removeCallbacks(sleepRunnable!!)
+        }
+
+        sleepRunnable = Runnable {
+            // Enough time to sleep
+            viewModel.updatePlayPause(false)
+            pause()
+        }
+
+        sleepHandler.postDelayed(sleepRunnable!!, sleepTimeMillis)
+    }
+
+    fun cancelSleepCountdown() {
+        if (sleepRunnable != null) {
+            sleepHandler.removeCallbacks(sleepRunnable!!)
+        }
+        sleepRunnable = null
+    }
 
     private val updateSeekBarRunnable = object : Runnable {
         override fun run() {

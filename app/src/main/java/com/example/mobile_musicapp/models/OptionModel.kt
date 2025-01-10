@@ -11,6 +11,7 @@ enum class Option(val title: String, val iconResId: Int) {
     DOWNLOAD("Download", R.drawable.ic_download),
     REPEAT("Repeat", R.drawable.ic_repeat),
     SHARE("Share", R.drawable.ic_share),
+    SLEEP_TIMER("Sleep Timer", R.drawable.ic_sleep_timer),
     GO_TO_QUEUE("Go to Queue", R.drawable.ic_queue);
 
     companion object {

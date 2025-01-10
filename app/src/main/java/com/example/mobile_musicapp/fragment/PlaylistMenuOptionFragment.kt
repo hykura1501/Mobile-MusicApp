@@ -7,16 +7,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.PlaylistOptionAdapter
 import com.example.mobile_musicapp.models.PlaylistOption
-import com.example.mobile_musicapp.services.PlaylistDao
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.launch
 
 class PlaylistMenuOptionFragment : BottomSheetDialogFragment() {
 

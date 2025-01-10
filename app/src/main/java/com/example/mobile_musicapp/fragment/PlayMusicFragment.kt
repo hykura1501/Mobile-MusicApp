@@ -133,17 +133,17 @@ class PlayMusicFragment : Fragment() {
             updateUI()
         }
 
+        viewModel.isPlaying.observe(viewLifecycleOwner) {
+            if (viewModel.isPlaying.value == true) {
+                playButton.setImageResource(R.drawable.ic_pause_black)
+            } else {
+                playButton.setImageResource(R.drawable.ic_play_black)
+            }
+        }
+
         // Play/Pause button handling
         playButton.setOnClickListener {
             viewModel.togglePlayPause()
-
-            if (viewModel.isPlaying.value == true) {
-                PlayerManager.play()
-                playButton.setImageResource(R.drawable.ic_pause_black)
-            } else {
-                PlayerManager.pause()
-                playButton.setImageResource(R.drawable.ic_play_black)
-            }
         }
 
         nextButton.setOnClickListener {
@@ -176,6 +176,7 @@ class PlayMusicFragment : Fragment() {
                 Option.COMMENT.title,
                 Option.SHARE.title,
                 Option.GO_TO_QUEUE.title,
+                Option.SLEEP_TIMER.title,
             )
             val actionDialogFragment = MenuOptionFragment.newInstance(options) { handleShare() }
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
