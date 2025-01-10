@@ -41,10 +41,10 @@ object PlayerManager {
         override fun run() {
             mediaPlayer?.let {
                 val currentPosition = it.currentPosition
-                viewModel.updatePosition(currentPosition)
+                viewModel.updatePosition(currentPosition.toLong())
 
                 if (it.isPlaying) {
-                    handler.postDelayed(this, 1000)
+                    handler.postDelayed(this, 100)
                 }
             }
         }
@@ -91,6 +91,7 @@ object PlayerManager {
 
     fun pause() {
         mediaPlayer?.pause()
+        handler.removeCallbacks(updateSeekBarRunnable)
     }
 
     fun stop() {
@@ -101,6 +102,7 @@ object PlayerManager {
     }
 
     fun next() {
+        handler.removeCallbacks(updateSeekBarRunnable)
         pause()
         mediaPlayer?.reset()
         Queue.nextSong()
@@ -114,6 +116,7 @@ object PlayerManager {
     }
 
     fun previous() {
+        handler.removeCallbacks(updateSeekBarRunnable)
         pause()
         mediaPlayer?.reset()
         Queue.previousSong()
@@ -125,6 +128,6 @@ object PlayerManager {
 
     fun seekTo(position: Int) {
         mediaPlayer?.seekTo(position)
-        viewModel.updatePosition(getCurrentPosition())
+        viewModel.updatePosition(getCurrentPosition().toLong())
     }
 }

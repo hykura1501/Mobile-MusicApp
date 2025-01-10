@@ -102,4 +102,5 @@
     <string name="queueTitle">Queue</string>
     <string name="queueButton">Queue button</string>
     <string name="repeatButton">Repeat button</string>
+    <string name="lyricsTitle">Lyrics</string>
 </resources>
