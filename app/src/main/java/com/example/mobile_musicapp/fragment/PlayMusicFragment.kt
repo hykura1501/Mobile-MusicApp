@@ -21,12 +21,18 @@ import kotlin.text.*
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mobile_musicapp.adapters.LyricsAdapter
 import com.example.mobile_musicapp.helpers.BackgroundHelper
+import com.example.mobile_musicapp.models.LyricLine
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.services.PlayerManager
+import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.example.mobile_musicapp.viewModels.SongViewModel
@@ -55,11 +61,15 @@ class PlayMusicFragment : Fragment() {
     private lateinit var album: TextView
     private lateinit var songThumbnail: ImageView
     private lateinit var playerBackground: ConstraintLayout
+    private lateinit var recyclerLyrics: RecyclerView
+
     private var isFavorite: Boolean = false
 
     private val args: PlayMusicFragmentArgs by navArgs()
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
     private val songViewModel : SongViewModel by viewModels()
+    private var lyrics = emptyList<LyricLine>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +116,8 @@ class PlayMusicFragment : Fragment() {
         songThumbnail = view.findViewById<ImageView>(R.id.songThumbnail) as ImageView
 
         playerBackground = view.findViewById<ConstraintLayout>(R.id.playerBackground)
+        recyclerLyrics = view.findViewById<RecyclerView>(R.id.lyric) as RecyclerView
+
         return view
     }
 
@@ -120,8 +132,10 @@ class PlayMusicFragment : Fragment() {
         updateUI()
 
         val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+
+        // Update playing time of song
         viewModel.currentPosition.observe(viewLifecycleOwner) { position ->
-            seekBar.progress = position
+            seekBar.progress = position!!.toInt()
 
             val minutes = (position / 1000) / 60
             val seconds = (position / 1000) % 60
@@ -130,6 +144,12 @@ class PlayMusicFragment : Fragment() {
         }
 
         viewModel.currentSong.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                getLyrics()
+                withContext(Dispatchers.Main) {
+                    loadLyrics()
+                }
+            }
             updateUI()
         }
 
@@ -230,6 +250,26 @@ class PlayMusicFragment : Fragment() {
         // Set background using BackgroundHelper
         val song = Queue.getCurrentSong()!!
         BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground, cornerRadius = 0f)
+
+
+    }
+
+    private fun loadLyrics() {
+        val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
+
+        val adapter = LyricsAdapter(lyrics)
+        recyclerLyrics.adapter = adapter
+        recyclerLyrics.layoutManager = LinearLayoutManager(requireContext())
+
+        viewModel.currentPosition.observe(viewLifecycleOwner) { position ->
+            val currentIndex = lyrics.indexOfLast { it.timestamp <= position }
+            if (currentIndex != adapter.highlightedPosition) {
+                adapter.highlightedPosition = currentIndex
+                adapter.notifyItemChanged(adapter.highlightedPosition)
+                if (adapter.highlightedPosition != -1)
+                    recyclerLyrics.smoothScrollToPosition(currentIndex)
+            }
+        }
     }
 
     @SuppressLint("DefaultLocale")
@@ -308,4 +348,8 @@ class PlayMusicFragment : Fragment() {
         }
     }
 
+    private suspend fun getLyrics() {
+        val song = Queue.getCurrentSong()!!
+        lyrics = SongDao.fetchLyrics(song.lyric)
+    }
 }

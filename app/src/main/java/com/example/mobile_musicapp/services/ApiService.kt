@@ -11,6 +11,7 @@ import com.example.mobile_musicapp.models.UserResponse
 import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -22,6 +23,7 @@ import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
 
 
@@ -109,18 +111,22 @@ data class PlaylistResponse(
     val __v: Int
 )
 
+data class LyricsResponse(
+    val data: String
+)
 
 data class UserResponse(
     val code: Int,
     val data: User
 )
 
-
-
 data class ApiResponseComment(
     val code: Int,
     val data : CommentModel
 )
+
+
+
 interface ApiService {
     // playlist ----------------------------------------------------------------
     @GET("playlist")
@@ -189,6 +195,9 @@ interface ApiService {
 
     @DELETE("/song/favorite/remove/{songId}")
     suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
+
+    @GET
+    suspend fun fetchLyrics(@Url url: String): Response<ResponseBody>
 
     // auth ----------------------------------------------------------------
     @POST("auth/login")
