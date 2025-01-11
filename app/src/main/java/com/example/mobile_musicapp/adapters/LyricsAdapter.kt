@@ -27,7 +27,7 @@ class LyricsAdapter(private val lyrics: List<LyricLine>) : RecyclerView.Adapter<
         holder.textView.text = lyric.text
 
         holder.textView.setTextColor(
-            if (position == highlightedPosition) Color.GREEN else Color.WHITE
+            if (position <= highlightedPosition) Color.GREEN else Color.WHITE
         )
     }
 
