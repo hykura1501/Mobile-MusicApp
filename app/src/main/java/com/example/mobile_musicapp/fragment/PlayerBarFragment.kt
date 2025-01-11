@@ -46,7 +46,6 @@ class PlayerBarFragment : Fragment() {
         playerBarBackground = view.findViewById(R.id.playerBarBackground)
         seekBar.isEnabled = false
 
-
         return view
     }
 
@@ -56,7 +55,7 @@ class PlayerBarFragment : Fragment() {
 
         // Bind ViewModel data to UI
         viewModel.currentPosition.observe(viewLifecycleOwner) { position ->
-            seekBar.progress = position
+            seekBar.progress = position!!.toInt()
         }
 
         viewModel.currentSong.observe(viewLifecycleOwner) { song ->

@@ -102,4 +102,5 @@
     <string name="queueTitle">"Hàng đợi"</string>
     <string name="queueButton">"Nút hàng đợi"</string>
     <string name="repeatButton">Nút lặp lại </string>
+    <string name="lyricsTitle">Lyrics</string>
 </resources>
