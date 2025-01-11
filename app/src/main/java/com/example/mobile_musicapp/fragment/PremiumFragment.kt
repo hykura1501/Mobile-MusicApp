@@ -51,7 +51,7 @@ class PremiumFragment : Fragment() {
             val orderApi = CreateOrder()
             try {
                 lifecycleScope.launch {
-                    val data: JSONObject = orderApi.createOrder("50000000")
+                    val data: JSONObject = orderApi.createOrder("20000000")
                     val code = data.getString("returncode")
 
                     if (code == "1") {
