@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,7 +23,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:visibility="visible">
+                android:visibility="visible"
+                tools:ignore="UselessParent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -33,19 +36,21 @@
                         android:id="@+id/upload"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/baseline_cloud_upload_24" />
+                        android:src="@drawable/baseline_cloud_upload_24"
+                        tools:ignore="ContentDescription,HardcodedText,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     <ImageButton
                         android:id="@+id/btnLogout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/exit_app" />
+                        android:src="@drawable/exit_app"
+                        tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                 </LinearLayout>
                 <!-- Profile Picture -->
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivProfilePicture"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
@@ -54,7 +59,8 @@
                     android:contentDescription="Profile Picture"
                     android:src="@drawable/default_profile_avatar"
                     app:civ_border_color="#FF000000"
-                    app:civ_border_width="2dp" />
+                    app:civ_border_width="2dp"
+                    tools:ignore="HardcodedText" />
 
                 <!-- Username -->
                 <TextView
@@ -64,7 +70,8 @@
                     android:layout_gravity="center_horizontal"
                     android:text="Username"
                     android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
 
                 <!-- Email -->
                 <TextView
@@ -73,7 +80,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
-                    android:text="email@example.com" />
+                    android:text="email@example.com"
+                    tools:ignore="HardcodedText" />
 
                 <!-- Edit Profile Button -->
                 <Button
@@ -88,65 +96,65 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:drawableStart="@drawable/baseline_favorite_24"
                     android:drawablePadding="10dp"
                     android:text="@string/favourite_songs"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/baseline_favorite_24" />
                 <TextView
                     android:id="@+id/uploadedSong"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:drawableStart="@drawable/baseline_upload_24"
                     android:drawablePadding="10dp"
                     android:text="@string/upload_song"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/baseline_upload_24" />
 
                 <TextView
                     android:id="@+id/recentlyPlayed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:drawableStart="@drawable/baseline_access_time_24"
                     android:drawablePadding="10dp"
                     android:text="@string/recently_played"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/baseline_access_time_24" />
 
                 <TextView
                     android:id="@+id/language"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:drawableStart="@drawable/baseline_language_24"
                     android:drawablePadding="10dp"
                     android:text="@string/language"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/baseline_language_24" />
 
                 <TextView
                     android:id="@+id/changePassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:drawableStart="@drawable/baseline_security_24"
                     android:drawablePadding="10dp"
                     android:text="@string/change_password"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/baseline_security_24" />
 
                 <TextView
                     android:id="@+id/getPremium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:drawableStart="@drawable/baseline_workspace_premium_24"
                     android:drawablePadding="10dp"
                     android:text="@string/get_premium"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/baseline_workspace_premium_24" />
 
             </LinearLayout>
         </LinearLayout>

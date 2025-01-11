@@ -4,8 +4,6 @@ import android.util.Log
 import com.example.mobile_musicapp.models.LyricLine
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.parseLrcContent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class SongDao {
     companion object {

@@ -270,7 +270,6 @@ interface ApiService {
 
     @GET("user/me")
     suspend fun getInformationUser(): Response<UserResponse>
-
 }
 
 object TokenManager {

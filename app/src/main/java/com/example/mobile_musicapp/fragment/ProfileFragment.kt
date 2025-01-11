@@ -1,5 +1,6 @@
 package com.example.mobile_musicapp.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,17 +10,15 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.mobile_musicapp.LanguageChangeActivity
 import com.example.mobile_musicapp.R
-import com.example.mobile_musicapp.databinding.FragmentLoginBinding
 import com.example.mobile_musicapp.databinding.FragmentProfileBinding
 import com.example.mobile_musicapp.models.User
-import com.example.mobile_musicapp.services.AuthDao
 import com.example.mobile_musicapp.services.TokenManager
 import com.example.mobile_musicapp.services.UserDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.URL
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,7 +37,7 @@ class ProfileFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private var User : User? = User()
+    private var User = User()
     private var isLogin: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +97,33 @@ class ProfileFragment : Fragment() {
             }
         }
         binding.uploadedSong.setOnClickListener {
-            Toast.makeText(context, "Upload Song", Toast.LENGTH_SHORT).show()
+            val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Uploaded Song")
+            findNavController().navigate(action)
+        }
+
+        binding.favoriteSong.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Favorite Songs")
+            findNavController().navigate(action)
+        }
+
+        binding.recentlyPlayed.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Recently Played")
+            findNavController().navigate(action)
+        }
+
+        binding.language.setOnClickListener {
+            val intent = Intent(requireActivity(), LanguageChangeActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.changePassword.setOnClickListener {
+            Toast.makeText(context, "Change Password", Toast.LENGTH_SHORT).show()
+            // TODO : Change Password
+        }
+
+        binding.upload.setOnClickListener {
+            Toast.makeText(context, "Upload", Toast.LENGTH_SHORT).show()
+            //TODO : Upload Song
         }
 
         binding.btnEditProfile.setOnClickListener {
