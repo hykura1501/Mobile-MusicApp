@@ -95,4 +95,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0") // Add this line
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")  // Add this line
 
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("com.facebook.android:facebook-login:latest.release")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
+    implementation(project(":zalopay"))
 }

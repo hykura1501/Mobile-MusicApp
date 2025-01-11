@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Mobile-MusicApp"
 include(":app")
+include(":zalopay")

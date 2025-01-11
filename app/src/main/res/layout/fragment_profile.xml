@@ -20,26 +20,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:visibility="visible">
 
-                <ImageButton
-                    android:id="@+id/btnLogout"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_exit_app"
-                    android:background="@android:color/transparent"
-                    android:layout_gravity="end"
-                />
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/upload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/baseline_cloud_upload_24" />
+
+                    <ImageButton
+                        android:id="@+id/btnLogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/exit_app" />
+                </LinearLayout>
                 <!-- Profile Picture -->
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/ivProfilePicture"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="16dp"
+                    android:contentDescription="Profile Picture"
                     android:src="@drawable/default_profile_avatar"
-                    android:contentDescription="Profile Picture" />
+                    app:civ_border_color="#FF000000"
+                    app:civ_border_width="2dp" />
 
                 <!-- Username -->
                 <TextView
@@ -47,9 +62,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:text="Username"
                     android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:text="Username" />
+                    android:textStyle="bold" />
 
                 <!-- Email -->
                 <TextView
@@ -60,47 +75,79 @@
                     android:layout_marginTop="8dp"
                     android:text="email@example.com" />
 
-                <!-- Bio Section -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:text="Bio" />
-
-                <EditText
-                    android:id="@+id/tvBio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:hint="User bio goes here..." />
-
                 <!-- Edit Profile Button -->
                 <Button
                     android:id="@+id/btnEditProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
+                    android:backgroundTint="@android:color/holo_red_dark"
                     android:text="@string/edit_profile" />
-
-                <!-- Recently Played Section -->
                 <TextView
-                    android:id="@+id/FavouriteSongsHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="@string/recently_played"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recentlyPlayedRecyclerView"
+                    android:id="@+id/favoriteSong"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="vertical"
-                    android:paddingBottom="16dp" />
+                    android:layout_marginTop="24dp"
+                    android:drawableStart="@drawable/baseline_favorite_24"
+                    android:drawablePadding="10dp"
+                    android:text="@string/favourite_songs"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/uploadedSong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:drawableStart="@drawable/baseline_upload_24"
+                    android:drawablePadding="10dp"
+                    android:text="@string/upload_song"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/recentlyPlayed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:drawableStart="@drawable/baseline_access_time_24"
+                    android:drawablePadding="10dp"
+                    android:text="@string/recently_played"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:drawableStart="@drawable/baseline_language_24"
+                    android:drawablePadding="10dp"
+                    android:text="@string/language"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/changePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:drawableStart="@drawable/baseline_security_24"
+                    android:drawablePadding="10dp"
+                    android:text="@string/change_password"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/getPremium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:drawableStart="@drawable/baseline_workspace_premium_24"
+                    android:drawablePadding="10dp"
+                    android:text="@string/get_premium"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -112,6 +159,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
     >
         <TextView
             android:layout_width="wrap_content"

@@ -102,4 +102,16 @@
     <string name="queueTitle">Queue</string>
     <string name="queueButton">Queue button</string>
     <string name="repeatButton">Repeat button</string>
+
+    <string name="default_web_client_id">120145876571-bchb2bg4u88m1h2r495bkkl2gerhm18u.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">967125375370459</string>
+    <string name="facebook_client_token">938ac1b3f5fd4cf1b29cfae8db60e980</string>
+
+    <string name="upload_song">Uploaded Song</string>
+    <string name="language">Language</string>
+    <string name="change_password">Change Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="phone">Phone</string>
+    <string name="enter_your_phone">Enter your phone number</string>
+    <string name="get_premium">Get Premium</string>
 </resources>
