@@ -141,6 +141,14 @@
             android:id="@+id/action_profileFragment_to_preminumFragment"
             app:destination="@id/premium"
             app:popUpTo="@id/profileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_SongsFragment"
+            app:destination="@id/songsFragment">
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
     </fragment>
 
     <fragment
@@ -183,22 +191,7 @@
             app:destination="@id/login"
             app:popUpTo="@id/register" />
     </fragment>
-<!--    <fragment-->
-<!--        android:id="@+id/search2"-->
-<!--        android:name="com.example.mobile_musicapp.fragment.Search"-->
-<!--        android:label="Search">-->
-<!--        <action-->
-<!--            android:id="@+id/action_search2_to_deepSearch"-->
-<!--            app:destination="@id/deepSearch" />-->
-<!--        <action-->
-<!--            android:id="@+id/action_search2_to_playMusicFragment"-->
-<!--            app:destination="@id/playMusicFragment">-->
-<!--            <argument-->
-<!--                android:name="songListWithIndex"-->
-<!--                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"-->
-<!--                app:nullable="false" />-->
-<!--        </action>-->
-<!--    </fragment>-->
+
     <fragment
         android:id="@+id/deepSearch"
         android:name="com.example.mobile_musicapp.fragment.DeepSearchFragment"
@@ -225,8 +218,25 @@
         android:name="com.example.mobile_musicapp.fragment.PremiumFragment"
         android:label="fragment_premium"
         tools:layout="@layout/fragment_premium">
-    >
 
     </fragment>
+
+    <fragment
+        android:id="@+id/songsFragment"
+        android:name="com.example.mobile_musicapp.fragment.SongsFragment"
+        android:label="songs">
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_SongsFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+        </action>
+        <action
+            android:id="@+id/action_SongsFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
+    </fragment>
+
 
 </navigation>
