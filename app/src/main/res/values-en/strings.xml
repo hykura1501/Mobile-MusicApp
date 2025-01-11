@@ -114,4 +114,5 @@
     <string name="phone">Phone</string>
     <string name="enter_your_phone">Enter your phone number</string>
     <string name="get_premium">Get Premium</string>
+    <string name="lyricsTitle">Lyrics</string>
 </resources>

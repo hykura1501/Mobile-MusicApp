@@ -11,23 +11,22 @@ import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.Duration
+import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
 
 
@@ -40,6 +39,7 @@ data class ApiResponsePlaylists(
     val code: Int,
     val data: List<Playlist>
 )
+
 data class ApiResponseSong(
     val code: Int,
     val data: List<Song>
@@ -103,6 +103,29 @@ data class FavoriteSongsResponse(
     val totalPage: Int
 )
 
+data class AddSongToPlaylistRequest(
+    val songId: String
+)
+
+data class RemoveSongFromPlaylistRequest(
+    val songId: String
+)
+
+data class PlaylistResponse(
+    val _id: String,
+    val userId: String,
+    val title: String,
+    val deleted: Boolean,
+    val songIds: List<String>,
+    val createdAt: String,
+    val updatedAt: String,
+    val __v: Int
+)
+
+data class LyricsResponse(
+    val data: String
+)
+
 data class UserResponse(
     val code: Int,
     val data: User
@@ -112,10 +135,14 @@ data class ApiResponseComment(
     val code: Int,
     val data : CommentModel
 )
+
+
+
 interface ApiService {
     // playlist ----------------------------------------------------------------
     @GET("playlist")
     suspend fun getAllPlaylists(): Response<ApiResponsePlaylists>
+
     @GET("song")
     suspend fun getSongByPage(@Query("page") page: Int, @Query("perPage") size: Int): Response<ApiResponseSong>
 
@@ -129,6 +156,19 @@ interface ApiService {
     suspend fun createPlaylist(
         @Body playlistRequest: CreatePlaylistRequest
     ): Response<ApiResponsePlaylist>
+
+    @POST("playlist/add-song/{playlistId}")
+    suspend fun addSongToPlaylist(
+        @Path("playlistId") playlistId: String,
+        @Body request: AddSongToPlaylistRequest)
+
+    // DELETE is not official support body
+    @HTTP(method = "DELETE", path = "playlist/remove-song/{playlistId}", hasBody = true)
+    suspend fun removeSongFromPlaylist(
+        @Path("playlistId") playlistId: String,
+        @Body request: RemoveSongFromPlaylistRequest
+    ): PlaylistResponse
+
 
     // song ----------------------------------------------------------------
     @GET("song/detail/{songId}")
@@ -166,6 +206,9 @@ interface ApiService {
 
     @DELETE("/song/favorite/remove/{songId}")
     suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
+
+    @GET
+    suspend fun fetchLyrics(@Url url: String): Response<ResponseBody>
 
     // auth ----------------------------------------------------------------
     @POST("auth/login")

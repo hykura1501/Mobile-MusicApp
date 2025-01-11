@@ -40,9 +40,6 @@ object Queue {
         }
     }
 
-    fun setCurrentSongIndex(data : Int) {
-        currentSongIndex = data
-    }
     fun removeSong(song: Song) {
         if (songs.contains(song)) {
             songs.remove(song)
