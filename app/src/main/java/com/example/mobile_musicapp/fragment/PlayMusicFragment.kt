@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.adapters.LyricsAdapter
 import com.example.mobile_musicapp.helpers.BackgroundHelper
+import com.example.mobile_musicapp.itemDecoration.FadeEdgeItemDecoration
 import com.example.mobile_musicapp.models.LyricLine
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.services.FavoriteSongDao
@@ -241,6 +242,7 @@ class PlayMusicFragment : Fragment() {
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     PlayerManager.play()
+                    viewModel.updatePlayPause(true)
                 }
             }
         )
@@ -261,13 +263,22 @@ class PlayMusicFragment : Fragment() {
         recyclerLyrics.adapter = adapter
         recyclerLyrics.layoutManager = LinearLayoutManager(requireContext())
 
+        val fadeHeight = 20
+        recyclerLyrics.addItemDecoration(FadeEdgeItemDecoration(fadeHeight))
+
         viewModel.currentPosition.observe(viewLifecycleOwner) { position ->
             val currentIndex = lyrics.indexOfLast { it.timestamp <= position }
             if (currentIndex != adapter.highlightedPosition) {
                 adapter.highlightedPosition = currentIndex
                 adapter.notifyItemChanged(adapter.highlightedPosition)
-                if (adapter.highlightedPosition != -1)
-                    recyclerLyrics.smoothScrollToPosition(currentIndex)
+                if (currentIndex != -1) {
+                    if (currentIndex + 1 < lyrics.size) {
+                        recyclerLyrics.smoothScrollToPosition(currentIndex + 2)
+                    }
+                    else {
+                        recyclerLyrics.smoothScrollToPosition(currentIndex)
+                    }
+                }
             }
         }
     }
