@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/login">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -134,6 +134,26 @@
             android:id="@+id/action_profileFragment_to_login"
             app:destination="@id/login"
             app:popUpTo="@id/profileFragment" />
+        <action android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment"
+            app:popUpTo="@id/profileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_preminumFragment"
+            app:destination="@id/premium"
+            app:popUpTo="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.mobile_musicapp.fragment.EditProfileFragment"
+        android:label="EditProfileFragment">
+        <argument
+            android:name="user"
+            app:argType="com.example.mobile_musicapp.models.User" />
+        <action
+            android:id="@+id/action_editProfileFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/editProfileFragment" />
     </fragment>
 
     <fragment
@@ -198,6 +218,15 @@
         <action
             android:id="@+id/action_deepSearchFragment_to_queueFragment"
             app:destination="@id/queueFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/premium"
+        android:name="com.example.mobile_musicapp.fragment.PremiumFragment"
+        android:label="fragment_premium"
+        tools:layout="@layout/fragment_premium">
+    >
+
     </fragment>
 
 </navigation>
