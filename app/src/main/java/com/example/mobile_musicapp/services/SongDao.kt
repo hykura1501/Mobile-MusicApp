@@ -1,7 +1,11 @@
 package com.example.mobile_musicapp.services
 
 import android.util.Log
+import com.example.mobile_musicapp.models.LyricLine
 import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.models.parseLrcContent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SongDao {
     companion object {
@@ -80,5 +84,28 @@ class SongDao {
                 emptyList()
             }
         }
+
+        suspend fun fetchLyrics(url: String): List<LyricLine> {
+            return try {
+                val response = RetrofitClient.instance.fetchLyrics(url)
+                if (response.isSuccessful) {
+                    val rawLyrics = response.body()?.string()
+                    if (rawLyrics != null) {
+                        parseLrcContent(rawLyrics)
+                    } else {
+                        Log.e("FetchLyrics", "Empty response body")
+                        emptyList()
+                    }
+                } else {
+                    Log.e("FetchLyrics", "Error: ${response.code()} - ${response.message()}")
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("FetchLyrics", "Exception: ${e.message}")
+                emptyList()
+            }
+        }
+
+
     }
 }
