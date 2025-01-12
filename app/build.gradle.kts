@@ -95,6 +95,8 @@ dependencies {
     implementation("androidx.paging:paging-runtime:3.1.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0") // Add this line
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")  // Add this line
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
 
     implementation("com.google.android.gms:play-services-auth:21.3.0")
     implementation("com.facebook.android:facebook-login:latest.release")

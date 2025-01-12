@@ -1,4 +1,5 @@
 package com.example.mobile_musicapp.fragment
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -84,7 +85,7 @@ class PlayMusicFragment : Fragment() {
             )
             val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
             viewModel.updateSong(Queue.getCurrentSong()!!)
-            viewModel.togglePlayPause()
+            viewModel.updatePlayPause(true)
             PlayerManager.prepare()
         }
     }

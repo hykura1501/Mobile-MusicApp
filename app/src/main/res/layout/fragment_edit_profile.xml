@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".fragment.EditProfileFragment"
     android:orientation="vertical"
+    android:background="@color/white"
     >
 
     <LinearLayout
@@ -57,15 +58,16 @@
                 android:contentDescription="@string/iconDescription"
                 android:src="@drawable/default_profile_avatar"
             />
+
             <ImageButton
                 android:id="@+id/choseAvatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_camera_alt_24"
-                android:layout_marginTop="80dp"
                 android:layout_marginStart="80dp"
+                android:layout_marginTop="80dp"
                 android:backgroundTint="@android:color/holo_blue_bright"
-            />
+                android:src="@drawable/baseline_camera_alt_24"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         </RelativeLayout>
         <TextView

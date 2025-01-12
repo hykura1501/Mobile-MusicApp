@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import vn.zalopay.sdk.ZaloPaySDK
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private val favoritesViewModel: FavoritesViewModel by viewModels()
