@@ -1,3 +1,5 @@
+@file:Suppress("SameParameterValue", "SameParameterValue")
+
 package com.example.mobile_musicapp.fragment
 
 import android.content.Intent
@@ -30,6 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
+@Suppress("SameParameterValue")
 class HomeFragment : Fragment() {
 
     private lateinit var greetingTextView: TextView
@@ -93,24 +96,13 @@ class HomeFragment : Fragment() {
 
 
         updateGreeting()
-        handleEvent()
 
         ivSetting.setOnClickListener {
-
             val intent = Intent(requireActivity(), LanguageChangeActivity::class.java)
             startActivity(intent)
-//            requireActivity().finish()
         }
     }
 
-    private fun handleEvent() {
-//        bottomNavigation.setOnItemSelectedListener {
-//            if (it.itemId == R.id.search) {
-//                navigateToSearch()
-//            }
-//            true
-//        }
-    }
     private fun setupRecyclerViews() {
         favoriteSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         newReleaseSongsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

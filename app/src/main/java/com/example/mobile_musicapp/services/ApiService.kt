@@ -11,6 +11,7 @@ import com.example.mobile_musicapp.singletons.App
 import okhttp3.Interceptor
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -210,6 +211,11 @@ interface ApiService {
     @GET
     suspend fun fetchLyrics(@Url url: String): Response<ResponseBody>
 
+    @Multipart
+    @POST("song")
+    suspend fun uploadSong(@Part url: MultipartBody.Part): Response<Void>
+
+
     // auth ----------------------------------------------------------------
     @POST("auth/login")
     suspend fun login(
@@ -269,7 +275,6 @@ interface ApiService {
 
     @GET("user/me")
     suspend fun getInformationUser(): Response<UserResponse>
-
 }
 
 object TokenManager {

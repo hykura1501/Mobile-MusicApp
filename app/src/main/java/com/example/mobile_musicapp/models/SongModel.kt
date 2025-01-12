@@ -13,8 +13,8 @@ data class Song(
     val thumbnail: String = "",
     val duration: Int = 0,
     val album: String = "",
-    var liked: Int = 0,
-    var views: Int = 0,
+    var like: Int = 0,
+    var view: Int = 0,
     val path: String = "", // Using path to align with API
     val lyric: String = ""
 ) : Parcelable {
@@ -44,8 +44,8 @@ data class Song(
         parcel.writeString(thumbnail)
         parcel.writeInt(duration)
         parcel.writeString(album)
-        parcel.writeInt(liked)
-        parcel.writeInt(views)
+        parcel.writeInt(like)
+        parcel.writeInt(view)
         parcel.writeString(path) // Using path to align with API
         parcel.writeString(lyric)
     }
