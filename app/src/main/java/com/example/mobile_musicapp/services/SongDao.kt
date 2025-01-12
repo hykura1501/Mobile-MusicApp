@@ -1,9 +1,16 @@
 package com.example.mobile_musicapp.services
 
+import android.content.ContentResolver
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import com.example.mobile_musicapp.helpers.FileHelper
 import com.example.mobile_musicapp.models.LyricLine
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.parseLrcContent
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 
 class SongDao {
     companion object {
@@ -104,6 +111,34 @@ class SongDao {
             }
         }
 
+        suspend fun uploadSong(uri: Uri, contentResolver: ContentResolver, requireContext: Context): Boolean {
+            return try {
+                val file = FileHelper.getFileFromUri(uri, contentResolver, requireContext)
+                if (file == null) {
+                    Log.e("UploadSong", "Failed to get file from URI: $uri")
+                    return false
+                }
 
+                Log.d("UploadSong", "File prepared: ${file.name}")
+
+                val mediaType = "audio/mpeg".toMediaTypeOrNull()
+                val requestFile = file.asRequestBody(mediaType)
+                val multipartBody = MultipartBody.Part.createFormData("url", file.name, requestFile)
+
+                val response = RetrofitClient.instance.uploadSong(multipartBody)
+
+                if (response.isSuccessful) {
+                    Log.d("UploadSong", "Upload successful: ${response.code()}")
+                } else {
+                    Log.e("UploadSong", "Upload failed: ${response.code()} - ${response.message()}")
+                    Log.e("UploadSong", "Error body: ${response.errorBody()?.string()}")
+                }
+
+                response.isSuccessful
+            } catch (e: Exception) {
+                Log.e("UploadSong", "Exception during upload: ${e.message}")
+                false
+            }
+        }
     }
 }

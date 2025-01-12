@@ -1,19 +1,24 @@
 package com.example.mobile_musicapp.fragment
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.LanguageChangeActivity
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.databinding.FragmentProfileBinding
+import com.example.mobile_musicapp.helpers.FileHelper
 import com.example.mobile_musicapp.models.User
+import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.services.TokenManager
 import com.example.mobile_musicapp.services.UserDao
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +35,8 @@ class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var filePickerLauncher: ActivityResultLauncher<String>
 
 
     private var _binding: FragmentProfileBinding? = null
@@ -83,6 +90,17 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        // init file picker
+        filePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            // Xử lý khi người dùng chọn tệp
+            if (uri != null) {
+                // Gọi phương thức để xử lý tệp đã chọn
+                handleSelectedMp3(uri)
+            } else {
+                Toast.makeText(requireContext(), "No file selected", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.btnLogin.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_login)
         }
@@ -97,8 +115,8 @@ class ProfileFragment : Fragment() {
             }
         }
         binding.uploadedSong.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Uploaded Song")
-            findNavController().navigate(action)
+            //val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Uploaded Song")
+            //findNavController().navigate(action)
         }
 
         binding.favoriteSong.setOnClickListener {
@@ -122,8 +140,8 @@ class ProfileFragment : Fragment() {
         }
 
         binding.upload.setOnClickListener {
-            Toast.makeText(context, "Upload", Toast.LENGTH_SHORT).show()
             //TODO : Upload Song
+            filePickerLauncher.launch("audio/*")
         }
 
         binding.btnEditProfile.setOnClickListener {
@@ -146,10 +164,10 @@ class ProfileFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
         binding.userProfile.visibility = View.VISIBLE
         binding.loginLayout.visibility = View.GONE
-        binding.tvFullName.text = User?.fullName
-        binding.tvEmail.text = User?.email
+        binding.tvFullName.text = User.fullName
+        binding.tvEmail.text = User.email
 
-        val url = User?.avatar
+        val url = User.avatar
         if (url != null) {
             Glide.with(binding.ivProfilePicture.context)
                 .load(url)
@@ -170,6 +188,28 @@ class ProfileFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun handleSelectedMp3(uri: Uri) {
+        val contentResolver = requireContext().contentResolver
+        val mimeType = contentResolver.getType(uri)
+
+        if (mimeType == "audio/mpeg") {
+            val fileName = FileHelper.getFileNameFromUri(uri, requireContext().contentResolver)
+            Toast.makeText(requireContext(), "Selected: $fileName", Toast.LENGTH_SHORT).show()
+            // upload file to server
+            lifecycleScope.launch {
+                val isUploaded = SongDao.uploadSong(uri, requireContext().contentResolver, requireContext())
+                if (isUploaded) {
+                    Toast.makeText(requireContext(), "Song uploaded successfully!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to upload song.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            Toast.makeText(requireContext(), "Please select a valid MP3 file", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
 
     companion object {
