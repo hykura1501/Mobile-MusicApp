@@ -211,6 +211,11 @@ interface ApiService {
     @GET
     suspend fun fetchLyrics(@Url url: String): Response<ResponseBody>
 
+    @Multipart
+    @POST("song")
+    suspend fun uploadSong(@Part url: MultipartBody.Part): Response<Void>
+
+
     // auth ----------------------------------------------------------------
     @POST("auth/login")
     suspend fun login(
