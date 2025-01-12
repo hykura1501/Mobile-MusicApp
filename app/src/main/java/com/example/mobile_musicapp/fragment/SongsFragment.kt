@@ -73,7 +73,6 @@ class SongsFragment : Fragment() {
             }
             else -> {
                 lifecycleScope.launch {
-
                     withContext(Dispatchers.Main) {
                         setupRecyclerView()
                     }
@@ -108,9 +107,9 @@ class SongsFragment : Fragment() {
             )
             val viewModel = ViewModelProvider(requireActivity())[PlayerBarViewModel::class.java]
             viewModel.updateSong(Queue.getCurrentSong()!!)
-            viewModel.togglePlayPause()
             PlayerManager.prepare()
-            val action = PlaylistFragmentDirections.actionAlbumFragmentToPlayMusicFragment(null)
+            viewModel.updatePlayPause(true)
+            val action = SongsFragmentDirections.actionSongsFragmentToPlayMusicFragment(null)
             findNavController().navigate(action)
         }
 
