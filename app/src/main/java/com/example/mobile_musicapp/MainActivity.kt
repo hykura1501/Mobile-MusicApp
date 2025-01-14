@@ -1,7 +1,11 @@
 package com.example.mobile_musicapp
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -97,6 +101,9 @@ class MainActivity : AppCompatActivity() {
         Queue.initialize(playerBarViewModel)
 
         FacebookSdk.sdkInitialize(this)
+
+        // Create notification channel
+        createNotificationChannel()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -158,5 +165,20 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         PlayerManager.stop()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "media_playback_channel",
+                "Media Playback",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "Media playback controls"
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }
