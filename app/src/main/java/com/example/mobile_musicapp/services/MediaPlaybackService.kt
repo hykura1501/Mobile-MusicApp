@@ -36,13 +36,43 @@ class MediaPlaybackService : Service() {
             override fun onPause() {
                 super.onPause()
                 Log.d("MediaPlaybackService", "onPause called")
+                createMediaStyleNotification()
                 stopForeground(false)
+            }
+
+            override fun onSkipToNext() {
+                super.onSkipToNext()
+                Log.d("MediaPlaybackService", "onSkipToNext called")
+                PlayerManager.next()
+                createMediaStyleNotification()
+            }
+
+            override fun onSkipToPrevious() {
+                super.onSkipToPrevious()
+                Log.d("MediaPlaybackService", "onSkipToPrevious called")
+                PlayerManager.previous()
+                createMediaStyleNotification()
             }
         })
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("MediaPlaybackService", "Service started")
+        val action = intent?.action
+        when (action) {
+            "ACTION_PLAY" -> {
+                mediaSession.controller.transportControls.play()
+            }
+            "ACTION_PAUSE" -> {
+                mediaSession.controller.transportControls.pause()
+            }
+            "ACTION_NEXT" -> {
+                mediaSession.controller.transportControls.skipToNext()
+            }
+            "ACTION_PREVIOUS" -> {
+                mediaSession.controller.transportControls.skipToPrevious()
+            }
+        }
         createMediaStyleNotification()
         return START_STICKY
     }
