@@ -6,15 +6,20 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.media.app.NotificationCompat.MediaStyle
 import android.support.v4.media.session.MediaSessionCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Queue
+import com.bumptech.glide.request.transition.Transition
 
 class MediaPlaybackService : Service() {
 
@@ -84,11 +89,13 @@ class MediaPlaybackService : Service() {
             val service = instance ?: return
             Log.d("MediaPlaybackService", "Creating MediaStyle notification")
             val currentSong = Queue.getCurrentSong()
+            val thumbnailUrl = currentSong?.thumbnail
+
             val builder = NotificationCompat.Builder(service, "media_playback_channel")
                 .setSmallIcon(R.drawable.ic_music_note)
                 .setContentTitle(currentSong?.title ?: "Unknown Title")
                 .setContentText(currentSong?.artistName ?: "Unknown Artist")
-                .setLargeIcon(BitmapFactory.decodeResource(service.resources, R.drawable.album_art))
+                .setOngoing(true) // Make the notification non-dismissible
                 .setStyle(
                     MediaStyle()
                         .setMediaSession(service.mediaSession.sessionToken)
@@ -98,7 +105,23 @@ class MediaPlaybackService : Service() {
                 .addAction(R.drawable.ic_pause_black, "Pause", getPendingIntent("ACTION_PAUSE"))
                 .addAction(R.drawable.ic_next_music, "Next", getPendingIntent("ACTION_NEXT"))
 
-            service.startForeground(1, builder.build())
+            if (thumbnailUrl != null) {
+                Glide.with(service)
+                    .asBitmap()
+                    .load(thumbnailUrl)
+                    .into(object : CustomTarget<Bitmap>() {
+                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                            builder.setLargeIcon(resource)
+                            service.startForeground(1, builder.build())
+                        }
+
+                        override fun onLoadCleared(placeholder: Drawable?) {
+                            // Handle placeholder if needed
+                        }
+                    })
+            } else {
+                service.startForeground(1, builder.build())
+            }
         }
 
         private fun getPendingIntent(action: String): PendingIntent {
@@ -117,5 +140,12 @@ class MediaPlaybackService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MediaPlaybackService", "Service destroyed")
+        stopForeground(true)
+        mediaSession.release()
     }
 }
