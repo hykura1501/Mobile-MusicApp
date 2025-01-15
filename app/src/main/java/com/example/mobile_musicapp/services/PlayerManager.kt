@@ -134,4 +134,8 @@ object PlayerManager {
         mediaPlayer?.seekTo(position)
         viewModel.updatePosition(getCurrentPosition().toLong())
     }
+
+    fun isPlaying(): Boolean {
+        return mediaPlayer?.isPlaying ?: false
+    }
 }

@@ -34,27 +34,25 @@ class MediaPlaybackService : Service() {
         mediaSession.setCallback(object : MediaSessionCompat.Callback() {
             override fun onPlay() {
                 super.onPlay()
-                Log.d("MediaPlaybackService", "onPlay called")
+                PlayerManager.play()
                 createMediaStyleNotification()
             }
 
             override fun onPause() {
                 super.onPause()
-                Log.d("MediaPlaybackService", "onPause called")
+                PlayerManager.pause()
                 createMediaStyleNotification()
                 stopForeground(false)
             }
 
             override fun onSkipToNext() {
                 super.onSkipToNext()
-                Log.d("MediaPlaybackService", "onSkipToNext called")
                 PlayerManager.next()
                 createMediaStyleNotification()
             }
 
             override fun onSkipToPrevious() {
                 super.onSkipToPrevious()
-                Log.d("MediaPlaybackService", "onSkipToPrevious called")
                 PlayerManager.previous()
                 createMediaStyleNotification()
             }
@@ -87,22 +85,35 @@ class MediaPlaybackService : Service() {
 
         fun createMediaStyleNotification() {
             val service = instance ?: return
-            Log.d("MediaPlaybackService", "Creating MediaStyle notification")
             val currentSong = Queue.getCurrentSong()
             val thumbnailUrl = currentSong?.thumbnail
+
+            val isPlaying = PlayerManager.isPlaying()
+
+            val playPauseAction = if (isPlaying) {
+                NotificationCompat.Action(
+                    R.drawable.ic_pause_black, "Pause",
+                    getPendingIntent("ACTION_PAUSE")
+                )
+            } else {
+                NotificationCompat.Action(
+                    R.drawable.ic_play_black, "Play",
+                    getPendingIntent("ACTION_PLAY")
+                )
+            }
 
             val builder = NotificationCompat.Builder(service, "media_playback_channel")
                 .setSmallIcon(R.drawable.ic_music_note)
                 .setContentTitle(currentSong?.title ?: "Unknown Title")
                 .setContentText(currentSong?.artistName ?: "Unknown Artist")
-                .setOngoing(true) // Make the notification non-dismissible
+                .setOngoing(isPlaying)
                 .setStyle(
                     MediaStyle()
                         .setMediaSession(service.mediaSession.sessionToken)
                         .setShowActionsInCompactView(0, 1, 2)
                 )
                 .addAction(R.drawable.ic_previous_music, "Previous", getPendingIntent("ACTION_PREVIOUS"))
-                .addAction(R.drawable.ic_pause_black, "Pause", getPendingIntent("ACTION_PAUSE"))
+                .addAction(playPauseAction)
                 .addAction(R.drawable.ic_next_music, "Next", getPendingIntent("ACTION_NEXT"))
 
             if (thumbnailUrl != null) {
