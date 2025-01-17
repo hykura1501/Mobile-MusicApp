@@ -21,6 +21,7 @@ import com.example.mobile_musicapp.LanguageChangeActivity
 import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.helpers.RandomHelper
+import com.example.mobile_musicapp.helpers.RecommendationManager
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.SongDao
@@ -71,16 +72,13 @@ class HomeFragment : Fragment() {
         loadPopularSongs(1, 7)
         loadTopLikesSongs(1, 29)
 
-        val randomHelper = RandomHelper()
-        val perPage = randomHelper.getRandomNumber(11, 19)
-        val page = randomHelper.getRandomNumber(5, 37)
-        loadRecommendedSongs(page, perPage)
-
         // Observe loading state and favorite songs from ViewModel
         favoritesViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
             if (!isLoading) {
                 val favoriteSongs = favoritesViewModel.favoriteSongs.value ?: emptyList()
                 loadFavoriteSongs(favoriteSongs)
+
+                loadRecommendedSongs(favoriteSongs)
             }
         })
 
@@ -158,11 +156,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun loadRecommendedSongs(page: Int, perPage: Int) {
+    private fun loadRecommendedSongs(favoriteSongs: List<Song>) {
         CoroutineScope(Dispatchers.Main).launch {
             val recommendedSongs = withContext(Dispatchers.IO) {
-                // currently using random songs from list of all songs
-                SongDao.getAllSongs(page, perPage)
+                val recommendationManager = RecommendationManager(favoriteSongs)
+                recommendationManager.getRecommendedSongs()
             }
             recommendedSongsRecyclerView.adapter = SongHorizontalAdapter(recommendedSongs) { song ->
                 val selectedIndex = recommendedSongs.indexOf(song)

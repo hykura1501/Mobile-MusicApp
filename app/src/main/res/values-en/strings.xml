@@ -42,6 +42,8 @@
     <string name="newSongReleaseTitle">New Song release</string>
     <string name="topFavoriteSongTitle">Top favorite song</string>
     <string name="topPopularSongTitle">Top popular song</string>
+    <string name="topLikeSongTitle">Top liked song</string>
+    <string name="recommendedSongTitle">Recommended song</string>
     <string name="likeButton">Like</string>
 
     <string name="libraryTitle">Library</string>
