@@ -7,7 +7,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.IBinder
@@ -16,6 +15,8 @@ import androidx.core.app.NotificationCompat
 import androidx.media.app.NotificationCompat.MediaStyle
 import android.support.v4.media.session.MediaSessionCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Queue
@@ -48,13 +49,13 @@ class MediaPlaybackService : Service() {
             override fun onSkipToNext() {
                 super.onSkipToNext()
                 PlayerManager.next()
-                createMediaStyleNotification()
+                createMediaStyleNotification(true)
             }
 
             override fun onSkipToPrevious() {
                 super.onSkipToPrevious()
                 PlayerManager.previous()
-                createMediaStyleNotification()
+                createMediaStyleNotification(true)
             }
         })
     }
@@ -71,24 +72,26 @@ class MediaPlaybackService : Service() {
             }
             "ACTION_NEXT" -> {
                 mediaSession.controller.transportControls.skipToNext()
+                PlayerManager.play() // Ensure the song is played
             }
             "ACTION_PREVIOUS" -> {
                 mediaSession.controller.transportControls.skipToPrevious()
+                PlayerManager.play() // Ensure the song is played
             }
         }
-        createMediaStyleNotification()
+        createMediaStyleNotification(action == "ACTION_NEXT" || action == "ACTION_PREVIOUS")
         return START_STICKY
     }
 
     companion object {
         private var instance: MediaPlaybackService? = null
 
-        fun createMediaStyleNotification() {
+        fun createMediaStyleNotification(forcePause: Boolean = false) {
             val service = instance ?: return
             val currentSong = Queue.getCurrentSong()
             val thumbnailUrl = currentSong?.thumbnail
 
-            val isPlaying = PlayerManager.isPlaying()
+            val isPlaying = PlayerManager.isPlaying() || forcePause
 
             val playPauseAction = if (isPlaying) {
                 NotificationCompat.Action(
@@ -120,6 +123,10 @@ class MediaPlaybackService : Service() {
                 Glide.with(service)
                     .asBitmap()
                     .load(thumbnailUrl)
+                    .override(4096, 4096) // Load the image with higher resolution
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .priority(Priority.HIGH)
+                    .fitCenter()
                     .into(object : CustomTarget<Bitmap>() {
                         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                             builder.setLargeIcon(resource)
