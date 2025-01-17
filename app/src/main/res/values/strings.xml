@@ -42,6 +42,8 @@
     <string name="newSongReleaseTitle">Bài hát mới phát hành</string>
     <string name="topFavoriteSongTitle">Bài hát yêu thích hàng đầu</string>
     <string name="topPopularSongTitle">Bài hát phổ biến nhất</string>
+    <string name="topLikeSongTitle">Bài hát nhiều like</string>
+    <string name="recommendedSongTitle">Bài hát đề xuất</string>
     <string name="likeButton">Thích</string>
 
     <string name="libraryTitle">Thư viện</string>
