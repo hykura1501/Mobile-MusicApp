@@ -1,5 +1,7 @@
 package com.example.mobile_musicapp.services
 
+import android.content.Context
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
@@ -82,6 +84,8 @@ object PlayerManager {
                 handler.post(updateSeekBarRunnable)
             }
         }
+
+        MediaPlaybackService.createMediaStyleNotification()
     }
 
     fun play() {
@@ -129,5 +133,9 @@ object PlayerManager {
     fun seekTo(position: Int) {
         mediaPlayer?.seekTo(position)
         viewModel.updatePosition(getCurrentPosition().toLong())
+    }
+
+    fun isPlaying(): Boolean {
+        return mediaPlayer?.isPlaying ?: false
     }
 }

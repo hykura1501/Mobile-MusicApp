@@ -3,6 +3,7 @@ package com.example.mobile_musicapp.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.singletons.Favorite
@@ -33,6 +35,7 @@ import com.example.mobile_musicapp.itemDecoration.FadeEdgeItemDecoration
 import com.example.mobile_musicapp.models.LyricLine
 import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.services.FavoriteSongDao
+import com.example.mobile_musicapp.services.MediaPlaybackService
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
@@ -88,6 +91,11 @@ class PlayMusicFragment : Fragment() {
             viewModel.updatePlayPause(true)
             PlayerManager.prepare()
         }
+
+        // Start the MediaPlaybackService
+        val intent = Intent(requireContext(), MediaPlaybackService::class.java)
+        ContextCompat.startForegroundService(requireContext(), intent)
+        Log.d("PlayMusicFragment", "MediaPlaybackService startForegroundService called")
     }
 
     override fun onCreateView(
