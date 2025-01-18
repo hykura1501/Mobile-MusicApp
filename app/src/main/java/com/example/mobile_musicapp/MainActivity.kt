@@ -33,6 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import vn.zalopay.sdk.Environment
 import vn.zalopay.sdk.ZaloPaySDK
 
 @Suppress("DEPRECATION")
@@ -101,6 +102,8 @@ class MainActivity : AppCompatActivity() {
         Queue.initialize(playerBarViewModel)
 
         FacebookSdk.sdkInitialize(this)
+
+        ZaloPaySDK.init(553, Environment.SANDBOX)
 
         // Create notification channel
         createNotificationChannel()
