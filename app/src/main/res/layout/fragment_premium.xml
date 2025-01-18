@@ -1,131 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.PremiumFragment"
-    android:orientation="vertical"
-    >
+    android:background="#1C1C1E">
 
+    <!-- Nội dung chính -->
     <LinearLayout
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="16dp"
-        android:background="#000000">
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/btnPay">
 
-        <!-- Premium Title -->
+        <!-- Tiêu đề -->
         <TextView
-            android:id="@+id/tvPremium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Premium"
-            android:textColor="#FFFFFF"
+            android:text="Choose your plan"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Price -->
-        <TextView
-            android:id="@+id/tvPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$9.99/mo"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Feature 1 -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_check"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Voice messages anywhere"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <!-- Feature 2 -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_check"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Voice messages anywhere"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <!-- Feature 3 -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_check"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Voice messages anywhere"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <!-- Button -->
-        <Button
-            android:id="@+id/btnBuyNow"
+        <!-- Các gói dịch vụ -->
+        <RadioGroup
+            android:id="@+id/planGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Buy now"
-            android:textColor="#000000"
-            android:background="#FFFFFF"
-            android:layout_marginTop="16dp" />
+            android:orientation="vertical">
+
+            <!-- Gói tuần -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="#333333"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:id="@+id/radioWeekly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekly - $2.99"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7 days"
+                    android:textColor="#A3A3A3"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Gói tháng -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="#333333"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:id="@+id/radioMonthly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monthly - $9.99"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30 days"
+                    android:textColor="#A3A3A3"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Gói năm -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="#333333"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:id="@+id/radioYearly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yearly - $99.99"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="365 days"
+                    android:textColor="#A3A3A3"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </RadioGroup>
     </LinearLayout>
 
-
-    <Button
-        android:id="@+id/createOrder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create Order" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/zlpToken"
-        android:textSize="20sp"
-    />
+    <!-- Nút Buy Now -->
     <Button
         android:id="@+id/btnPay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pay" />
-</LinearLayout>
+        android:text="@string/buy_now"
+        android:textSize="20sp"
+        android:background="#4CAF50"
+        android:textColor="@color/green"
+        android:padding="16dp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp" />
+</RelativeLayout>
