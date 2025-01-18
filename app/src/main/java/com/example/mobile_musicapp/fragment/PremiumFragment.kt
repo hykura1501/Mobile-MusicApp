@@ -45,26 +45,43 @@ class PremiumFragment : Fragment() {
         }
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentPremiumBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.createOrder.setOnClickListener {
             val orderApi = CreateOrder()
-            try {
-                lifecycleScope.launch {
+            lifecycleScope.launch {
+                try {
                     val data: JSONObject = orderApi.createOrder("20000000")
                     val code = data.getString("returncode")
-
                     if (code == "1") {
                         binding.zlpToken.setText(data.getString("zptranstoken"))
+                    } else {
+                        Toast.makeText(requireContext(), "Create order failed: $code", Toast.LENGTH_SHORT).show()
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(requireActivity(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(requireActivity(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        binding.btnPay.setOnClickListener(View.OnClickListener {
-            val token: String = binding.zlpToken.getText().toString()
+
+        binding.btnPay.setOnClickListener {
+            val token = binding.zlpToken.text.toString()
+            if (token.isBlank()) {
+                Toast.makeText(requireActivity(), "Please generate an order token first.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             ZaloPaySDK.getInstance()
                 .payOrder(requireActivity(), token, "demozpdk://app", object : PayOrderListener {
                     override fun onPaymentSucceeded(
@@ -72,7 +89,7 @@ class PremiumFragment : Fragment() {
                         transToken: String,
                         appTransID: String
                     ) {
-                        requireActivity().runOnUiThread(Runnable {
+                        requireActivity().runOnUiThread {
                             AlertDialog.Builder(requireActivity())
                                 .setTitle("Payment Success")
                                 .setMessage(
@@ -82,21 +99,19 @@ class PremiumFragment : Fragment() {
                                         transToken
                                     )
                                 )
-                                .setPositiveButton(
-                                    "OK"
-                                ) { dialog, which -> }
-                                .setNegativeButton("Cancel", null).show()
-                        })
+                                .setPositiveButton("OK", null)
+                                .show()
+                        }
                     }
 
                     override fun onPaymentCanceled(zpTransToken: String, appTransID: String) {
-                        AlertDialog.Builder(requireActivity())
-                            .setTitle("User Cancel Payment")
-                            .setMessage(String.format("zpTransToken: %s \n", zpTransToken))
-                            .setPositiveButton(
-                                "OK"
-                            ) { dialog, which -> }
-                            .setNegativeButton("Cancel", null).show()
+                        requireActivity().runOnUiThread {
+                            AlertDialog.Builder(requireActivity())
+                                .setTitle("User Cancel Payment")
+                                .setMessage(String.format("zpTransToken: %s", zpTransToken))
+                                .setPositiveButton("OK", null)
+                                .show()
+                        }
                     }
 
                     override fun onPaymentError(
@@ -104,34 +119,24 @@ class PremiumFragment : Fragment() {
                         zpTransToken: String,
                         appTransID: String
                     ) {
-                        AlertDialog.Builder(requireActivity())
-                            .setTitle("Payment Fail")
-                            .setMessage(
-                                String.format(
-                                    "ZaloPayErrorCode: %s \nTransToken: %s",
-                                    zaloPayError.toString(),
-                                    zpTransToken
+                        requireActivity().runOnUiThread {
+                            AlertDialog.Builder(requireActivity())
+                                .setTitle("Payment Fail")
+                                .setMessage(
+                                    String.format(
+                                        "Error: %s\nzpTransToken: %s",
+                                        zaloPayError.toString(),
+                                        zpTransToken
+                                    )
                                 )
-                            )
-                            .setPositiveButton(
-                                "OK"
-                            ) { dialog, which -> }
-                            .setNegativeButton("Cancel", null).show()
+                                .setPositiveButton("OK", null)
+                                .show()
+                        }
                     }
                 })
-        })
+        }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentPremiumBinding.inflate(inflater, container, false)
-        // ZaloPay SDK Init
-        ZaloPaySDK.init(553, Environment.SANDBOX)
-        val view = binding.root
-        return view
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
