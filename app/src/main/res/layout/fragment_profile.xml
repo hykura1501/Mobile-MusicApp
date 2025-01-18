@@ -49,18 +49,19 @@
                         android:src="@drawable/exit_app"
                         tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                 </LinearLayout>
-                <!-- Profile Picture -->
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivProfilePicture"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="16dp"
+                    android:layout_gravity="center_horizontal"
                     android:contentDescription="Profile Picture"
                     android:src="@drawable/default_profile_avatar"
                     app:civ_border_color="#FF000000"
                     app:civ_border_width="2dp"
                     tools:ignore="HardcodedText" />
+                <!-- Profile Picture -->
+
 
                 <!-- Username -->
                 <TextView
@@ -71,6 +72,7 @@
                     android:text="Username"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    android:drawablePadding="5dp"
                     tools:ignore="HardcodedText" />
 
                 <!-- Email -->
