@@ -90,6 +90,10 @@ data class FacebookLoginRequest(
     val accessToken: String
 )
 
+data class PremiumRequest(
+    val day: Int
+)
+
 data class ApiResponseAuth(
     val code: Int,
     val token: String,
@@ -258,6 +262,10 @@ interface ApiService {
         @Part("phone") phone: RequestBody,
     ): Response<UserResponse>
 
+    @POST("user/premium")
+    suspend fun upgradeToPremium(
+        @Body day: PremiumRequest
+    ): Response<Void>
 
 
     // comment ----------------------------------------------------------------

@@ -116,5 +116,7 @@
     <string name="phone">Phone</string>
     <string name="enter_your_phone">Enter your phone number</string>
     <string name="get_premium">Get Premium</string>
+    <string name="buy_now">Buy Now</string>
     <string name="lyricsTitle">Lyrics</string>
+    <string name="no_ads">No ads</string>
 </resources>
