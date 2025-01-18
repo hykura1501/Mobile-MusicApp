@@ -302,7 +302,7 @@ object TokenManager {
 
 
 object RetrofitClient {
-    private const val BASE_URL = "https://backend-mobile-xi.vercel.app/"
+    private const val BASE_URL = "https://33b8-2001-ee0-4d0e-a050-f9f5-bcb0-9148-2a4c.ngrok-free.app/"
 
     private val authInterceptor = Interceptor { chain ->
         val token = "Bearer ${TokenManager.getToken(App.instance)}"
