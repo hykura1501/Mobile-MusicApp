@@ -64,6 +64,20 @@ class UserDao {
                 null
             }
         }
+        suspend fun upgradeToPremium(day: Int): Void? {
+            return try {
+                var premiumRequest = PremiumRequest(day)
+                val response = RetrofitClient.instance.upgradeToPremium(premiumRequest)
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
 
     }
 }

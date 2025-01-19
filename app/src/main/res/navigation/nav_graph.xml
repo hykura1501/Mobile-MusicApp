@@ -164,6 +164,10 @@
                 app:argType="string"
                 app:nullable="false" />
         </action>
+
+        <action
+            android:id="@+id/action_profileFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
     </fragment>
 
     <fragment
@@ -234,6 +238,7 @@
         android:label="fragment_premium"
         tools:layout="@layout/fragment_premium">
 
+
     </fragment>
 
     <fragment
@@ -251,6 +256,12 @@
         <action
             android:id="@+id/action_SongsFragment_to_queueFragment"
             app:destination="@id/queueFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.example.mobile_musicapp.fragment.ResetPasswordFragment"
+        android:label="reset_password">
     </fragment>
 
     <fragment

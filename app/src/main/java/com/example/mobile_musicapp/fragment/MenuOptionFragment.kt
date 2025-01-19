@@ -1,6 +1,10 @@
 package com.example.mobile_musicapp.fragment
 
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,12 +89,11 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
 
     private fun handleOptionClick(option: Option) {
         when (option) {
-            // TODO: handle option click for each option
             Option.ADD_TO_PLAYLIST -> { addSongToPlaylist() }
             Option.ADD_TO_QUEUE -> { addSongToQueue() }
             Option.REMOVE_FROM_PLAYLIST -> { removeSongFromPlaylist() }
             Option.REMOVE_FROM_QUEUE -> { removeSongFromQueue() }
-            Option.DOWNLOAD -> { /* Handle download */ }
+            Option.DOWNLOAD -> { downloadSong() }
             Option.SHARE -> { shareCallback?.invoke() }
             Option.REPEAT -> { toggleRepeatMode() }
             Option.COMMENT -> {
@@ -186,6 +189,27 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
             song?.let {
                 val action = PlayMusicFragmentDirections.actionPlayMusicFragmentToArtistFragment(it.artistId)
                 findNavController().navigate(action)
+            }
+        }
+    }
+
+    private fun downloadSong() {
+        val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        shareViewModel.selectedSong.observe(viewLifecycleOwner) { song ->
+            song?.let {
+                val downloadManager = requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                val uri = Uri.parse(song.path)
+                val fileName = song.title + ".mp3"
+
+                val request = DownloadManager.Request(uri).apply {
+                    setTitle("Downloading Song")
+                    setDescription("Downloading $fileName")
+                    setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    setDestinationInExternalPublicDir(Environment.DIRECTORY_MUSIC, fileName)
+                    setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                }
+
+                downloadManager.enqueue(request)
             }
         }
     }
