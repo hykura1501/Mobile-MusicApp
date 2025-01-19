@@ -25,6 +25,7 @@ import com.example.mobile_musicapp.models.User
 import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.services.TokenManager
 import com.example.mobile_musicapp.services.UserDao
+import com.example.mobile_musicapp.services.UserManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -109,6 +110,7 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profileFragment_to_login)
         }
         binding.btnLogout.setOnClickListener {
+            UserManager.clear()
             lifecycleScope.launch {
                 try {
                     TokenManager.clearToken(requireContext())
