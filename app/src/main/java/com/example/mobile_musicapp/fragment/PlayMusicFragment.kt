@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -67,6 +68,7 @@ class PlayMusicFragment : Fragment() {
     private lateinit var songThumbnail: ImageView
     private lateinit var playerBackground: ConstraintLayout
     private lateinit var recyclerLyrics: RecyclerView
+    private lateinit var lyricContainer: CardView
 
     private var isFavorite: Boolean = false
 
@@ -74,7 +76,6 @@ class PlayMusicFragment : Fragment() {
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
     private val songViewModel : SongViewModel by viewModels()
     private var lyrics = emptyList<LyricLine>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,6 +128,7 @@ class PlayMusicFragment : Fragment() {
 
         playerBackground = view.findViewById<ConstraintLayout>(R.id.playerBackground)
         recyclerLyrics = view.findViewById<RecyclerView>(R.id.lyric) as RecyclerView
+        lyricContainer = view.findViewById<CardView>(R.id.lyricContainer) as CardView
 
         return view
     }
@@ -197,14 +199,18 @@ class PlayMusicFragment : Fragment() {
         }
 
         shuffleButton.setOnClickListener {
-            viewModel.toggleShuffleMode()
-            updateShuffleIcon()
-            Queue.toggleShuffleMode()
+            if (PlayerManager.getCurrentSong().title != "Ad") {
+                viewModel.toggleShuffleMode()
+                updateShuffleIcon()
+                Queue.toggleShuffleMode()
+            }
         }
 
         repeatButton.setOnClickListener {
-            viewModel.toggleRepeatMode()
-            updateRepeatIcon()
+            if (PlayerManager.getCurrentSong().title != "Ad") {
+                viewModel.toggleRepeatMode()
+                updateRepeatIcon()
+            }
         }
 
         optionsButton.setOnClickListener {
@@ -221,29 +227,36 @@ class PlayMusicFragment : Fragment() {
         }
 
         addToFavoritesButton.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                val result = withContext(Dispatchers.IO) {
-                    FavoriteSongDao.addOrRemoveFavoriteSong(song._id)
-                }
-                result.fold(
-                    onSuccess = { message ->
-                        if (isFavorite) {
-                            Favorite.removeFromFavorites(song)
-                            favoritesViewModel.removeFavorite(song)
-                        } else {
-                            Favorite.addToFavorites(song)
-                            favoritesViewModel.addFavorite(song)
-                        }
-                        updateFavoriteIcon()
-                        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
-                    },
-                    onFailure = { throwable ->
-                        Toast.makeText(context, throwable.message ?: "Failed to update Favorites!", Toast.LENGTH_SHORT).show()
+            if (PlayerManager.getCurrentSong().title != "Ad") {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val result = withContext(Dispatchers.IO) {
+                        FavoriteSongDao.addOrRemoveFavoriteSong(song._id)
                     }
-                )
+                    result.fold(
+                        onSuccess = { message ->
+                            if (isFavorite) {
+                                Favorite.removeFromFavorites(song)
+                                favoritesViewModel.removeFavorite(song)
+                            } else {
+                                Favorite.addToFavorites(song)
+                                favoritesViewModel.addFavorite(song)
+                            }
+                            updateFavoriteIcon()
+                            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+                        },
+                        onFailure = { throwable ->
+                            Toast.makeText(
+                                context,
+                                throwable.message ?: "Failed to update Favorites!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    )
+                }
             }
         }
 
+        seekBar.isEnabled = song.title != "Ad"
         seekBar.setOnSeekBarChangeListener (
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -353,12 +366,10 @@ class PlayMusicFragment : Fragment() {
         val song = PlayerManager.getCurrentSong()
         if (song.title == "Ad") {
             addToFavoritesButton.visibility = View.GONE
-            return
         }
-        else{
+        else {
             addToFavoritesButton.visibility = View.VISIBLE
         }
-
         isFavorite = Favorite.getPlaylist().any { it._id == song._id }
         if (isFavorite) {
             addToFavoritesButton.setImageResource(R.drawable.ic_heart_filled)
@@ -387,6 +398,11 @@ class PlayMusicFragment : Fragment() {
 
     private suspend fun getLyrics() {
         val song = PlayerManager.getCurrentSong()
+        if (song.title == "Ad") {
+            lyricContainer.visibility = View.INVISIBLE
+            return
+        }
+        lyricContainer.visibility = View.VISIBLE
         lyrics = SongDao.fetchLyrics(song.lyric)
     }
 }
