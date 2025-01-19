@@ -24,6 +24,14 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_artistFragment"
+            app:destination="@id/artistFragment">
+            <argument
+                android:name="artistId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -37,6 +45,13 @@
         <action
             android:id="@+id/action_playMusicFragment_to_queueFragment"
             app:destination="@id/queueFragment"/>
+        <action
+            android:id="@+id/action_playMusicFragment_to_artistFragment"
+            app:destination="@id/artistFragment">
+            <argument
+                android:name="artistId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -249,5 +264,21 @@
         android:label="reset_password">
     </fragment>
 
+    <fragment
+        android:id="@+id/artistFragment"
+        android:name="com.example.mobile_musicapp.fragment.ArtistFragment"
+        android:label="ArtistFragment">
+        <argument
+            android:name="artistId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_artistFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="true" />
+        </action>
+    </fragment>
 
 </navigation>

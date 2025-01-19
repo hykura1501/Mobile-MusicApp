@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val playerBarFragmentContainer = findViewById<View>(R.id.player_bar_container)
             when (destination.id) {
-                R.id.playMusicFragment, R.id.newPlaylistFragment, R.id.login, R.id.register -> {
+                R.id.playMusicFragment, R.id.newPlaylistFragment, R.id.login, R.id.register, R.id.artistFragment -> {
                     bottomNavigationView.visibility = View.GONE
                     playerBarFragmentContainer?.visibility = View.GONE
                 }
