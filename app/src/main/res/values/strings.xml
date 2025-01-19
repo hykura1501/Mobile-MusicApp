@@ -82,6 +82,7 @@
     <string name="register">"Đăng ký"</string>
     <string name="enter_your_email">"Nhập email của bạn"</string>
     <string name="enter_your_password">"Nhập mật khẩu của bạn"</string>
+    <string name="re_enter_your_password">"Nhập lại mật khẩu của bạn"</string>
     <string name="enter_your_fullName">"Nhập họ tên của bạn"</string>
     <string name="recovery_password">"Khôi phục mật khẩu"</string>
     <string name="button_back">"Nút quay lại"</string>
