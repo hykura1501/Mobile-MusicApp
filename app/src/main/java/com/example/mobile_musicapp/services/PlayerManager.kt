@@ -12,7 +12,7 @@ object PlayerManager {
     private var mediaPlayer: MediaPlayer? = null
     private var viewModel = PlayerBarViewModel()
     private val handler = Handler(Looper.getMainLooper())
-    private const val MAX_COUNT = 5
+    private const val MAX_COUNT = 6
     private var count = 0
     private val ad = Song(
         title = "Ad",
@@ -82,7 +82,6 @@ object PlayerManager {
 
     fun prepare() {
         var song = Queue.getCurrentSong()
-        count++
         if (count >= MAX_COUNT) {
             count = 0
 
@@ -130,6 +129,7 @@ object PlayerManager {
         handler.removeCallbacks(updateSeekBarRunnable)
         pause()
         mediaPlayer?.reset()
+        count++
         if (count < MAX_COUNT) {
             Queue.nextSong()
         }

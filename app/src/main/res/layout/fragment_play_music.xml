@@ -212,6 +212,7 @@
             app:layout_constraintTop_toTopOf="@+id/currentTime" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/lyricContainer"
             android:layout_width="320dp"
             android:layout_height="320dp"
             android:layout_marginTop="32dp"
