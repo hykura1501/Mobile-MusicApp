@@ -58,6 +58,7 @@ class DeepSearchFragment : Fragment() {
                     Option.SHARE.title,
                     Option.ADD_TO_PLAYLIST.title,
                     Option.ADD_TO_QUEUE.title,
+                    Option.DOWNLOAD.title,
                 )
                 val actionDialogFragment = MenuOptionFragment.newInstance(options)
                 actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")

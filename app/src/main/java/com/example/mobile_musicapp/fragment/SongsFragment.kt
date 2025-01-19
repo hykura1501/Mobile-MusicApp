@@ -20,6 +20,7 @@ import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.repository.SongRepository
 import com.example.mobile_musicapp.services.FavoriteSongDao
 import com.example.mobile_musicapp.services.PlayerManager
+import com.example.mobile_musicapp.services.SongDao
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.example.mobile_musicapp.viewModels.ShareViewModel
@@ -66,6 +67,14 @@ class SongsFragment : Fragment() {
             "Favorite Songs" -> {
                 lifecycleScope.launch {
                     songs = FavoriteSongDao.getFavoriteSongs()
+                    withContext(Dispatchers.Main) {
+                        setupRecyclerView()
+                    }
+                }
+            }
+            "Uploaded Song" -> {
+                lifecycleScope.launch {
+                    songs = SongDao.getUploadedSongs()
                     withContext(Dispatchers.Main) {
                         setupRecyclerView()
                     }

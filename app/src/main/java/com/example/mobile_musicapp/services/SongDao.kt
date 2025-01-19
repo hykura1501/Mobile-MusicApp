@@ -140,5 +140,40 @@ class SongDao {
                 false
             }
         }
+
+        suspend fun getUploadedSongs(): List<Song> {
+            return try {
+                val response = RetrofitClient.instance.getUploadedSongs()
+                if (response.isSuccessful) {
+                    val uploadedSongResponse = response.body()
+                    val uploadedSongs = uploadedSongResponse?.data ?: emptyList()
+                    Log.d("SongDao", "Fetched uploaded songs: $uploadedSongs")
+                    uploadedSongs
+                } else {
+                    Log.e("SongDao", "Error: ${response.code()} - ${response.message()}")
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("SongDao", "Exception: ${e.message}")
+                emptyList()
+            }
+        }
+
+        suspend fun uploadSongFromYoutube(url: String): Boolean {
+            return try {
+                val response =
+                    RetrofitClient.instance.uploadSongFromYoutube(YoutubeLinkRequest(url))
+                if (response.isSuccessful) {
+                    Log.d("UploadSongFromYoutube", "Upload successful: ${response.code()}")
+                    true
+                } else {
+                    Log.d("UploadSongFromYoutube", "Upload failed: ${response.code()} - ${response.message()}")
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e("UploadSongFromYoutube", "Exception during upload: ${e.message}")
+                false
+            }
+        }
     }
 }
