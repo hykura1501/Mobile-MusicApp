@@ -1,26 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.PremiumFragment"
-    android:orientation="vertical"
-    >
+    android:background="#1C1C1E">
 
-    <Button
-        android:id="@+id/createOrder"
+    <!-- Nội dung chính -->
+    <LinearLayout
+        android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Order" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/zlpToken"
-        android:textSize="20sp"
-    />
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/btnPay">
+
+        <!-- Tiêu đề -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose your plan"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Các gói dịch vụ -->
+        <RadioGroup
+            android:id="@+id/planGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Gói tuần -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="#333333"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:id="@+id/radioWeekly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekly - $2.99"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7 days"
+                    android:textColor="#A3A3A3"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Gói tháng -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="#333333"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:id="@+id/radioMonthly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monthly - $9.99"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30 days"
+                    android:textColor="#A3A3A3"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Gói năm -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="#333333"
+                android:gravity="center_vertical">
+
+                <RadioButton
+                    android:id="@+id/radioYearly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yearly - $99.99"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="365 days"
+                    android:textColor="#A3A3A3"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </RadioGroup>
+    </LinearLayout>
+
+    <!-- Nút Buy Now -->
     <Button
         android:id="@+id/btnPay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pay" />
-</LinearLayout>
+        android:text="@string/buy_now"
+        android:textSize="20sp"
+        android:background="#4CAF50"
+        android:textColor="@color/green"
+        android:padding="16dp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp" />
+</RelativeLayout>

@@ -208,6 +208,8 @@ class PlayMusicFragment : Fragment() {
                 Option.GO_TO_QUEUE.title,
                 Option.SLEEP_TIMER.title,
                 Option.ARTIST_INFO.title,
+                Option.ADD_TO_PLAYLIST.title,
+                Option.DOWNLOAD.title,
             )
             val actionDialogFragment = MenuOptionFragment.newInstance(options) { handleShare() }
             actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
@@ -262,8 +264,6 @@ class PlayMusicFragment : Fragment() {
         // Set background using BackgroundHelper
         val song = Queue.getCurrentSong()!!
         BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground, cornerRadius = 0f)
-
-
     }
 
     private fun loadLyrics() {
