@@ -61,6 +61,10 @@ data class CreatePlaylistRequest(
     val title: String
 )
 
+data class YoutubeLinkRequest(
+    val url: String
+)
+
 data class DeletePlaylistResponse(
     val code: Int,
     val message: String
@@ -141,6 +145,10 @@ data class ApiResponseComment(
     val data : CommentModel
 )
 
+data class UploadedSongResponse(
+    val code: Int,
+    val data: List<Song>
+)
 
 
 interface ApiService {
@@ -203,6 +211,7 @@ interface ApiService {
         @Query("perPage") perPage: Int
     ): Response<ApiResponseSongs>
 
+    // favorite song -----------------------------------------------------
     @GET("/song/favorite")
     suspend fun getFavoriteSongs(): Response<FavoriteSongsResponse>
 
@@ -215,10 +224,16 @@ interface ApiService {
     @GET
     suspend fun fetchLyrics(@Url url: String): Response<ResponseBody>
 
+    // upload song --------------------------------------------------------
     @Multipart
     @POST("song")
     suspend fun uploadSong(@Part url: MultipartBody.Part): Response<Void>
 
+    @GET("other/uploaded-songs")
+    suspend fun getUploadedSongs(): Response<UploadedSongResponse>
+
+    @POST("song/youtube")
+    suspend fun uploadSongFromYoutube(@Body url: YoutubeLinkRequest): Response<ResponseBody>
 
     // auth ----------------------------------------------------------------
     @POST("auth/login")
