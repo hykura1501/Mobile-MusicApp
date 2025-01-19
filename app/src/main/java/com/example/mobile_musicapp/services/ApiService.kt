@@ -4,6 +4,7 @@ import com.example.mobile_musicapp.models.CommentModel
 import com.example.mobile_musicapp.models.CommentRequest
 import com.example.mobile_musicapp.models.CommentResponse
 import android.content.SharedPreferences
+import android.provider.ContactsContract.CommonDataKinds.Email
 import com.example.mobile_musicapp.models.Artist
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
@@ -121,6 +122,17 @@ data class RemoveSongFromPlaylistRequest(
     val songId: String
 )
 
+data class ChangePasswordRequest(
+    val oldPassword: String,
+    val newPassword: String,
+    val confirmNewPassword: String
+)
+
+data class ChangePasswordResponse(
+    val code: Int,
+    val message: String
+)
+
 data class PlaylistResponse(
     val _id: String,
     val userId: String,
@@ -158,6 +170,25 @@ data class ArtistData(
 data class UploadedSongResponse(
     val code: Int,
     val data: List<Song>
+)
+
+data class EmailRequest(
+    val email: String
+)
+
+data class OtpRequest(
+    val otp: String,
+    val email: String
+)
+
+data class OtpResponse(
+    val code: Int,
+    val resetToken: String
+)
+
+data class ResetPasswordRequest(
+    val resetToken: String,
+    val newPassword: String
 )
 
 data class FollowResponse(
@@ -307,6 +338,22 @@ interface ApiService {
         @Body day: PremiumRequest
     ): Response<Void>
 
+    @POST("user/change-password")
+    suspend fun changePassword(
+        @Body request: ChangePasswordRequest
+    ): Response<ChangePasswordResponse>
+
+    @GET("user/me")
+    suspend fun getInformationUser(): Response<UserResponse>
+
+    @POST("user/password/forgot")
+    suspend fun forgotPassword(@Body email: EmailRequest): Response<Void>
+
+    @POST("user/password/otp")
+    suspend fun verifyOTP(@Body otp: OtpRequest): Response<OtpResponse>
+    @POST("user/password/reset")
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): Response<Void>
+
 
     // comment ----------------------------------------------------------------
     @POST("comment/{id}")
@@ -323,7 +370,6 @@ interface ApiService {
 
     @GET("user/me")
     suspend fun getInformationUser(): Response<UserResponse>
-
 
     // artist
     @GET("artist/detail/{artistId}")

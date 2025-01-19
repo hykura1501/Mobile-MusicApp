@@ -2,12 +2,20 @@ package com.example.mobile_musicapp.services
 
 import android.widget.Toast
 import com.example.mobile_musicapp.models.User
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+
+sealed class UserApiResult {
+    data class Success(val code: Int, val message: String) : UserApiResult()
+    data class Error(val code: Int, val message: String) : UserApiResult()
+}
+
 
 class UserDao {
     companion object {
@@ -68,6 +76,71 @@ class UserDao {
             return try {
                 var premiumRequest = PremiumRequest(day)
                 val response = RetrofitClient.instance.upgradeToPremium(premiumRequest)
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        suspend fun changePassword(oldPassword: String, newPassword: String, confirmNewPassword: String): UserApiResult? {
+            return try {
+                var changePasswordRequest = ChangePasswordRequest(oldPassword, newPassword, confirmNewPassword)
+                val response = RetrofitClient.instance.changePassword(changePasswordRequest)
+                if (response.isSuccessful) {
+                    UserApiResult.Success(response.code(), response.message())
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = Gson().fromJson(errorBody, JsonObject::class.java)
+                    val errorMessage = errorJson["message"]?.asString ?: "Unknown error"
+                    val statusCode = errorJson["code"]?.asInt ?: -1
+                    UserApiResult.Error(statusCode, errorMessage)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        suspend fun recoverPassword(email: String): Void? {
+            return try {
+                val emailRequest = EmailRequest(email)
+                val response = RetrofitClient.instance.forgotPassword(emailRequest)
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    null
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        suspend fun verifyOtp(email: String, otp: String): OtpResponse? {
+            return try {
+                val otpRequest = OtpRequest(otp, email)
+                val response = RetrofitClient.instance.verifyOTP(otpRequest)
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        suspend fun resetPassword(resetToken: String, newPassword: String): Void? {
+            return try {
+                val resetPasswordRequest = ResetPasswordRequest(resetToken, newPassword)
+                val response = RetrofitClient.instance.resetPassword(resetPasswordRequest)
                 if (response.isSuccessful) {
                     response.body()
                 } else {
