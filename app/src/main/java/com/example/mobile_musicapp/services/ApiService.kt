@@ -120,6 +120,17 @@ data class RemoveSongFromPlaylistRequest(
     val songId: String
 )
 
+data class ChangePasswordRequest(
+    val oldPassword: String,
+    val newPassword: String,
+    val confirmNewPassword: String
+)
+
+data class ChangePasswordResponse(
+    val code: Int,
+    val message: String
+)
+
 data class PlaylistResponse(
     val _id: String,
     val userId: String,
@@ -282,6 +293,11 @@ interface ApiService {
         @Body day: PremiumRequest
     ): Response<Void>
 
+    @POST("user/change-password")
+    suspend fun changePassword(
+        @Body request: ChangePasswordRequest
+    ): Response<ChangePasswordResponse>
+
 
     // comment ----------------------------------------------------------------
     @POST("comment/{id}")
@@ -325,7 +341,7 @@ object TokenManager {
 
 
 object RetrofitClient {
-    private const val BASE_URL = "https://backend-mobile-xi.vercel.app/"
+    private const val BASE_URL = "https://5ba6-2001-ee0-4d0e-a050-f9f5-bcb0-9148-2a4c.ngrok-free.app/"
 
     private val authInterceptor = Interceptor { chain ->
         val token = "Bearer ${TokenManager.getToken(App.instance)}"
