@@ -106,5 +106,51 @@ class UserDao {
             }
         }
 
+        suspend fun recoverPassword(email: String): Void? {
+            return try {
+                val emailRequest = EmailRequest(email)
+                val response = RetrofitClient.instance.forgotPassword(emailRequest)
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    null
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        suspend fun verifyOtp(email: String, otp: String): OtpResponse? {
+            return try {
+                val otpRequest = OtpRequest(otp, email)
+                val response = RetrofitClient.instance.verifyOTP(otpRequest)
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
+        suspend fun resetPassword(resetToken: String, newPassword: String): Void? {
+            return try {
+                val resetPasswordRequest = ResetPasswordRequest(resetToken, newPassword)
+                val response = RetrofitClient.instance.resetPassword(resetPasswordRequest)
+                if (response.isSuccessful) {
+                    response.body()
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+
     }
 }

@@ -4,6 +4,7 @@ import com.example.mobile_musicapp.models.CommentModel
 import com.example.mobile_musicapp.models.CommentRequest
 import com.example.mobile_musicapp.models.CommentResponse
 import android.content.SharedPreferences
+import android.provider.ContactsContract.CommonDataKinds.Email
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.User
@@ -161,6 +162,24 @@ data class UploadedSongResponse(
     val data: List<Song>
 )
 
+data class EmailRequest(
+    val email: String
+)
+
+data class OtpRequest(
+    val otp: String,
+    val email: String
+)
+
+data class OtpResponse(
+    val code: Int,
+    val resetToken: String
+)
+
+data class ResetPasswordRequest(
+    val resetToken: String,
+    val newPassword: String
+)
 
 interface ApiService {
     // playlist ----------------------------------------------------------------
@@ -298,6 +317,17 @@ interface ApiService {
         @Body request: ChangePasswordRequest
     ): Response<ChangePasswordResponse>
 
+    @GET("user/me")
+    suspend fun getInformationUser(): Response<UserResponse>
+
+    @POST("user/password/forgot")
+    suspend fun forgotPassword(@Body email: EmailRequest): Response<Void>
+
+    @POST("user/password/otp")
+    suspend fun verifyOTP(@Body otp: OtpRequest): Response<OtpResponse>
+    @POST("user/password/reset")
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): Response<Void>
+
 
     // comment ----------------------------------------------------------------
     @POST("comment/{id}")
@@ -311,9 +341,6 @@ interface ApiService {
 
     @POST("other/recently-played/{id}")
     suspend fun addPlayedRecently(@Path("id") id : String): Response<ApiResponsePlayedRecently>
-
-    @GET("user/me")
-    suspend fun getInformationUser(): Response<UserResponse>
 }
 
 object TokenManager {
@@ -341,7 +368,7 @@ object TokenManager {
 
 
 object RetrofitClient {
-    private const val BASE_URL = "https://5ba6-2001-ee0-4d0e-a050-f9f5-bcb0-9148-2a4c.ngrok-free.app/"
+    private const val BASE_URL = "https://backend-mobile-xi.vercel.app/"
 
     private val authInterceptor = Interceptor { chain ->
         val token = "Bearer ${TokenManager.getToken(App.instance)}"

@@ -121,4 +121,7 @@
     <string name="buy_now">Buy Now</string>
     <string name="lyricsTitle">Lyrics</string>
     <string name="no_ads">No ads</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="otp_message">The OTP has been sent to your email:</string>
+    <string name="enter_otp">Enter OTP</string>
 </resources>
