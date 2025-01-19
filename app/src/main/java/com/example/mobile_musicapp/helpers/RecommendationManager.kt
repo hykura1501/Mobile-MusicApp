@@ -1,31 +1,27 @@
+// RecommendationManager.kt
 package com.example.mobile_musicapp.helpers
 
+import com.example.mobile_musicapp.models.Artist
 import com.example.mobile_musicapp.models.Song
-import com.example.mobile_musicapp.services.SongDao
+import com.example.mobile_musicapp.services.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
-class RecommendationManager(private val favoriteSongs: List<Song>) {
+class RecommendationManager(private val apiService: ApiService) {
 
-    suspend fun getRecommendedSongs(): List<Song> {
-        val allSongs = withContext(Dispatchers.IO) {
-            SongDao.getAllSongs(page = 1, perPage = 1000000)
-        }
-        val recommendedSongs = mutableListOf<Song>()
-
-        if (allSongs.isEmpty() || favoriteSongs.isEmpty()) {
-            return recommendedSongs
-        }
-
-        favoriteSongs.forEach { favoriteSong ->
-            val sameArtistSongs = allSongs.filter { it.artistId == favoriteSong.artistId && it.title != favoriteSong.title }
-            if (sameArtistSongs.isNotEmpty()) {
-                val randomNumber = (3..7).random()
-                recommendedSongs.addAll(sameArtistSongs.take(randomNumber))
+    suspend fun getRecommendedSongs(followingArtists: List<Artist>): List<Song> {
+        return withContext(Dispatchers.IO) {
+            val allSongs = followingArtists.flatMap { artist ->
+                val response = apiService.getArtistDetails(artist.artistId)
+                if (response.isSuccessful) {
+                    val songs = response.body()?.data?.songs ?: emptyList()
+                    if (songs.size <= 2) songs else songs.shuffled().take(Random.nextInt(3, 7))
+                } else {
+                    emptyList()
+                }
             }
+            allSongs.shuffled()
         }
-
-        recommendedSongs.shuffle()
-        return recommendedSongs
     }
 }
