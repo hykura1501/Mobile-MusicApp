@@ -139,8 +139,8 @@ class ProfileFragment : Fragment() {
         }
 
         binding.changePassword.setOnClickListener {
-            Toast.makeText(context, "Change Password", Toast.LENGTH_SHORT).show()
-            // TODO : Change Password
+            val action = ProfileFragmentDirections.actionProfileFragmentToResetPasswordFragment()
+            findNavController().navigate(action)
         }
 
         binding.upload.setOnClickListener {
