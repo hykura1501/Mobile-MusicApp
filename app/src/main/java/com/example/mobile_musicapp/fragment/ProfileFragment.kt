@@ -1,12 +1,16 @@
 package com.example.mobile_musicapp.fragment
 
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -115,9 +119,8 @@ class ProfileFragment : Fragment() {
             }
         }
         binding.uploadedSong.setOnClickListener {
-            Toast.makeText(context, "Uploaded Song", Toast.LENGTH_SHORT).show()
-            //            //val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Uploaded Song")
-            //            //findNavController().navigate(action)
+            val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Uploaded Song")
+            findNavController().navigate(action)
         }
 
         binding.favoriteSong.setOnClickListener {
@@ -136,17 +139,25 @@ class ProfileFragment : Fragment() {
         }
 
         binding.changePassword.setOnClickListener {
-            Toast.makeText(context, "Change Password", Toast.LENGTH_SHORT).show()
-            // TODO : Change Password
+            val action = ProfileFragmentDirections.actionProfileFragmentToResetPasswordFragment()
+            findNavController().navigate(action)
         }
 
         binding.upload.setOnClickListener {
-            //TODO : Upload Song
-            filePickerLauncher.launch("audio/*")
+            val options = arrayOf("Upload từ link Youtube", "Upload từ thiết bị")
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Upload bài hát hát")
+            builder.setItems(options) { _, which ->
+                when (which) {
+                    0 -> uploadFromYTB()
+                    1 -> filePickerLauncher.launch("audio/*")
+                }
+            }
+            builder.show()
         }
 
         binding.btnEditProfile.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(User!!)
+            val action = ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(User)
             findNavController().navigate(action)
         }
 
@@ -214,25 +225,50 @@ class ProfileFragment : Fragment() {
         }
     }
 
-
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun uploadFromYTB() {
+        showYouTubeLinkInputDialog(requireContext()) { youtubeLink ->
+            if (youtubeLink.isNotBlank()) {
+                lifecycleScope.launch {
+                    val isUploaded = SongDao.uploadSongFromYoutube(youtubeLink)
+                    if (isUploaded) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Song uploaded successfully!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to upload song.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
+            } else {
+                Toast.makeText(requireContext(), "Vui lòng nhập link!", Toast.LENGTH_SHORT).show()
             }
+        }
     }
+
+    private fun showYouTubeLinkInputDialog(context: Context, onLinkEntered: (String) -> Unit) {
+        val input = EditText(context).apply {
+            hint = "Nhập link YouTube"
+            inputType = InputType.TYPE_TEXT_VARIATION_URI
+        }
+
+        val dialog = AlertDialog.Builder(context)
+            .setTitle("Nhập link YouTube")
+            .setView(input)
+            .setPositiveButton("OK") { _, _ ->
+                val link = input.text.toString()
+                onLinkEntered(link)
+            }
+            .setNegativeButton("Hủy") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+
+        dialog.show()
+    }
+
 }
