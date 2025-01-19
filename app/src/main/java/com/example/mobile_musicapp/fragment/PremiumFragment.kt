@@ -1,6 +1,7 @@
 package com.example.mobile_musicapp.fragment
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.mobile_musicapp.databinding.FragmentPremiumBinding
+import com.example.mobile_musicapp.services.UserDao
 import com.example.mobile_musicapp.services.payment.Api.CreateOrder
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -45,93 +48,113 @@ class PremiumFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.createOrder.setOnClickListener {
-            val orderApi = CreateOrder()
-            try {
-                lifecycleScope.launch {
-                    val data: JSONObject = orderApi.createOrder("20000000")
-                    val code = data.getString("returncode")
-
-                    if (code == "1") {
-                        binding.zlpToken.setText(data.getString("zptranstoken"))
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(requireActivity(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-        binding.btnPay.setOnClickListener(View.OnClickListener {
-            val token: String = binding.zlpToken.getText().toString()
-            ZaloPaySDK.getInstance()
-                .payOrder(requireActivity(), token, "demozpdk://app", object : PayOrderListener {
-                    override fun onPaymentSucceeded(
-                        transactionId: String,
-                        transToken: String,
-                        appTransID: String
-                    ) {
-                        requireActivity().runOnUiThread(Runnable {
-                            AlertDialog.Builder(requireActivity())
-                                .setTitle("Payment Success")
-                                .setMessage(
-                                    String.format(
-                                        "TransactionId: %s - TransToken: %s",
-                                        transactionId,
-                                        transToken
-                                    )
-                                )
-                                .setPositiveButton(
-                                    "OK"
-                                ) { dialog, which -> }
-                                .setNegativeButton("Cancel", null).show()
-                        })
-                    }
-
-                    override fun onPaymentCanceled(zpTransToken: String, appTransID: String) {
-                        AlertDialog.Builder(requireActivity())
-                            .setTitle("User Cancel Payment")
-                            .setMessage(String.format("zpTransToken: %s \n", zpTransToken))
-                            .setPositiveButton(
-                                "OK"
-                            ) { dialog, which -> }
-                            .setNegativeButton("Cancel", null).show()
-                    }
-
-                    override fun onPaymentError(
-                        zaloPayError: ZaloPayError,
-                        zpTransToken: String,
-                        appTransID: String
-                    ) {
-                        AlertDialog.Builder(requireActivity())
-                            .setTitle("Payment Fail")
-                            .setMessage(
-                                String.format(
-                                    "ZaloPayErrorCode: %s \nTransToken: %s",
-                                    zaloPayError.toString(),
-                                    zpTransToken
-                                )
-                            )
-                            .setPositiveButton(
-                                "OK"
-                            ) { dialog, which -> }
-                            .setNegativeButton("Cancel", null).show()
-                    }
-                })
-        })
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPremiumBinding.inflate(inflater, container, false)
-        // ZaloPay SDK Init
-        ZaloPaySDK.init(553, Environment.SANDBOX)
         val view = binding.root
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        binding.btnPay.setOnClickListener {
+            var radioWeeklyValue = binding.radioWeekly.isChecked
+            var radioMonthlyValue = binding.radioMonthly.isChecked
+            var radioYearlyValue = binding.radioYearly.isChecked
+            val orderApi = CreateOrder()
+            var amount = 0
+            var day = 0
+            if (radioWeeklyValue) {
+                amount = 20000
+                day = 7
+            } else if (radioMonthlyValue) {
+                amount = 60000
+                day = 30
+            } else if (radioYearlyValue) {
+                amount = 600000
+                day = 365
+            }
+            lifecycleScope.launch {
+                try {
+                    val data: JSONObject = orderApi.createOrder(amount.toString())
+                    val code = data.getString("returncode")
+                    if (code == "1") {
+                        val token = data.getString("zptranstoken")
+
+                        if (token.isBlank()) {
+                            Toast.makeText(requireActivity(), "Please generate an order token first.", Toast.LENGTH_SHORT).show()
+                        }
+
+                        ZaloPaySDK.getInstance()
+                            .payOrder(requireActivity(), token, "demozpdk://app", object : PayOrderListener {
+                                override fun onPaymentSucceeded(
+                                    transactionId: String,
+                                    transToken: String,
+                                    appTransID: String
+                                ) {
+                                    lifecycleScope.launch {
+                                        var response = UserDao.upgradeToPremium(day)
+                                    }
+
+                                    requireActivity().runOnUiThread {
+                                        AlertDialog.Builder(requireActivity())
+                                            .setTitle("Payment Success")
+                                            .setMessage(
+                                                String.format("You have %s days of premium account", day)
+                                            )
+                                            .setPositiveButton("OK") { _, _ ->
+                                                requireActivity().onBackPressed()
+                                            }
+                                            .show()
+
+                                    }
+                                }
+
+                                override fun onPaymentCanceled(zpTransToken: String, appTransID: String) {
+                                    requireActivity().runOnUiThread {
+                                        AlertDialog.Builder(requireActivity())
+                                            .setTitle("User Cancel Payment")
+                                            .setMessage(String.format("zpTransToken: %s", zpTransToken))
+                                            .setPositiveButton("OK", null)
+                                            .show()
+                                    }
+                                }
+
+                                override fun onPaymentError(
+                                    zaloPayError: ZaloPayError,
+                                    zpTransToken: String,
+                                    appTransID: String
+                                ) {
+                                    requireActivity().runOnUiThread {
+                                        AlertDialog.Builder(requireActivity())
+                                            .setTitle("Payment Fail")
+                                            .setMessage(
+                                                String.format(
+                                                    "Error: %s\nzpTransToken: %s",
+                                                    zaloPayError.toString(),
+                                                    zpTransToken
+                                                )
+                                            )
+                                            .setPositiveButton("OK", null)
+                                            .show()
+                                    }
+                                }
+                            })
+                    } else {
+                        Toast.makeText(requireContext(), "Create order failed: $code", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(requireActivity(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
