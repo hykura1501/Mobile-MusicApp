@@ -1,6 +1,7 @@
 package com.example.mobile_musicapp.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,13 +21,12 @@ import com.example.mobile_musicapp.models.Artist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.ApiService
+import com.example.mobile_musicapp.services.RetrofitClient
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import com.example.mobile_musicapp.viewModels.ShareViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class ArtistFragment : Fragment() {
 
@@ -34,8 +34,12 @@ class ArtistFragment : Fragment() {
     private lateinit var artistDescription: TextView
     private lateinit var artistAvatar: ImageView
     private lateinit var songsRecyclerView: RecyclerView
+    private lateinit var followButton: ImageButton
     private lateinit var playerBarViewModel: PlayerBarViewModel
     private lateinit var shareViewModel: ShareViewModel
+    private lateinit var apiService: ApiService
+    private lateinit var artist: Artist
+    private var isFollowed: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +55,7 @@ class ArtistFragment : Fragment() {
         artistDescription = view.findViewById(R.id.artistDescription)
         artistAvatar = view.findViewById(R.id.artistAvatar)
         songsRecyclerView = view.findViewById(R.id.songsRecyclerView)
+        followButton = view.findViewById(R.id.followButton)
         val backButton: ImageButton = view.findViewById(R.id.backButton)
 
         backButton.setOnClickListener {
@@ -64,15 +69,18 @@ class ArtistFragment : Fragment() {
 
         val artistId = arguments?.getString("artistId") ?: return
         fetchArtistDetails(artistId)
+
+        followButton.setOnClickListener {
+            if (isFollowed) {
+                unfollowArtist(artist._id)
+            } else {
+                followArtist(artist._id)
+            }
+        }
     }
 
     private fun fetchArtistDetails(artistId: String) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://backend-mobile-xi.vercel.app/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(ApiService::class.java)
+        apiService = RetrofitClient.instance
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -80,15 +88,37 @@ class ArtistFragment : Fragment() {
                 if (response.isSuccessful && response.body()?.code == 200) {
                     withContext(Dispatchers.Main) {
                         response.body()?.data?.let { data ->
-                            displayArtistInfo(data.artist)
+                            artist = data.artist
+                            checkFollowStatus(artist._id)
+                            displayArtistInfo(artist)
                             setupRecyclerView(data.songs)
                         }
                     }
                 } else {
-                    // Handle error
+                    Log.e("ArtistFragment", "Error fetching artist details: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                // Handle exception
+                Log.e("ArtistFragment", "Exception fetching artist details", e)
+            }
+        }
+    }
+
+    private fun checkFollowStatus(artistId: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = apiService.followArtist(artistId)
+                withContext(Dispatchers.Main) {
+                    Log.d("ArtistFragment", "Check follow status response: ${response.body()}")
+                    if (response.body() == null || (response.body()?.code == 400 && response.body()?.message == "Already followed")) {
+                        isFollowed = true
+                    } else {
+                        isFollowed = false
+                        unfollowArtist(artistId)
+                    }
+                    updateFollowButton()
+                }
+            } catch (e: Exception) {
+                Log.e("ArtistFragment", "Exception checking follow status", e)
             }
         }
     }
@@ -111,6 +141,52 @@ class ArtistFragment : Fragment() {
 
         adapter.onOptionClick = { selectedItem ->
             shareViewModel.selectedSong.value = selectedItem
+        }
+    }
+
+    private fun followArtist(artistId: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = apiService.followArtist(artistId)
+                if (response.isSuccessful && response.body()?.code == 200) {
+                    withContext(Dispatchers.Main) {
+                        Log.d("ArtistFragment", "Followed artist successfully")
+                        isFollowed = true
+                        updateFollowButton()
+                    }
+                } else {
+                    Log.e("ArtistFragment", "Error following artist: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("ArtistFragment", "Exception following artist", e)
+            }
+        }
+    }
+
+    private fun unfollowArtist(artistId: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = apiService.unfollowArtist(artistId)
+                if (response.isSuccessful && response.body()?.code == 200) {
+                    withContext(Dispatchers.Main) {
+                        Log.d("ArtistFragment", "Unfollowed artist successfully")
+                        isFollowed = false
+                        updateFollowButton()
+                    }
+                } else {
+                    Log.e("ArtistFragment", "Error unfollowing artist: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("ArtistFragment", "Exception unfollowing artist", e)
+            }
+        }
+    }
+
+    private fun updateFollowButton() {
+        if (isFollowed) {
+            followButton.setImageResource(R.drawable.ic_heart_filled)
+        } else {
+            followButton.setImageResource(R.drawable.ic_heart)
         }
     }
 }
