@@ -343,9 +343,6 @@ interface ApiService {
         @Body request: ChangePasswordRequest
     ): Response<ChangePasswordResponse>
 
-    @GET("user/me")
-    suspend fun getInformationUser(): Response<UserResponse>
-
     @POST("user/password/forgot")
     suspend fun forgotPassword(@Body email: EmailRequest): Response<Void>
 
