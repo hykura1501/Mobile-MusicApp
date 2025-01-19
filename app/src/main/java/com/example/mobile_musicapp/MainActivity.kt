@@ -17,12 +17,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.mobile_musicapp.helpers.NavigationHelper.setupWithNavControllerCustom
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.services.SongDao
+import com.example.mobile_musicapp.services.UserManager
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
@@ -72,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val playerBarFragmentContainer = findViewById<View>(R.id.player_bar_container)
             when (destination.id) {
-                R.id.playMusicFragment, R.id.newPlaylistFragment, R.id.login, R.id.register -> {
+                R.id.playMusicFragment, R.id.newPlaylistFragment, R.id.login, R.id.register, R.id.artistFragment -> {
                     bottomNavigationView.visibility = View.GONE
                     playerBarFragmentContainer?.visibility = View.GONE
                 }
@@ -107,6 +109,10 @@ class MainActivity : AppCompatActivity() {
 
         // Create notification channel
         createNotificationChannel()
+
+        lifecycleScope.launch {
+            UserManager.fetchCurrentUser()
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
