@@ -1,10 +1,13 @@
 package com.example.mobile_musicapp.services
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -18,12 +21,12 @@ object UserManager {
     var favoriteSongs: MutableList<Song> = mutableListOf()
     var avatar: String = ""
     var isPremium: Boolean = false
-    var premiumExpiredAt: Date = Date()
+    var premiumExpiredAt: String = ""
 
     /**
      * Clear user data when user logs out or data reset is required.
      */
-    private fun clear() {
+     fun clear() {
         _id = ""
         fullName = ""
         phone = ""
@@ -32,22 +35,7 @@ object UserManager {
         favoriteSongs.clear()
         avatar = ""
         isPremium = false
-        premiumExpiredAt = Date()
-    }
-
-    /**
-     * Set user information.
-     */
-
-    private fun parseIsoDate(isoDate: String): Date? {
-        return try {
-            val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            isoFormatter.timeZone = TimeZone.getTimeZone("UTC")
-            isoFormatter.parse(isoDate)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+        premiumExpiredAt = ""
     }
 
     private fun setUserInfo(user: User?) {
@@ -59,7 +47,7 @@ object UserManager {
         favoriteSongs = user.favoriteSongs.toMutableList() // Copy to avoid reference issues
         avatar = user.avatar
         isPremium = user.isPremium
-        premiumExpiredAt = parseIsoDate(user.premiumExpiredAt) ?: Date()
+        premiumExpiredAt = user.premiumExpiredAt
     }
 
     /**
