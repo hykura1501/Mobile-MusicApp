@@ -22,6 +22,7 @@ import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.CommentsAdapter
 import com.example.mobile_musicapp.models.CommentModel
 import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.services.UserManager
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.CommentViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -103,7 +104,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
         ivSend.setOnClickListener {
             if (edtContent.text.toString().trim().isNotEmpty()){
                 Queue.getCurrentSong()?.let {
-                    commentViewModel.addComment(it._id, edtContent.text.toString().trim())
+                    commentViewModel.addComment(it._id, UserManager._id, UserManager.fullName, edtContent.text.toString().trim())
                 }
             }
         }
