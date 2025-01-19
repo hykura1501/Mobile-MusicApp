@@ -183,13 +183,13 @@ class PlayMusicFragment : Fragment() {
         }
 
         nextButton.setOnClickListener {
-            if (PlayerManager.getCurrentSong().title != "Ad") {
+            if (PlayerManager.getCurrentSong().title != "Advertisement") {
                 PlayerManager.next()
             }
         }
 
         previousButton.setOnClickListener {
-            if (PlayerManager.getCurrentSong().title != "Ad") {
+            if (PlayerManager.getCurrentSong().title != "Advertisement") {
                 PlayerManager.previous()
             }
         }
@@ -199,7 +199,7 @@ class PlayMusicFragment : Fragment() {
         }
 
         shuffleButton.setOnClickListener {
-            if (PlayerManager.getCurrentSong().title != "Ad") {
+            if (PlayerManager.getCurrentSong().title != "Advertisement") {
                 viewModel.toggleShuffleMode()
                 updateShuffleIcon()
                 Queue.toggleShuffleMode()
@@ -207,7 +207,7 @@ class PlayMusicFragment : Fragment() {
         }
 
         repeatButton.setOnClickListener {
-            if (PlayerManager.getCurrentSong().title != "Ad") {
+            if (PlayerManager.getCurrentSong().title != "Advertisement") {
                 viewModel.toggleRepeatMode()
                 updateRepeatIcon()
             }
@@ -230,7 +230,7 @@ class PlayMusicFragment : Fragment() {
         }
 
         addToFavoritesButton.setOnClickListener {
-            if (PlayerManager.getCurrentSong().title != "Ad") {
+            if (PlayerManager.getCurrentSong().title != "Advertisement") {
                 CoroutineScope(Dispatchers.Main).launch {
                     val result = withContext(Dispatchers.IO) {
                         FavoriteSongDao.addOrRemoveFavoriteSong(song._id)
@@ -259,23 +259,23 @@ class PlayMusicFragment : Fragment() {
             }
         }
 
-        seekBar.isEnabled = song.title != "Ad"
+        seekBar.isEnabled = song.title != "Advertisement"
         seekBar.setOnSeekBarChangeListener (
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    if (fromUser && PlayerManager.getCurrentSong().title != "Ad") {
+                    if (fromUser && PlayerManager.getCurrentSong().title != "Advertisement") {
                         PlayerManager.seekTo(progress)
                     }
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                    if (PlayerManager.getCurrentSong().title != "Ad") {
+                    if (PlayerManager.getCurrentSong().title != "Advertisement") {
                         PlayerManager.pause()
                     }
                 }
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    if (PlayerManager.getCurrentSong().title != "Ad") {
+                    if (PlayerManager.getCurrentSong().title != "Advertisement") {
                         PlayerManager.play()
                         viewModel.updatePlayPause(true)
                     }
@@ -367,7 +367,7 @@ class PlayMusicFragment : Fragment() {
 
     private fun updateFavoriteIcon() {
         val song = PlayerManager.getCurrentSong()
-        if (song.title == "Ad") {
+        if (song.title == "Advertisement") {
             addToFavoritesButton.visibility = View.GONE
         }
         else {
@@ -384,7 +384,7 @@ class PlayMusicFragment : Fragment() {
     private fun handleShare() {
         val song = PlayerManager.getCurrentSong()
 
-        if (song.title == "Ad") {
+        if (song.title == "Advertisement") {
             Toast.makeText(requireContext(), "This is an ad song!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -401,7 +401,7 @@ class PlayMusicFragment : Fragment() {
 
     private suspend fun getLyrics() {
         val song = PlayerManager.getCurrentSong()
-        if (song.title == "Ad") {
+        if (song.title == "Advertisement") {
             lyricContainer.visibility = View.INVISIBLE
             return
         }

@@ -1,8 +1,10 @@
 package com.example.mobile_musicapp.services
 
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.RequiresApi
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
@@ -15,13 +17,13 @@ object PlayerManager {
     private const val MAX_COUNT = 6
     private var count = 0
     private val ad = Song(
-        title = "Ad",
-        artistName = "Spotify",
+        title = "Advertisement",
+        artistName = "Advertisement",
         path = "http://res.cloudinary.com/dw0acvowr/video/upload/v1737279106/oro8x9wtmioykcdtqqwg.mp3",
         duration = 30,
         thumbnail = "https://res.cloudinary.com/dnqege3qj/image/upload/v1737279956/Screenshot_2025-01-19_164441_ecsnbj.png",
-        album = "Spotify Ad",
-        artistId = "spotify"
+        album = "Advertisement",
+        artistId = "Advertisement"
     )
     private var currentSong: Song? = null
 
@@ -86,7 +88,7 @@ object PlayerManager {
             count = 0
 
             // There is a promotion ad if user is not premium or premium expired
-            if ((!UserManager.isPremium || UserManager.premiumExpiredAt.time < System.currentTimeMillis())) {
+            if (!UserManager.isPremium) {
                 song = ad
             }
         }

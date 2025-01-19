@@ -16,6 +16,7 @@ import com.example.mobile_musicapp.databinding.FragmentLoginBinding
 import com.example.mobile_musicapp.services.AuthDao
 import com.example.mobile_musicapp.services.TokenManager
 import com.example.mobile_musicapp.services.AuthApiResult
+import com.example.mobile_musicapp.services.UserManager
 import com.facebook.CallbackManager
 import com.facebook.FacebookSdk
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -236,6 +237,7 @@ class Login : Fragment() {
                 showError("An error occurred: ${e.message}")
             }
         }
+
     }
 
     private fun showError(message: String) {
@@ -248,6 +250,9 @@ class Login : Fragment() {
     }
 
     private fun navigateToHome() {
+        lifecycleScope.launch {
+            UserManager.fetchCurrentUser()
+        }
         findNavController().navigate(R.id.action_login_to_home)
     }
 
