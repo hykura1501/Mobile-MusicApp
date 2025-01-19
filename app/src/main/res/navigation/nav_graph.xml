@@ -24,6 +24,14 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_artistFragment"
+            app:destination="@id/artistFragment">
+            <argument
+                android:name="artistId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment

@@ -159,6 +159,10 @@ data class FollowData(
     val _id: String
 )
 
+data class FollowedArtistResponse(
+    val code: Int,
+    val data: List<Artist>
+)
 
 interface ApiService {
     // playlist ----------------------------------------------------------------
@@ -307,6 +311,9 @@ interface ApiService {
 
     @POST("artist/un-follow/{artistId}")
     suspend fun unfollowArtist(@Path("artistId") artistId: String): Response<FollowResponse>
+
+    @GET("artist/following")
+    suspend fun getFollowingArtists(): Response<FollowedArtistResponse>
 }
 
 object TokenManager {
