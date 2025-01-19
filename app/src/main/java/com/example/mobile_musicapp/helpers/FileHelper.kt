@@ -24,6 +24,13 @@ class FileHelper {
 
             // Nếu URI là kiểu "content", từ MediaStore
             if (uri.scheme == "content") {
+                // Lấy tên file từ URI
+                val fileName = getFileNameFromUri(uri, contentResolver)
+                if (fileName == null) {
+                    Log.e("UploadSong", "Failed to get file name from URI: $uri")
+                    return null
+                }
+
                 // Lấy nội dung từ MediaStore
                 val cursor = contentResolver.query(uri, null, null, null, null)
                 cursor?.use {
@@ -37,10 +44,10 @@ class FileHelper {
                     }
                 }
 
-                // Nếu không tìm thấy tệp, tạo tệp tạm từ InputStream
+                // Nếu không tìm thấy tệp, tạo tệp tạm từ InputStream với tên file gốc
                 contentResolver.openInputStream(uri)?.use { inputStream ->
                     // Đảm bảo rằng bạn gọi context được truyền vào để lấy cacheDir
-                    val tempFile = File(context.cacheDir, "temp_song.mp3")
+                    val tempFile = File(context.cacheDir, fileName)
 
                     // Sử dụng FileOutputStream đúng cách
                     FileOutputStream(tempFile).use { outputStream ->
@@ -57,25 +64,15 @@ class FileHelper {
         }
 
         fun getFileNameFromUri(uri: Uri, contentResolver: ContentResolver): String? {
-            // Nếu URI là kiểu "file"
-            if (uri.scheme == "file") {
-                val file = File(uri.path!!)
-                return file.name
-            }
-
-            // Nếu URI là kiểu "content", từ MediaStore
-            if (uri.scheme == "content") {
-                val cursor = contentResolver.query(uri, null, null, null, null)
-                cursor?.use {
-                    if (it.moveToFirst()) {
-                        val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                        if (columnIndex != -1) {
-                            return it.getString(columnIndex) // Tên file
-                        }
-                    }
+            val cursor = contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    return it.getString(columnIndex)
                 }
             }
-            return null
+            return null // Return null if no name is found
         }
+
     }
 }
