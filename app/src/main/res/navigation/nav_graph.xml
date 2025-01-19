@@ -252,6 +252,14 @@
         <argument
             android:name="artistId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_artistFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="true" />
+        </action>
     </fragment>
 
 </navigation>
