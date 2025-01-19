@@ -5,6 +5,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 
