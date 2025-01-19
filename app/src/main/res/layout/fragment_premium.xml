@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose your plan"
+            android:text="Chọn gói dịch vụ"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
@@ -32,87 +32,100 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <RadioButton
+                android:id="@+id/radioWeekly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gói tuần - 20.000"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF"
+                android:layout_weight="1" />
+
+            <RadioButton
+                android:id="@+id/radioMonthly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gói tháng - 60.000"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF"
+                android:layout_weight="1" />
+
+            <RadioButton
+                android:id="@+id/radioYearly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gói năm - 600.000"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF"
+                android:layout_weight="1" />
 
             <!-- Gói tuần -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="#333333"
-                android:layout_marginBottom="8dp"
-                android:gravity="center_vertical">
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="12dp"-->
+<!--                android:background="#333333"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:gravity="center_vertical">-->
 
-                <RadioButton
-                    android:id="@+id/radioWeekly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Weekly - $2.99"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"
-                    android:layout_weight="1" />
+<!--                -->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="7 days"
-                    android:textColor="#A3A3A3"
-                    android:textSize="14sp" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="7 days"-->
+<!--                    android:textColor="#A3A3A3"-->
+<!--                    android:textSize="14sp" />-->
+<!--            </LinearLayout>-->
 
-            <!-- Gói tháng -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="#333333"
-                android:layout_marginBottom="8dp"
-                android:gravity="center_vertical">
+<!--            &lt;!&ndash; Gói tháng &ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="12dp"-->
+<!--                android:background="#333333"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:gravity="center_vertical">-->
 
-                <RadioButton
-                    android:id="@+id/radioMonthly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Monthly - $9.99"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"
-                    android:layout_weight="1" />
+<!--               -->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="30 days"
-                    android:textColor="#A3A3A3"
-                    android:textSize="14sp" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="30 days"-->
+<!--                    android:textColor="#A3A3A3"-->
+<!--                    android:textSize="14sp" />-->
+<!--            </LinearLayout>-->
 
-            <!-- Gói năm -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="#333333"
-                android:gravity="center_vertical">
+<!--            &lt;!&ndash; Gói năm &ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="12dp"-->
+<!--                android:background="#333333"-->
+<!--                android:gravity="center_vertical">-->
 
-                <RadioButton
-                    android:id="@+id/radioYearly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Yearly - $99.99"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"
-                    android:layout_weight="1" />
+<!--                -->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="365 days"
-                    android:textColor="#A3A3A3"
-                    android:textSize="14sp" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="365 days"-->
+<!--                    android:textColor="#A3A3A3"-->
+<!--                    android:textSize="14sp" />-->
+<!--            </LinearLayout>-->
         </RadioGroup>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lợi ích: Nghe nhạc không quảng cáo"
+            android:layout_marginTop="20dp"
+            android:textSize="22sp"
+            android:textColor="#FFFFFF"
+        />
     </LinearLayout>
 
     <!-- Nút Buy Now -->
