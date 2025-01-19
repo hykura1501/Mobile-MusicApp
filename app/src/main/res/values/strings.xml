@@ -117,5 +117,7 @@
     <string name="phone">Số điện thoại</string>
     <string name="enter_your_phone">Nhập số điện thoại của bạn</string>
     <string name="get_premium">Mua quyền VIP</string>
+    <string name="no_ads">Không quảng cáo</string>
+    <string name="buy_now">Mua ngay</string>
     <string name="lyricsTitle">Lyrics</string>
 </resources>

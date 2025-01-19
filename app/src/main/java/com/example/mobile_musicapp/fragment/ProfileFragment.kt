@@ -166,6 +166,9 @@ class ProfileFragment : Fragment() {
         binding.userProfile.visibility = View.VISIBLE
         binding.loginLayout.visibility = View.GONE
         binding.tvFullName.text = User.fullName
+        if (User.isPremium) {
+            binding.tvFullName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.premium_yellow, 0)
+        }
         binding.tvEmail.text = User.email
 
         val url = User.avatar

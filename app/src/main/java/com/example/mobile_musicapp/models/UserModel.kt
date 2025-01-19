@@ -3,6 +3,7 @@ package com.example.mobile_musicapp.models
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+
 @Parcelize
 data class User (
     var _id: String = "",
@@ -11,5 +12,7 @@ data class User (
     var email: String = "",
     var deleted: Boolean = false,
     var favoriteSongs: MutableList<Song> = mutableListOf(),
-    var avatar: String = ""
+    var avatar: String = "",
+    var isPremium: Boolean = false,
+    var premiumExpiredAt: String = ""
 ) : Parcelable
