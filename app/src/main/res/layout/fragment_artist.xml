@@ -1,7 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <ImageButton
@@ -12,32 +11,46 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/backButton" />
 
+    <ImageButton
+        android:id="@+id/followButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_heart"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true" />
+
     <ImageView
         android:id="@+id/artistAvatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:scaleType="centerCrop" />
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        android:layout_below="@id/backButton"
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/artistName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:paddingTop="16dp" />
+        android:paddingTop="16dp"
+        android:layout_below="@id/artistAvatar" />
 
     <TextView
         android:id="@+id/artistDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingTop="8dp" />
+        android:layout_centerHorizontal="true"
+        android:paddingTop="8dp"
+        android:layout_below="@id/artistName" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/songsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp" />
-</LinearLayout>
+        android:paddingTop="16dp"
+        android:layout_below="@id/artistDescription" />
+</RelativeLayout>
