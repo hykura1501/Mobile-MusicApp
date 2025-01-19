@@ -44,6 +44,7 @@
     <string name="topPopularSongTitle">Bài hát phổ biến nhất</string>
     <string name="topLikeSongTitle">Bài hát nhiều like</string>
     <string name="recommendedSongTitle">Bài hát đề xuất</string>
+    <string name="followingArtistTitle">Nghệ sĩ đang theo dõi</string>
     <string name="likeButton">Thích</string>
 
     <string name="libraryTitle">Thư viện</string>

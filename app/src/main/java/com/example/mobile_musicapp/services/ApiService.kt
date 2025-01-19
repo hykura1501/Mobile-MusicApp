@@ -4,6 +4,7 @@ import com.example.mobile_musicapp.models.CommentModel
 import com.example.mobile_musicapp.models.CommentRequest
 import com.example.mobile_musicapp.models.CommentResponse
 import android.content.SharedPreferences
+import com.example.mobile_musicapp.models.Artist
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.User
@@ -145,11 +146,35 @@ data class ApiResponseComment(
     val data : CommentModel
 )
 
+data class ArtistResponse(
+    val code: Int,
+    val data: ArtistData
+)
+
+data class ArtistData(
+    val artist: Artist,
+    val songs: List<Song>
+)
 data class UploadedSongResponse(
     val code: Int,
     val data: List<Song>
 )
 
+data class FollowResponse(
+    val code: Int,
+    val message: String,
+    val data: List<FollowData>
+)
+
+data class FollowData(
+    val artistId: String,
+    val _id: String
+)
+
+data class FollowedArtistResponse(
+    val code: Int,
+    val data: List<Artist>
+)
 
 interface ApiService {
     // playlist ----------------------------------------------------------------
@@ -298,6 +323,20 @@ interface ApiService {
 
     @GET("user/me")
     suspend fun getInformationUser(): Response<UserResponse>
+
+
+    // artist
+    @GET("artist/detail/{artistId}")
+    suspend fun getArtistDetails(@Path("artistId") artistId: String): Response<ArtistResponse>
+
+    @POST("artist/follow/{artistId}")
+    suspend fun followArtist(@Path("artistId") artistId: String): Response<FollowResponse>
+
+    @POST("artist/un-follow/{artistId}")
+    suspend fun unfollowArtist(@Path("artistId") artistId: String): Response<FollowResponse>
+
+    @GET("artist/following")
+    suspend fun getFollowingArtists(): Response<FollowedArtistResponse>
 }
 
 object TokenManager {

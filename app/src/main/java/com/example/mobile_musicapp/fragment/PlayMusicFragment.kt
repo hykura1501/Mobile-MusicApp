@@ -221,6 +221,7 @@ class PlayMusicFragment : Fragment() {
                 Option.SHARE.title,
                 Option.GO_TO_QUEUE.title,
                 Option.SLEEP_TIMER.title,
+                Option.ARTIST_INFO.title,
                 Option.ADD_TO_PLAYLIST.title,
                 Option.DOWNLOAD.title,
             )

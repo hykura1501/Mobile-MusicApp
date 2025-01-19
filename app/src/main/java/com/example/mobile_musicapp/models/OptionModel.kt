@@ -12,7 +12,8 @@ enum class Option(val title: String, val iconResId: Int) {
     REPEAT("Repeat", R.drawable.ic_repeat),
     SHARE("Share", R.drawable.ic_share),
     SLEEP_TIMER("Sleep Timer", R.drawable.ic_sleep_timer),
-    GO_TO_QUEUE("Go to Queue", R.drawable.ic_queue);
+    GO_TO_QUEUE("Go to Queue", R.drawable.ic_queue),
+    ARTIST_INFO("Artist Info", R.drawable.ic_profile);
 
     companion object {
         fun fromTitle(title: String): Option? {
