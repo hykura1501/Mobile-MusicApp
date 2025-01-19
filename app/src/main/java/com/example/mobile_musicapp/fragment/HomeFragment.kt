@@ -19,7 +19,6 @@ import com.example.mobile_musicapp.LanguageChangeActivity
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.ArtistHorizontalAdapter
 import com.example.mobile_musicapp.adapters.SongHorizontalAdapter
-import com.example.mobile_musicapp.helpers.RandomHelper
 import com.example.mobile_musicapp.helpers.RecommendationManager
 import com.example.mobile_musicapp.models.Artist
 import com.example.mobile_musicapp.models.Song
@@ -46,6 +45,7 @@ class HomeFragment : Fragment() {
     private lateinit var followingArtistRecyclerView: RecyclerView
     private lateinit var artistHorizontalAdapter: ArtistHorizontalAdapter
     private lateinit var apiService: ApiService
+    private lateinit var recommendationManager: RecommendationManager
     private lateinit var ivSetting: ImageButton
 
     private val favoritesViewModel: FavoritesViewModel by activityViewModels()
@@ -78,7 +78,6 @@ class HomeFragment : Fragment() {
             if (!isLoading) {
                 val favoriteSongs = favoritesViewModel.favoriteSongs.value ?: emptyList()
                 loadFavoriteSongs(favoriteSongs)
-                loadRecommendedSongs(favoriteSongs)
             }
         })
 
@@ -99,6 +98,7 @@ class HomeFragment : Fragment() {
         }
 
         apiService = RetrofitClient.instance
+        recommendationManager = RecommendationManager(apiService)
         fetchFollowingArtists()
     }
 
@@ -163,12 +163,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun loadRecommendedSongs(favoriteSongs: List<Song>) {
+    private fun loadRecommendedSongs(followingArtists: List<Artist>) {
         CoroutineScope(Dispatchers.Main).launch {
-            val recommendedSongs = withContext(Dispatchers.IO) {
-                val recommendationManager = RecommendationManager(favoriteSongs)
-                recommendationManager.getRecommendedSongs()
-            }
+            val recommendedSongs = recommendationManager.getRecommendedSongs(followingArtists)
             recommendedSongsRecyclerView.adapter = SongHorizontalAdapter(recommendedSongs) { song ->
                 val selectedIndex = recommendedSongs.indexOf(song)
                 val action = HomeFragmentDirections.actionHomeFragmentToPlayMusicFragment(SongListWithIndex(recommendedSongs, selectedIndex))
@@ -185,6 +182,7 @@ class HomeFragment : Fragment() {
                     val artists = response.body()?.data ?: listOf()
                     withContext(Dispatchers.Main) {
                         artistHorizontalAdapter.updateArtists(artists)
+                        loadRecommendedSongs(artists)
                     }
                 } else {
                     // Handle error
