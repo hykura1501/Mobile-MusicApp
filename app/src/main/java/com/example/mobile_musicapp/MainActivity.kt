@@ -17,12 +17,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.mobile_musicapp.helpers.NavigationHelper.setupWithNavControllerCustom
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.services.SongDao
+import com.example.mobile_musicapp.services.UserManager
 import com.example.mobile_musicapp.singletons.Favorite
 import com.example.mobile_musicapp.singletons.Queue
 import com.example.mobile_musicapp.viewModels.FavoritesViewModel
@@ -107,6 +109,10 @@ class MainActivity : AppCompatActivity() {
 
         // Create notification channel
         createNotificationChannel()
+
+        lifecycleScope.launch {
+            UserManager.fetchCurrentUser()
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
