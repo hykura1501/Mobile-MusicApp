@@ -116,8 +116,8 @@ class ProfileFragment : Fragment() {
         }
         binding.uploadedSong.setOnClickListener {
             Toast.makeText(context, "Uploaded Song", Toast.LENGTH_SHORT).show()
-            //val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Uploaded Song")
-            //findNavController().navigate(action)
+            //            //val action = ProfileFragmentDirections.actionProfileFragmentToSongsFragment("Uploaded Song")
+            //            //findNavController().navigate(action)
         }
 
         binding.favoriteSong.setOnClickListener {

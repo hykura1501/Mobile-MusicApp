@@ -136,8 +136,12 @@ class PlayMusicFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Connect UI components
-        Queue.getCurrentSong()?.let {
-            songViewModel.addPlayedRecently(it._id)
+        val song = PlayerManager.getCurrentSong()
+
+        if (song.title != "Ad") {
+            Queue.getCurrentSong()?.let {
+                songViewModel.addPlayedRecently(it._id)
+            }
         }
         updateUI()
 
@@ -177,11 +181,15 @@ class PlayMusicFragment : Fragment() {
         }
 
         nextButton.setOnClickListener {
-            PlayerManager.next()
+            if (PlayerManager.getCurrentSong().title != "Ad") {
+                PlayerManager.next()
+            }
         }
 
         previousButton.setOnClickListener {
-            PlayerManager.previous()
+            if (PlayerManager.getCurrentSong().title != "Ad") {
+                PlayerManager.previous()
+            }
         }
 
         minimizeButton.setOnClickListener {
@@ -201,7 +209,7 @@ class PlayMusicFragment : Fragment() {
 
         optionsButton.setOnClickListener {
             val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
-            shareViewModel.selectedSong.value = Queue.getCurrentSong()
+            shareViewModel.selectedSong.value = song
             val options = listOf(
                 Option.COMMENT.title,
                 Option.SHARE.title,
@@ -213,7 +221,6 @@ class PlayMusicFragment : Fragment() {
         }
 
         addToFavoritesButton.setOnClickListener {
-            val song = Queue.getCurrentSong()!!
             CoroutineScope(Dispatchers.Main).launch {
                 val result = withContext(Dispatchers.IO) {
                     FavoriteSongDao.addOrRemoveFavoriteSong(song._id)
@@ -240,18 +247,22 @@ class PlayMusicFragment : Fragment() {
         seekBar.setOnSeekBarChangeListener (
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    if (fromUser) {
+                    if (fromUser && PlayerManager.getCurrentSong().title != "Ad") {
                         PlayerManager.seekTo(progress)
                     }
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                    PlayerManager.pause()
+                    if (PlayerManager.getCurrentSong().title != "Ad") {
+                        PlayerManager.pause()
+                    }
                 }
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    PlayerManager.play()
-                    viewModel.updatePlayPause(true)
+                    if (PlayerManager.getCurrentSong().title != "Ad") {
+                        PlayerManager.play()
+                        viewModel.updatePlayPause(true)
+                    }
                 }
             }
         )
@@ -259,10 +270,7 @@ class PlayMusicFragment : Fragment() {
         updateFavoriteIcon()
 
         // Set background using BackgroundHelper
-        val song = Queue.getCurrentSong()!!
         BackgroundHelper.updateBackgroundWithImageColor(requireContext(), song.thumbnail, playerBackground, cornerRadius = 0f)
-
-
     }
 
     private fun loadLyrics() {
@@ -294,7 +302,7 @@ class PlayMusicFragment : Fragment() {
 
     @SuppressLint("DefaultLocale")
     private fun updateUI() {
-        val song = Queue.getCurrentSong()!!
+        val song = PlayerManager.getCurrentSong()
         album.text = song.album
 
         Glide.with(this)
@@ -342,7 +350,15 @@ class PlayMusicFragment : Fragment() {
     }
 
     private fun updateFavoriteIcon() {
-        val song = Queue.getCurrentSong()!!
+        val song = PlayerManager.getCurrentSong()
+        if (song.title == "Ad") {
+            addToFavoritesButton.visibility = View.GONE
+            return
+        }
+        else{
+            addToFavoritesButton.visibility = View.VISIBLE
+        }
+
         isFavorite = Favorite.getPlaylist().any { it._id == song._id }
         if (isFavorite) {
             addToFavoritesButton.setImageResource(R.drawable.ic_heart_filled)
@@ -352,24 +368,25 @@ class PlayMusicFragment : Fragment() {
     }
 
     private fun handleShare() {
-        val song = Queue.getCurrentSong()
-        if (song != null) {
-            // Construct the shareable link
-            val appLink = "https://adsjgdskjsgdkjsd.web.app/songs/${song._id}"
+        val song = PlayerManager.getCurrentSong()
 
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, "Check out this song: ${song.title} by ${song.artistName} $appLink")
-                type = "text/plain"
-            }
-            startActivity(Intent.createChooser(shareIntent, "Share via"))
-        } else {
-            Toast.makeText(context, "No song is currently playing", Toast.LENGTH_SHORT).show()
+        if (song.title == "Ad") {
+            Toast.makeText(requireContext(), "This is an ad song!", Toast.LENGTH_SHORT).show()
+            return
         }
+        // Construct the shareable link
+        val appLink = "https://adsjgdskjsgdkjsd.web.app/songs/${song._id}"
+
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Check out this song: ${song.title} by ${song.artistName} $appLink")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share via"))
     }
 
     private suspend fun getLyrics() {
-        val song = Queue.getCurrentSong()!!
+        val song = PlayerManager.getCurrentSong()
         lyrics = SongDao.fetchLyrics(song.lyric)
     }
 }
