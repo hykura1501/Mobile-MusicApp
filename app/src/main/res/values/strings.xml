@@ -122,4 +122,7 @@
     <string name="no_ads">Không quảng cáo</string>
     <string name="buy_now">Mua ngay</string>
     <string name="lyricsTitle">Lyrics</string>
+    <string name="send_otp">Gửi mã OTP</string>
+    <string name="otp_message">Đã gửi mã OTP đến email của bạn là:</string>
+    <string name="enter_otp">Nhập mã OTP</string>
 </resources>
