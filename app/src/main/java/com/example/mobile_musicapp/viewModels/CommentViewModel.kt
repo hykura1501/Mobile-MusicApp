@@ -25,11 +25,11 @@ class CommentViewModel : ViewModel() {
     fun getCommentLiveData() = commentLiveData
     fun getCommentAddLiveData() = commentAddLiveData
 
-    fun addComment(songId : String , data : String) {
+    fun addComment(songId : String , id: String, fullName: String, data : String) {
         viewModelScope.launch {
            commentRepository.addComment(songId, data)?.let {
                Log.d(TAG, "addComment: ===> ${it.code}")
-               _commentAddMutableLiveData.postValue(Pair(it.code,it.data.first()))
+               _commentAddMutableLiveData.postValue(Pair(it.code, CommentModel(UserInfo(id,fullName),data)))
            }?: run {
                Log.d(TAG, "addComment: NULL")
                _commentAddMutableLiveData.postValue(Pair(-1, CommentModel(UserInfo("",""),"")))
