@@ -37,6 +37,13 @@
         <action
             android:id="@+id/action_playMusicFragment_to_queueFragment"
             app:destination="@id/queueFragment"/>
+        <action
+            android:id="@+id/action_playMusicFragment_to_artistFragment"
+            app:destination="@id/artistFragment">
+            <argument
+                android:name="artistId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -238,5 +245,13 @@
             app:destination="@id/queueFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/artistFragment"
+        android:name="com.example.mobile_musicapp.fragment.ArtistFragment"
+        android:label="ArtistFragment">
+        <argument
+            android:name="artistId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

@@ -101,6 +101,7 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
             }
             Option.SLEEP_TIMER -> { sleepTimer() }
             Option.GO_TO_QUEUE -> { navigateToQueue() }
+            Option.ARTIST_INFO -> { navigateToArtistInfo() }
         }
         dismiss()
     }
@@ -177,5 +178,15 @@ class MenuOptionFragment : BottomSheetDialogFragment() {
     private fun sleepTimer() {
         val actionDialogFragment = ChoosingSleepTimerFragment()
         actionDialogFragment.show(parentFragmentManager, "ChoosingSleepTimerFragment")
+    }
+
+    private fun navigateToArtistInfo() {
+        val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+        shareViewModel.selectedSong.observe(viewLifecycleOwner) { song ->
+            song?.let {
+                val action = PlayMusicFragmentDirections.actionPlayMusicFragmentToArtistFragment(it.artistId)
+                findNavController().navigate(action)
+            }
+        }
     }
 }

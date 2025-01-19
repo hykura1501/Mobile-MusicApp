@@ -4,6 +4,7 @@ import com.example.mobile_musicapp.models.CommentModel
 import com.example.mobile_musicapp.models.CommentRequest
 import com.example.mobile_musicapp.models.CommentResponse
 import android.content.SharedPreferences
+import com.example.mobile_musicapp.models.Artist
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.User
@@ -137,7 +138,15 @@ data class ApiResponseComment(
     val data : CommentModel
 )
 
+data class ArtistResponse(
+    val code: Int,
+    val data: ArtistData
+)
 
+data class ArtistData(
+    val artist: Artist,
+    val songs: List<Song>
+)
 
 interface ApiService {
     // playlist ----------------------------------------------------------------
@@ -275,6 +284,11 @@ interface ApiService {
 
     @GET("user/me")
     suspend fun getInformationUser(): Response<UserResponse>
+
+
+    // artist
+    @GET("artist/detail/{artistId}")
+    suspend fun getArtistDetails(@Path("artistId") artistId: String): Response<ArtistResponse>
 }
 
 object TokenManager {
