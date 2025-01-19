@@ -195,6 +195,26 @@
             android:id="@+id/action_login_to_register"
             app:destination="@id/register"
             app:popUpTo="@id/login" />
+        <action
+            android:id="@+id/action_login_to_recoveryPassword"
+            app:destination="@id/recoverPassFragment"
+            app:popUpTo="@id/login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recoverPassFragment"
+        android:name="com.example.mobile_musicapp.fragment.RecoverPassFragment"
+        android:label="fragment_recover_pass"
+        tools:layout="@layout/fragment_recover_pass"
+    >
+        <action
+            android:id="@+id/action_recover_to_enter_otp"
+            app:destination="@id/optFragment"
+        >
+            <argument
+                android:name="email"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -209,6 +229,46 @@
             android:id="@+id/action_register_to_login"
             app:destination="@id/login"
             app:popUpTo="@id/register" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/optFragment"
+        android:name="com.example.mobile_musicapp.fragment.OtpFragment"
+        android:label="fragment_otp"
+        tools:layout="@layout/fragment_otp">
+        <argument
+            android:name="email"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_optFragment_to_enterPassFragment"
+            app:destination="@id/enterPassFragment">
+
+            <argument
+                android:name="resetToken"
+                app:argType="string" />
+
+        </action>
+    >
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/enterPassFragment"
+        android:name="com.example.mobile_musicapp.fragment.EnterPassword"
+        android:label="fragment_enter_password"
+        tools:layout="@layout/fragment_enter_password">
+        >
+
+        <action
+            android:id="@+id/action_enterPassFragment_to_login"
+            app:destination="@id/login"
+        />
+
+        <argument
+            android:name="resetToken"
+            app:argType="string" />
+
     </fragment>
 
     <fragment

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".fragment.ResetPasswordFragment">
+    tools:context=".fragment.RecoverPassFragment">
 
     <ImageButton
         android:layout_gravity="start"
@@ -20,54 +20,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="@string/change_password"
+        android:text="@string/recovery_password"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textAlignment="center"
         android:layout_gravity="center_horizontal" />
 
     <EditText
-        android:id="@+id/oldPasswordEditText"
+        android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:autofillHints="emailAddress"
         android:background="@drawable/custom_input"
         android:ems="10"
-        android:hint="@string/enter_your_old_password"
-        android:inputType="textPassword"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp" />
-
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:autofillHints="emailAddress"
-        android:background="@drawable/custom_input"
-        android:ems="10"
-        android:hint="@string/enter_your_password"
-        android:inputType="textPassword"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp" />
-
-    <EditText
-        android:id="@+id/reEnterPasswordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:autofillHints="emailAddress"
-        android:background="@drawable/custom_input"
-        android:ems="10"
-        android:hint="@string/re_enter_your_password"
-        android:inputType="textPassword"
+        android:hint="@string/enter_your_email"
         android:paddingStart="12dp"
         android:paddingEnd="12dp" />
 
@@ -81,15 +50,15 @@
         android:textColor="@android:color/holo_red_dark"/>
 
     <Button
-        android:id="@+id/btnChangePassword"
+        android:id="@+id/btnSendOTP"
         android:layout_width="240dp"
-        android:layout_gravity="center"
         android:layout_height="64dp"
+        android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/green"
-        android:textColor="@color/white"
         android:gravity="center"
-        android:text="@string/change_password"
+        android:text="@string/send_otp"
+        android:textColor="@color/white"
         android:textSize="20sp" />
 
 </LinearLayout>

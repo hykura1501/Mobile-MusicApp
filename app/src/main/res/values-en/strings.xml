@@ -83,6 +83,7 @@
     <string name="register">"Register"</string>
     <string name="enter_your_email">"Enter your email"</string>
     <string name="enter_your_password">"Enter your password"</string>
+    <string name="enter_your_old_password">"Enter your old password"</string>
     <string name="re_enter_your_password">"Re-enter your password"</string>
     <string name="enter_your_fullName">"Enter your full name"</string>
     <string name="recovery_password">"Recovery password"</string>
@@ -121,4 +122,7 @@
     <string name="buy_now">Buy Now</string>
     <string name="lyricsTitle">Lyrics</string>
     <string name="no_ads">No ads</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="otp_message">The OTP has been sent to your email:</string>
+    <string name="enter_otp">Enter OTP</string>
 </resources>

@@ -116,6 +116,10 @@ class Login : Fragment() {
         binding.btnFacebook.setOnClickListener {
             binding.fbLoginButton.performClick()
         }
+
+        binding.btnRecoveryPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_login_to_recoveryPassword)
+        }
     }
 
     private fun sendAccessTokenToServer(accessToken: String) {
