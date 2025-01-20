@@ -24,6 +24,14 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_artistFragment"
+            app:destination="@id/artistFragment">
+            <argument
+                android:name="artistId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -37,6 +45,13 @@
         <action
             android:id="@+id/action_playMusicFragment_to_queueFragment"
             app:destination="@id/queueFragment"/>
+        <action
+            android:id="@+id/action_playMusicFragment_to_artistFragment"
+            app:destination="@id/artistFragment">
+            <argument
+                android:name="artistId"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -141,6 +156,18 @@
             android:id="@+id/action_profileFragment_to_preminumFragment"
             app:destination="@id/premium"
             app:popUpTo="@id/profileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_SongsFragment"
+            app:destination="@id/songsFragment">
+            <argument
+                android:name="title"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
+
+        <action
+            android:id="@+id/action_profileFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
     </fragment>
 
     <fragment
@@ -168,6 +195,26 @@
             android:id="@+id/action_login_to_register"
             app:destination="@id/register"
             app:popUpTo="@id/login" />
+        <action
+            android:id="@+id/action_login_to_recoveryPassword"
+            app:destination="@id/recoverPassFragment"
+            app:popUpTo="@id/login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recoverPassFragment"
+        android:name="com.example.mobile_musicapp.fragment.RecoverPassFragment"
+        android:label="fragment_recover_pass"
+        tools:layout="@layout/fragment_recover_pass"
+    >
+        <action
+            android:id="@+id/action_recover_to_enter_otp"
+            app:destination="@id/optFragment"
+        >
+            <argument
+                android:name="email"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
@@ -183,22 +230,47 @@
             app:destination="@id/login"
             app:popUpTo="@id/register" />
     </fragment>
-<!--    <fragment-->
-<!--        android:id="@+id/search2"-->
-<!--        android:name="com.example.mobile_musicapp.fragment.Search"-->
-<!--        android:label="Search">-->
-<!--        <action-->
-<!--            android:id="@+id/action_search2_to_deepSearch"-->
-<!--            app:destination="@id/deepSearch" />-->
-<!--        <action-->
-<!--            android:id="@+id/action_search2_to_playMusicFragment"-->
-<!--            app:destination="@id/playMusicFragment">-->
-<!--            <argument-->
-<!--                android:name="songListWithIndex"-->
-<!--                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"-->
-<!--                app:nullable="false" />-->
-<!--        </action>-->
-<!--    </fragment>-->
+
+    <fragment
+        android:id="@+id/optFragment"
+        android:name="com.example.mobile_musicapp.fragment.OtpFragment"
+        android:label="fragment_otp"
+        tools:layout="@layout/fragment_otp">
+        <argument
+            android:name="email"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_optFragment_to_enterPassFragment"
+            app:destination="@id/enterPassFragment">
+
+            <argument
+                android:name="resetToken"
+                app:argType="string" />
+
+        </action>
+    >
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/enterPassFragment"
+        android:name="com.example.mobile_musicapp.fragment.EnterPassword"
+        android:label="fragment_enter_password"
+        tools:layout="@layout/fragment_enter_password">
+        >
+
+        <action
+            android:id="@+id/action_enterPassFragment_to_login"
+            app:destination="@id/login"
+        />
+
+        <argument
+            android:name="resetToken"
+            app:argType="string" />
+
+    </fragment>
+
     <fragment
         android:id="@+id/deepSearch"
         android:name="com.example.mobile_musicapp.fragment.DeepSearchFragment"
@@ -225,8 +297,48 @@
         android:name="com.example.mobile_musicapp.fragment.PremiumFragment"
         android:label="fragment_premium"
         tools:layout="@layout/fragment_premium">
-    >
 
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/songsFragment"
+        android:name="com.example.mobile_musicapp.fragment.SongsFragment"
+        android:label="songs">
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_SongsFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+        </action>
+        <action
+            android:id="@+id/action_SongsFragment_to_queueFragment"
+            app:destination="@id/queueFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.example.mobile_musicapp.fragment.ResetPasswordFragment"
+        android:label="reset_password">
+    </fragment>
+
+    <fragment
+        android:id="@+id/artistFragment"
+        android:name="com.example.mobile_musicapp.fragment.ArtistFragment"
+        android:label="ArtistFragment">
+        <argument
+            android:name="artistId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_artistFragment_to_playMusicFragment"
+            app:destination="@id/playMusicFragment">
+            <argument
+                android:name="songListWithIndex"
+                app:argType="com.example.mobile_musicapp.models.SongListWithIndex"
+                app:nullable="true" />
+        </action>
     </fragment>
 
 </navigation>

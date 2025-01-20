@@ -4,6 +4,8 @@ import com.example.mobile_musicapp.models.CommentModel
 import com.example.mobile_musicapp.models.CommentRequest
 import com.example.mobile_musicapp.models.CommentResponse
 import android.content.SharedPreferences
+import android.provider.ContactsContract.CommonDataKinds.Email
+import com.example.mobile_musicapp.models.Artist
 import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.User
@@ -12,22 +14,22 @@ import okhttp3.Interceptor
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.time.Duration
+import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
 
 
@@ -40,6 +42,7 @@ data class ApiResponsePlaylists(
     val code: Int,
     val data: List<Playlist>
 )
+
 data class ApiResponseSong(
     val code: Int,
     val data: List<Song>
@@ -58,6 +61,10 @@ data class ApiResponsePlaylist(
 
 data class CreatePlaylistRequest(
     val title: String
+)
+
+data class YoutubeLinkRequest(
+    val url: String
 )
 
 data class DeletePlaylistResponse(
@@ -89,6 +96,10 @@ data class FacebookLoginRequest(
     val accessToken: String
 )
 
+data class PremiumRequest(
+    val day: Int
+)
+
 data class ApiResponseAuth(
     val code: Int,
     val token: String,
@@ -103,6 +114,40 @@ data class FavoriteSongsResponse(
     val totalPage: Int
 )
 
+data class AddSongToPlaylistRequest(
+    val songId: String
+)
+
+data class RemoveSongFromPlaylistRequest(
+    val songId: String
+)
+
+data class ChangePasswordRequest(
+    val oldPassword: String,
+    val newPassword: String,
+    val confirmNewPassword: String
+)
+
+data class ChangePasswordResponse(
+    val code: Int,
+    val message: String
+)
+
+data class PlaylistResponse(
+    val _id: String,
+    val userId: String,
+    val title: String,
+    val deleted: Boolean,
+    val songIds: List<String>,
+    val createdAt: String,
+    val updatedAt: String,
+    val __v: Int
+)
+
+data class LyricsResponse(
+    val data: String
+)
+
 data class UserResponse(
     val code: Int,
     val data: User
@@ -112,10 +157,61 @@ data class ApiResponseComment(
     val code: Int,
     val data : CommentModel
 )
+
+data class ArtistResponse(
+    val code: Int,
+    val data: ArtistData
+)
+
+data class ArtistData(
+    val artist: Artist,
+    val songs: List<Song>
+)
+data class UploadedSongResponse(
+    val code: Int,
+    val data: List<Song>
+)
+
+data class EmailRequest(
+    val email: String
+)
+
+data class OtpRequest(
+    val otp: String,
+    val email: String
+)
+
+data class OtpResponse(
+    val code: Int,
+    val resetToken: String
+)
+
+data class ResetPasswordRequest(
+    val resetToken: String,
+    val newPassword: String
+)
+
+data class FollowResponse(
+    val code: Int,
+    val message: String,
+    val data: List<FollowData>
+)
+
+data class FollowData(
+    val artistId: String,
+    val _id: String
+)
+
+data class FollowedArtistResponse(
+    val code: Int,
+    val data: List<Artist>
+)
+
 interface ApiService {
     // playlist ----------------------------------------------------------------
     @GET("playlist")
     suspend fun getAllPlaylists(): Response<ApiResponsePlaylists>
+
     @GET("song")
     suspend fun getSongByPage(@Query("page") page: Int, @Query("perPage") size: Int): Response<ApiResponseSong>
 
@@ -129,6 +225,19 @@ interface ApiService {
     suspend fun createPlaylist(
         @Body playlistRequest: CreatePlaylistRequest
     ): Response<ApiResponsePlaylist>
+
+    @POST("playlist/add-song/{playlistId}")
+    suspend fun addSongToPlaylist(
+        @Path("playlistId") playlistId: String,
+        @Body request: AddSongToPlaylistRequest)
+
+    // DELETE is not official support body
+    @HTTP(method = "DELETE", path = "playlist/remove-song/{playlistId}", hasBody = true)
+    suspend fun removeSongFromPlaylist(
+        @Path("playlistId") playlistId: String,
+        @Body request: RemoveSongFromPlaylistRequest
+    ): PlaylistResponse
+
 
     // song ----------------------------------------------------------------
     @GET("song/detail/{songId}")
@@ -158,6 +267,7 @@ interface ApiService {
         @Query("perPage") perPage: Int
     ): Response<ApiResponseSongs>
 
+    // favorite song -----------------------------------------------------
     @GET("/song/favorite")
     suspend fun getFavoriteSongs(): Response<FavoriteSongsResponse>
 
@@ -166,6 +276,20 @@ interface ApiService {
 
     @DELETE("/song/favorite/remove/{songId}")
     suspend fun removeFavoriteSong(@Path("songId") songId: String): Response<Void>
+
+    @GET
+    suspend fun fetchLyrics(@Url url: String): Response<ResponseBody>
+
+    // upload song --------------------------------------------------------
+    @Multipart
+    @POST("song")
+    suspend fun uploadSong(@Part url: MultipartBody.Part): Response<Void>
+
+    @GET("other/uploaded-songs")
+    suspend fun getUploadedSongs(): Response<UploadedSongResponse>
+
+    @POST("song/youtube")
+    suspend fun uploadSongFromYoutube(@Body url: YoutubeLinkRequest): Response<ResponseBody>
 
     // auth ----------------------------------------------------------------
     @POST("auth/login")
@@ -209,6 +333,23 @@ interface ApiService {
         @Part("phone") phone: RequestBody,
     ): Response<UserResponse>
 
+    @POST("user/premium")
+    suspend fun upgradeToPremium(
+        @Body day: PremiumRequest
+    ): Response<Void>
+
+    @POST("user/change-password")
+    suspend fun changePassword(
+        @Body request: ChangePasswordRequest
+    ): Response<ChangePasswordResponse>
+
+    @POST("user/password/forgot")
+    suspend fun forgotPassword(@Body email: EmailRequest): Response<Void>
+
+    @POST("user/password/otp")
+    suspend fun verifyOTP(@Body otp: OtpRequest): Response<OtpResponse>
+    @POST("user/password/reset")
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): Response<Void>
 
 
     // comment ----------------------------------------------------------------
@@ -227,6 +368,18 @@ interface ApiService {
     @GET("user/me")
     suspend fun getInformationUser(): Response<UserResponse>
 
+    // artist
+    @GET("artist/detail/{artistId}")
+    suspend fun getArtistDetails(@Path("artistId") artistId: String): Response<ArtistResponse>
+
+    @POST("artist/follow/{artistId}")
+    suspend fun followArtist(@Path("artistId") artistId: String): Response<FollowResponse>
+
+    @POST("artist/un-follow/{artistId}")
+    suspend fun unfollowArtist(@Path("artistId") artistId: String): Response<FollowResponse>
+
+    @GET("artist/following")
+    suspend fun getFollowingArtists(): Response<FollowedArtistResponse>
 }
 
 object TokenManager {

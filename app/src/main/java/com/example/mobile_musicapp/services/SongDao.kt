@@ -1,7 +1,16 @@
 package com.example.mobile_musicapp.services
 
+import android.content.ContentResolver
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import com.example.mobile_musicapp.helpers.FileHelper
+import com.example.mobile_musicapp.models.LyricLine
 import com.example.mobile_musicapp.models.Song
+import com.example.mobile_musicapp.models.parseLrcContent
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 
 class SongDao {
     companion object {
@@ -78,6 +87,92 @@ class SongDao {
             } catch (e: Exception) {
                 Log.e("SongDao", "Exception: ${e.message}")
                 emptyList()
+            }
+        }
+
+        suspend fun fetchLyrics(url: String): List<LyricLine> {
+            return try {
+                val response = RetrofitClient.instance.fetchLyrics(url)
+                if (response.isSuccessful) {
+                    val rawLyrics = response.body()?.string()
+                    if (rawLyrics != null) {
+                        parseLrcContent(rawLyrics)
+                    } else {
+                        Log.e("FetchLyrics", "Empty response body")
+                        emptyList()
+                    }
+                } else {
+                    Log.e("FetchLyrics", "Error: ${response.code()} - ${response.message()}")
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("FetchLyrics", "Exception: ${e.message}")
+                emptyList()
+            }
+        }
+
+        suspend fun uploadSong(uri: Uri, contentResolver: ContentResolver, requireContext: Context): Boolean {
+            return try {
+                val file = FileHelper.getFileFromUri(uri, contentResolver, requireContext)
+                if (file == null) {
+                    Log.e("UploadSong", "Failed to get file from URI: $uri")
+                    return false
+                }
+
+                Log.d("UploadSong", "File prepared: ${file.name}")
+
+                val mediaType = "audio/mpeg".toMediaTypeOrNull()
+                val requestFile = file.asRequestBody(mediaType)
+                val multipartBody = MultipartBody.Part.createFormData("url", file.name, requestFile)
+
+                val response = RetrofitClient.instance.uploadSong(multipartBody)
+
+                if (response.isSuccessful) {
+                    Log.d("UploadSong", "Upload successful: ${response.code()}")
+                } else {
+                    Log.e("UploadSong", "Upload failed: ${response.code()} - ${response.message()}")
+                    Log.e("UploadSong", "Error body: ${response.errorBody()?.string()}")
+                }
+
+                response.isSuccessful
+            } catch (e: Exception) {
+                Log.e("UploadSong", "Exception during upload: ${e.message}")
+                false
+            }
+        }
+
+        suspend fun getUploadedSongs(): List<Song> {
+            return try {
+                val response = RetrofitClient.instance.getUploadedSongs()
+                if (response.isSuccessful) {
+                    val uploadedSongResponse = response.body()
+                    val uploadedSongs = uploadedSongResponse?.data ?: emptyList()
+                    Log.d("SongDao", "Fetched uploaded songs: $uploadedSongs")
+                    uploadedSongs
+                } else {
+                    Log.e("SongDao", "Error: ${response.code()} - ${response.message()}")
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("SongDao", "Exception: ${e.message}")
+                emptyList()
+            }
+        }
+
+        suspend fun uploadSongFromYoutube(url: String): Boolean {
+            return try {
+                val response =
+                    RetrofitClient.instance.uploadSongFromYoutube(YoutubeLinkRequest(url))
+                if (response.isSuccessful) {
+                    Log.d("UploadSongFromYoutube", "Upload successful: ${response.code()}")
+                    true
+                } else {
+                    Log.d("UploadSongFromYoutube", "Upload failed: ${response.code()} - ${response.message()}")
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e("UploadSongFromYoutube", "Exception during upload: ${e.message}")
+                false
             }
         }
     }

@@ -46,7 +46,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.051"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <ImageButton
                     android:id="@+id/settingsButton"
@@ -128,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="Top Liked Songs"
+                    android:text="@string/topLikeSongTitle"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -140,13 +141,31 @@
                     android:scrollbars="horizontal"
                     android:paddingBottom="16dp" />
 
+                <!-- Following Artist Section -->
+                <TextView
+                    android:id="@+id/followingArtistHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/followingArtistTitle"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/followingArtistRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="horizontal"
+                    android:paddingBottom="16dp" />
+
                 <!-- Recommended Songs Section -->
                 <TextView
                     android:id="@+id/RecommendedSongsHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="Recommended Songs"
+                    android:text="@string/recommendedSongTitle"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />

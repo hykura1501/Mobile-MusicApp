@@ -82,6 +82,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.11.0")
     implementation(libs.androidx.palette.ktx)
     implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.ui.graphics.android)
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
     implementation("androidx.palette:palette:1.0.0")
 
@@ -94,6 +95,8 @@ dependencies {
     implementation("androidx.paging:paging-runtime:3.1.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0") // Add this line
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")  // Add this line
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
 
     implementation("com.google.android.gms:play-services-auth:21.3.0")
     implementation("com.facebook.android:facebook-login:latest.release")
@@ -102,4 +105,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
     implementation(project(":zalopay"))
+
+    // mediastyle notification
+    implementation("androidx.media:media:1.4.3")
 }

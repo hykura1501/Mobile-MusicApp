@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.SongAdapter
 import com.example.mobile_musicapp.adapters.SongPagingAdapter
+import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.repository.SongPagingSource
@@ -39,15 +40,30 @@ class DeepSearchFragment : Fragment() {
     private val songViewModel: SongViewModel by viewModels()
     private val songPlayRecentlyList = mutableListOf<Song>()
     private val songAdapter by lazy {
-        SongPagingAdapter{
-            val selectedIndex = SongPagingSource.cachedSongsSet.indexOfFirst { data -> data._id == it._id }
-            if (selectedIndex != -1 ){
-                val action = DeepSearchFragmentDirections.actionDeepSearchFragmentToPlayMusicFragment(
-                    SongListWithIndex(SongPagingSource.cachedSongsSet.toList(), selectedIndex)
+        SongPagingAdapter (
+            onClick = {
+                val selectedIndex = SongPagingSource.cachedSongsSet.indexOfFirst { data -> data._id == it._id }
+                if (selectedIndex != -1 ){
+                    val action = DeepSearchFragmentDirections.actionDeepSearchFragmentToPlayMusicFragment(
+                        SongListWithIndex(SongPagingSource.cachedSongsSet.toList(), selectedIndex)
+                    )
+                    findNavController().navigate(action)
+                }
+            },
+            onOptionClick = {
+                val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+                shareViewModel.selectedSong.value = it
+                // TODO: resolve click event
+                val options = listOf(
+                    Option.SHARE.title,
+                    Option.ADD_TO_PLAYLIST.title,
+                    Option.ADD_TO_QUEUE.title,
+                    Option.DOWNLOAD.title,
                 )
-                findNavController().navigate(action)
+                val actionDialogFragment = MenuOptionFragment.newInstance(options)
+                actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
             }
-        }
+        )
     }
 
     private val songRecentlyAdapter by lazy {

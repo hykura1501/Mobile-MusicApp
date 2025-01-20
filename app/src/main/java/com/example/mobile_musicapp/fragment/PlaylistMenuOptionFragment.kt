@@ -23,7 +23,6 @@ class PlaylistMenuOptionFragment : BottomSheetDialogFragment() {
 
     private lateinit var playlistThumbnail: ImageView
     private lateinit var playlistTitle: TextView
-    private lateinit var songArtist: TextView
 
     companion object {
         fun newInstance(options: List<String>, shareCallback: (() -> Unit)? = null): PlaylistMenuOptionFragment {
@@ -50,7 +49,6 @@ class PlaylistMenuOptionFragment : BottomSheetDialogFragment() {
         val view = inflater.inflate(R.layout.fragment_playlist_menu_option, container, false)
         playlistThumbnail = view.findViewById(R.id.playlistThumbnail)
         playlistTitle = view.findViewById(R.id.playlistTitle)
-        //playlist = view.findViewById(R.id.playlist)
         return view
     }
 

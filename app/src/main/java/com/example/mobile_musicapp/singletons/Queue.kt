@@ -5,6 +5,7 @@ import com.example.mobile_musicapp.models.Playlist
 import com.example.mobile_musicapp.models.Song
 import com.example.mobile_musicapp.services.PlayerManager
 import com.example.mobile_musicapp.services.SongDao
+import com.example.mobile_musicapp.services.UserManager
 import com.example.mobile_musicapp.viewModels.PlayerBarViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +24,6 @@ object Queue {
     private const val perPage = 10
     private var page = 1
     private var nextSongs : MutableList<Song> = mutableListOf()
-
     fun initialize(viewModel: PlayerBarViewModel) {
         this.viewModel = viewModel
         CoroutineScope(Dispatchers.IO).launch {
@@ -40,9 +40,6 @@ object Queue {
         }
     }
 
-    fun setCurrentSongIndex(data : Int) {
-        currentSongIndex = data
-    }
     fun removeSong(song: Song) {
         if (songs.contains(song)) {
             songs.remove(song)

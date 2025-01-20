@@ -42,6 +42,9 @@
     <string name="newSongReleaseTitle">Bài hát mới phát hành</string>
     <string name="topFavoriteSongTitle">Bài hát yêu thích hàng đầu</string>
     <string name="topPopularSongTitle">Bài hát phổ biến nhất</string>
+    <string name="topLikeSongTitle">Bài hát nhiều like</string>
+    <string name="recommendedSongTitle">Bài hát đề xuất</string>
+    <string name="followingArtistTitle">Nghệ sĩ đang theo dõi</string>
     <string name="likeButton">Thích</string>
 
     <string name="libraryTitle">Thư viện</string>
@@ -80,6 +83,8 @@
     <string name="register">"Đăng ký"</string>
     <string name="enter_your_email">"Nhập email của bạn"</string>
     <string name="enter_your_password">"Nhập mật khẩu của bạn"</string>
+    <string name="enter_your_old_password">"Nhập mật khẩu cũ của bạn"</string>
+    <string name="re_enter_your_password">"Nhập lại mật khẩu của bạn"</string>
     <string name="enter_your_fullName">"Nhập họ tên của bạn"</string>
     <string name="recovery_password">"Khôi phục mật khẩu"</string>
     <string name="button_back">"Nút quay lại"</string>
@@ -115,4 +120,10 @@
     <string name="phone">Số điện thoại</string>
     <string name="enter_your_phone">Nhập số điện thoại của bạn</string>
     <string name="get_premium">Mua quyền VIP</string>
+    <string name="no_ads">Không quảng cáo</string>
+    <string name="buy_now">Mua ngay</string>
+    <string name="lyricsTitle">Lyrics</string>
+    <string name="send_otp">Gửi mã OTP</string>
+    <string name="otp_message">Đã gửi mã OTP đến email của bạn là:</string>
+    <string name="enter_otp">Nhập mã OTP</string>
 </resources>

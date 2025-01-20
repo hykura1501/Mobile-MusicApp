@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_musicapp.R
 import com.example.mobile_musicapp.adapters.SongPagingAdapter
+import com.example.mobile_musicapp.models.Option
 import com.example.mobile_musicapp.models.SongListWithIndex
 import com.example.mobile_musicapp.repository.SongPagingSource
 import com.example.mobile_musicapp.viewModels.SearchViewModel
 import com.example.mobile_musicapp.viewModels.ShareViewModel
-import kotlinx.coroutines.FlowPreview
 
 class SearchFragment : Fragment() {
 
@@ -25,15 +25,29 @@ class SearchFragment : Fragment() {
     private lateinit var searchViewModel: SearchViewModel
 
     private val songAdapter by lazy {
-        SongPagingAdapter {
-            val selectedIndex = SongPagingSource.cachedSongsSet.indexOfFirst { data -> data._id == it._id }
-            if (selectedIndex != -1 ){
-                val action = SearchFragmentDirections.actionSearchFragmentToPlayMusicFragment(
-                    SongListWithIndex(SongPagingSource.cachedSongsSet.toList(), selectedIndex)
+        SongPagingAdapter (
+            onClick = {
+                val selectedIndex = SongPagingSource.cachedSongsSet.indexOfFirst { data -> data._id == it._id }
+                if (selectedIndex != -1 ){
+                    val action = SearchFragmentDirections.actionSearchFragmentToPlayMusicFragment(
+                        SongListWithIndex(SongPagingSource.cachedSongsSet.toList(), selectedIndex)
+                    )
+                    findNavController().navigate(action)
+                }
+            },
+            onOptionClick = {
+                val shareViewModel = ViewModelProvider(requireActivity())[ShareViewModel::class.java]
+                shareViewModel.selectedSong.value = it
+                val options = listOf(
+                    Option.SHARE.title,
+                    Option.ADD_TO_PLAYLIST.title,
+                    Option.ADD_TO_QUEUE.title,
+                    Option.DOWNLOAD.title,
                 )
-                findNavController().navigate(action)
+                val actionDialogFragment = MenuOptionFragment.newInstance(options)
+                actionDialogFragment.show(parentFragmentManager, "MenuOptionFragment")
             }
-        }
+        )
     }
 
     override fun onCreateView(
@@ -44,7 +58,6 @@ class SearchFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
 
-    @OptIn(FlowPreview::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -82,22 +95,22 @@ class SearchFragment : Fragment() {
         rcvSong = view.findViewById(R.id.genreRecyclerView)
         searchData = view.findViewById(R.id.iconMaterialButton)
     }
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Search.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
-    }
+//    companion object {
+//        /**
+//         * Use this factory method to create a new instance of
+//         * this fragment using the provided parameters.
+//         *
+//         * @param param1 Parameter 1.
+//         * @param param2 Parameter 2.
+//         * @return A new instance of fragment Search.
+//         */
+//        // TODO: Rename and change types and number of parameters
+//        @JvmStatic
+//        fun newInstance(param1: String, param2: String) =
+//            SearchFragment().apply {
+//                arguments = Bundle().apply {
+//
+//                }
+//            }
+//    }
 }

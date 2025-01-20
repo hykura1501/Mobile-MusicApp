@@ -12,12 +12,13 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -127,7 +128,8 @@
             android:id="@+id/btnRecoveryPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
+            android:textColor="@color/green"
             android:text="@string/recovery_password" />
 
         <Button
@@ -231,7 +233,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:gravity="center"
                 android:text="@string/not_a_member"
                 android:textSize="16sp" />

@@ -19,8 +19,8 @@ class PlayerBarViewModel : ViewModel() {
     private val _currentSong = MutableLiveData<Song>()
     val currentSong: LiveData<Song> = _currentSong
 
-    private val _currentPosition = MutableLiveData<Int>(0)
-    val currentPosition: LiveData<Int> = _currentPosition
+    private val _currentPosition = MutableLiveData<Long>(0)
+    val currentPosition: LiveData<Long> = _currentPosition
 
     private val _deleteSong = MutableLiveData<Song>()
     val deleteSong: LiveData<Song> = _deleteSong
@@ -55,11 +55,11 @@ class PlayerBarViewModel : ViewModel() {
         _currentSong.value = newSong
     }
 
-    fun updatePosition(newPosition: Int) {
+    fun updatePosition(newPosition: Long) {
         _currentPosition.value = newPosition
     }
 
-    fun deleteSong(song: Song) {
-        _deleteSong.value = song
+    fun deleteSong(deleteSong: Song) {
+        _deleteSong.value = deleteSong
     }
 }

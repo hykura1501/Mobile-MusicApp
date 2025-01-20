@@ -42,6 +42,9 @@
     <string name="newSongReleaseTitle">New Song release</string>
     <string name="topFavoriteSongTitle">Top favorite song</string>
     <string name="topPopularSongTitle">Top popular song</string>
+    <string name="topLikeSongTitle">Top liked song</string>
+    <string name="recommendedSongTitle">Recommended song</string>
+    <string name="followingArtistTitle">Following artist</string>
     <string name="likeButton">Like</string>
 
     <string name="libraryTitle">Library</string>
@@ -80,6 +83,8 @@
     <string name="register">"Register"</string>
     <string name="enter_your_email">"Enter your email"</string>
     <string name="enter_your_password">"Enter your password"</string>
+    <string name="enter_your_old_password">"Enter your old password"</string>
+    <string name="re_enter_your_password">"Re-enter your password"</string>
     <string name="enter_your_fullName">"Enter your full name"</string>
     <string name="recovery_password">"Recovery password"</string>
     <string name="button_back">"button back"</string>
@@ -114,4 +119,10 @@
     <string name="phone">Phone</string>
     <string name="enter_your_phone">Enter your phone number</string>
     <string name="get_premium">Get Premium</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="lyricsTitle">Lyrics</string>
+    <string name="no_ads">No ads</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="otp_message">The OTP has been sent to your email:</string>
+    <string name="enter_otp">Enter OTP</string>
 </resources>
