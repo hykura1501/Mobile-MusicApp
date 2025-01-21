@@ -103,7 +103,7 @@ class EditProfileFragment : Fragment() {
                             Toast.makeText(requireContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show()
                             requireActivity().onBackPressed()
                         } else {
-                            Toast.makeText(requireContext(), "Cập nhật thông tin thất bại", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "Email đã tồn tại", Toast.LENGTH_SHORT).show()
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
