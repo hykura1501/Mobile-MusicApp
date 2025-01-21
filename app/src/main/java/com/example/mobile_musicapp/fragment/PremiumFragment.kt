@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.mobile_musicapp.databinding.FragmentPremiumBinding
 import com.example.mobile_musicapp.services.UserDao
+import com.example.mobile_musicapp.services.UserManager
 import com.example.mobile_musicapp.services.payment.Api.CreateOrder
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -98,6 +99,7 @@ class PremiumFragment : Fragment() {
                                 ) {
                                     lifecycleScope.launch {
                                         var response = UserDao.upgradeToPremium(day)
+                                        UserManager.isPremium = true
                                     }
 
                                     requireActivity().runOnUiThread {
